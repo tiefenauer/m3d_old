@@ -1,0 +1,56 @@
+html, body{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body { padding-top: 50px; }
+
+#map, #profile
+{
+  height: 100%; 
+  width: 50%; 
+  float:left;
+    overflow: hidden;
+}
+
+.middle {
+    display: table;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+/*
+Use bootstraps container w/ some overrides, nice thing about this on bootstrap is there is
+psuedo element with clearfix and display: table; , all after (which is why I know .middle works above)
+*/
+.container{
+    width: 50%;
+    padding-left: 0;
+    padding-right: 0;
+}
+#pac-input 
+{
+    background-color: #fff;
+    padding: 0 11px 0 13px;
+    width: 400px;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    text-overflow: ellipsis;
+    z-index: 999;
+}
+#pac-input:focus 
+{
+    border-color: #4d90fe;
+    margin-left: -1px;
+    padding-left: 14px;  /* Regular padding-left + 1. */
+    width: 401px;
+}
+
+.progress, .progress .bar {
+  height: 100;
+  vertical-align: middle;
+}
