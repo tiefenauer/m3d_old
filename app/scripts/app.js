@@ -1,15 +1,14 @@
 /*jshint unused: vars */
 define([
-  'angular', 
-  'directives/m3dmenu', 
-  'controllers/menu'
-  , 'directives/m3dmap'
-  , 'controllers/map'
-  , 'directives/m3dprofile'
-  , 'controllers/profile'
-  , 'services/elevationdataservice'
-  , 'decorators/logdecorator']/*deps*/, 
-  function (angular, M3dmenuDirective, MenuCtrl, M3dmapDirective, MapCtrl, M3dprofileDirective, ProfileCtrl, ElevationdataserviceService, LogDecorator)/*invoke*/ {
+  'angular'
+  ,'filters'
+  ,'services'
+  ,'directives'
+  ,'controllers'
+  ,'models'
+  ,'decorators'
+  ]/*deps*/, 
+  function (angular)/*invoke*/ {
   'use strict';
 
   /**
@@ -20,21 +19,19 @@ define([
    *
    * Main module of the application.
    */
-  return angular.module('m3dApp', [
-          'm3dApp.services.Elevationdataservice',    
-          'm3dApp.directives.M3dmenu',
-          'm3dApp.controllers.MenuCtrl',
-          'm3dApp.directives.M3dmap',
-'m3dApp.controllers.MapCtrl',
-'m3dApp.directives.M3dprofile',
-'m3dApp.controllers.ProfileCtrl',
-'m3dApp.decorators.Log',
+  return angular.module('m3d', [
+           'm3d.filters'
+          ,'m3d.services'
+          ,'m3d.directives'
+          ,'m3d.controllers'
+          ,'m3d.models'
+          ,'m3d.decorators'
 /*angJSDeps*/
-            'ngCookies',
-            'ngResource',
-            'ngSanitize',
-            'ngRoute',
-            'ngAnimate',
-            'ngTouch'
+          ,'ngCookies'
+          ,'ngResource'
+          ,'ngSanitize'
+          ,'ngRoute'
+          ,'ngAnimate'
+          ,'ngTouch'
           ]);
 });

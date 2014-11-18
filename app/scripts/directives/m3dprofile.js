@@ -1,5 +1,18 @@
-define(['angular'], function (angular) {
-  'use strict';
+define([
+  'angular'
+  ], 
+  function (angular) {
+    'use strict';
+
+    var ProfileDirective = function () {
+      return {
+        templateUrl: 'views/templates/profile.html',
+        restrict: 'E',
+        controller: 'ProfileCtrl'
+      };
+    };
+
+    return ProfileDirective;
 
   /**
    * @ngdoc directive
@@ -7,12 +20,8 @@ define(['angular'], function (angular) {
    * @description
    * # m3dProfile
    */
+   /*
   angular.module('m3dApp.directives.M3dprofile', [])
-    .directive('m3dProfile', function () {
-      return {
-        templateUrl: 'views/templates/profile.html',
-        restrict: 'E',
-        controller: 'ProfileCtrl'
-      };
-    });
+    .directive('m3dProfile', ProfileDirective);
+    */
 });

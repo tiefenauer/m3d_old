@@ -155,14 +155,6 @@ define([
       map.fitBounds(bounds);
     };
 
-    /**
-     * @ngdoc function
-     * @name m3dApp.controller:MapCtrl
-     * @description
-     * # MapCtrl
-     * Controller of the m3dApp
-     */
-    angular.module('m3dApp.controllers.MapCtrl', ['m3dApp.services.Elevationdataservice'])
-      .controller('MapCtrl', ['$scope', '$log', 'ElevationDataService', MapController]);
+    return ['$scope', '$log', 'ElevationDataService', MapController];
 
 });

@@ -12,6 +12,17 @@ define([
     var buttonLabelDefault = 'Höhenprofil generieren';
     var buttonLabelProcessing = 'Abbrechen';  
 
+    var MenuController = function ($rootScope, $scope, $log) {
+      $log.debug('MenuController created');        
+      $scope.buttonLabel = buttonLabelDefault;
+
+      $scope.calculateHeightMap = calculateHeightMap;
+      $scope.showInfo = showInfo;        
+      $scope.showStats = showStats;        
+      $scope.showFileUpload = showFileUpload;
+      init($rootScope, $scope, $log);
+    }
+
     //var google = google;
     /**
      * @ngdoc function
@@ -20,17 +31,10 @@ define([
      * # MenuCtrl
      * Controller of the m3dApp
      */
+     /*
     angular.module('m3dApp.controllers.MenuCtrl', [])
-      .controller('MenuCtrl', function ($rootScope, $scope, $log) {
-        $log.debug('MenuController created');        
-        $scope.buttonLabel = buttonLabelDefault;
-
-        $scope.calculateHeightMap = calculateHeightMap;
-        $scope.showInfo = showInfo;        
-        $scope.showStats = showStats;        
-        $scope.showFileUpload = showFileUpload;
-        init($rootScope, $scope, $log);
-      });
+      .controller('MenuCtrl', MenuController);
+      */
 
     var init = function(rootScope, scope, log){
       $rootScope = rootScope; 
@@ -101,4 +105,6 @@ define([
       $log.debug('process button clicked');
       $rootScope.$broadcast('menu:process_button_clicked');
     };
+
+    return MenuController;
 });

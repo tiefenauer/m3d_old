@@ -10,7 +10,7 @@ define([
     describe('Directive: m3dMenu', function () {
 
       // load the directive's module
-      beforeEach(module('m3dApp.directives.M3dmenu'));
+      beforeEach(module('m3d.directives'));
 
       var element,
         scope;

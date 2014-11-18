@@ -99,6 +99,7 @@ define([
       processNextQueueItem();
     };
 
+    return ElevationDataService;
     /**
      * @ngdoc service
      * @name m3dApp.Elevationdataservice
@@ -106,6 +107,8 @@ define([
      * # Elevationdataservice
      * Service in the m3dApp.
      */
-    angular.module('m3dApp.services.Elevationdataservice', [])
+     /*
+    angular.module('m3d.services.ElevationDataService', [])
   	.service('ElevationDataService', ElevationDataService);
+    */
 });

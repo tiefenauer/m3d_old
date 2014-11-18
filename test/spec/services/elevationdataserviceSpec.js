@@ -1,21 +1,25 @@
 /*jshint unused: vars */
-define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
-  'use strict';
+define([
+  'angular'
+  ,'angular-mocks'
+  ,'app'
+  ], function(angular, mocks, app) {
+    'use strict';
 
-  describe('Service: ElevationDataService', function () {
+    describe('Service: ElevationDataService', function () {
 
-    // load the service's module
-    beforeEach(module('m3dApp.services.Elevationdataservice'));
+      // load the service's module
+      beforeEach(module('m3d.services'));
 
-    // instantiate service
-    var Elevationdataservice;
-    beforeEach(inject(function (_ElevationDataService_) {
-      Elevationdataservice = _ElevationDataService_;
-    }));
+      // instantiate service
+      var ElevationDataService;
+      beforeEach(inject(function (_ElevationDataService_) {
+        ElevationDataService = _ElevationDataService_;
+      }));
 
-    it('should do something', function () {
-      //expect(!!Elevationdataservice).toBe(true);
-    });
+      it('should not be empty', function () {
+        expect(!!ElevationDataService).toBe(true);
+      });
 
   });
 });

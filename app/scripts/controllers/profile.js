@@ -14,6 +14,20 @@ define([
       var objects = [];
       var io;
 
+      var ProfileController = function ($scope, $rootScope, $log) {
+        $log.debug('ProfileController created');        
+        init($scope, $rootScope, $log);
+
+        initScene();
+        initCamera();     
+        initRenderer();
+        initControls();
+        rotationHelper = new RotationHelper(renderer.domElement, camera, renderer);     
+        rotationHelper.initEvents();
+
+        render();
+      };
+
       /**
        * @ngdoc function
        * @name m3dApp.controller:ProfileCtrl
@@ -21,20 +35,10 @@ define([
        * # ProfileCtrl
        * Controller of the m3dApp
        */
+       /*
       angular.module('m3dApp.controllers.ProfileCtrl', [])
-        .controller('ProfileCtrl', function ($scope, $rootScope, $log) {
-          $log.debug('ProfileController created');        
-          init($scope, $rootScope, $log);
-
-          initScene();
-          initCamera();     
-          initRenderer();
-          initControls();
-          rotationHelper = new RotationHelper(renderer.domElement, camera, renderer);     
-          rotationHelper.initEvents();
-
-          render();
-        });
+        .controller('ProfileCtrl', ProfileController);
+        */
 
       var init = function(scope, rootScope, logger){
         $log = logger;
@@ -199,4 +203,6 @@ define([
         };
         animate();
       };       
+
+      return ProfileController;
 });
