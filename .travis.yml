@@ -6,4 +6,4 @@ before_script:
   - 'gem update --system && gem install compass'
   - 'bower install'
 script:
-  - 'grunt build'
+  - 'grunt build --verbose'
