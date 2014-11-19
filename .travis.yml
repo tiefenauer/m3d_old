@@ -7,4 +7,6 @@ before_script:
 - bower install
 script:
 - grunt build
-after_success: find dist -type f -exec curl -u $FTP_USER:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://ftp.tiefenauer.info/web/m3d/{}
+after_success: 
+- cd dist
+- find -type f -exec curl -u $FTP_USER:$FTP_PASSWORD --ftp-create-dirs -T {}  \;
