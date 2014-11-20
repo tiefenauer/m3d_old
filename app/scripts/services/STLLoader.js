@@ -66,10 +66,10 @@ define([
 				console.log(contents.substr(0,100));
 				var geometry =scope.parse(contents);
 				scope.dispatchEvent( { type: 'load', content: geometry, file: file } );
-				if (callback) callback(geometry, file.name);
+				if (callback) callback(geometry, file);
 			};
 			r.readAsBinaryString(file);
-		}
+		};
 
 		THREE.STLLoader.prototype.parse = function ( data ) {
 

@@ -21,13 +21,11 @@ define([
         $log.debug('ProfileController created');        
         init($scope, $rootScope, $log, ProfileIOService);
 
-        initScene();
-        initCamera();     
-        initRenderer();
-        initControls();
-        rotationHelper = new RotationHelper(renderer.domElement, camera, renderer);     
-        rotationHelper.initEvents();
+        scene = new THREE.Scene();
+        renderer = new THREE.WebGLRenderer({ antialias: true });
 
+        initScene();
+        initRenderer();
         render();
       };
 
@@ -67,11 +65,20 @@ define([
 
       var drawGeometry = function(event, data){
         clearScene();
-        var mesh = new THREE.Mesh(data.geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
-        mesh.geometry.mergeVertices();
-        mesh.geometry.computeVertexNormals();
-        mesh.name = data.fileName;    
-            add(mesh);
+        if (data.geometry instanceof THREE.Scene){
+          scene = data.geometry;
+          objects = data.geometry.children;
+          initScene();
+          initRenderer();
+          render();
+        }
+        else{
+          var mesh = new THREE.Mesh(data.geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
+          mesh.geometry.mergeVertices();
+          mesh.geometry.computeVertexNormals();
+          mesh.name = data.fileName;    
+          add(mesh);
+        }
       };
 
       /**
@@ -139,13 +146,17 @@ define([
         objects.push(object);
       };
 
-      var initScene = function(){
-        scene = new THREE.Scene();
-            var topLight = new THREE.PointLight( 0x404040, 2 );
-            topLight.position.set( 500, 500, 500 );       
+      var initScene = function(){        
+        var topLight = new THREE.PointLight( 0x404040, 2 );
+        topLight.position.set( 500, 500, 500 );       
 
-            var bottomLight = new THREE.PointLight( 0xffffff, 0.4 );  
-            bottomLight.position.set(0, -500, 0);
+        var bottomLight = new THREE.PointLight( 0xffffff, 0.4 );  
+        bottomLight.position.set(0, -500, 0);
+
+        var hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.6 ); 
+        hemiLight.color.setHSL( 0.6, 1, 0.6 );
+        hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+        hemiLight.position.set( 0, 500, 0 );        
 
         // red=X, green=Y, blue=Z
         // inset AxisHelper: http://jsfiddle.net/CBAyS/21/
@@ -153,10 +164,13 @@ define([
         var axis = new THREE.AxisHelper(100);
         var grid = new THREE.GridHelper(10,1);      
 
-            scene.add( topLight );
-            scene.add( bottomLight );
+        scene.add( topLight );
+        scene.add(hemiLight);
+        scene.add( bottomLight );
         scene.add(axis);
         scene.add(grid);
+        initCamera();     
+        initControls();               
       };
 
       var initCamera = function(){
@@ -171,12 +185,14 @@ define([
       var initRenderer = function(){
         var width = $el.width();
         var height = $el.height();
-        renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize( width, height );
         $el.append(renderer.domElement);        
         renderer.precision = 'highp';
-            renderer.setClearColor(0x000000, 1);
-            renderer.shadowMapEnabled = true;
+        renderer.setClearColor(0x000000, 1);
+        renderer.shadowMapEnabled = true;
+
+        rotationHelper = new RotationHelper(renderer.domElement, camera, renderer);     
+        rotationHelper.initEvents();         
       };
 
       var initControls = function(){
@@ -194,10 +210,10 @@ define([
         var animate = function(){         
           requestAnimationFrame(animate);
               controls.update();
-              if (mesh){
+              _.each(objects, function(mesh){
                 var rotation = (rotationHelper.targetRotation - mesh.rotation.y) * 0.05;
                 mesh.rotation.y += rotation;
-              }
+              });              
           renderer.render(scene, camera);         
         };
         animate();

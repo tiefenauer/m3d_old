@@ -69,7 +69,7 @@ define([
     };    
 
     var showFileUpload = function(){
-      var fileSelector = $('<input></input>').attr({type: 'file'});
+      var fileSelector = $('<input></input>').attr({type: 'file', accept: '.stl,.wrl'});
       fileSelector.change(function(evt){
         var file = evt.target.files[0];
         if (file) {

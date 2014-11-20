@@ -1,6 +1,7 @@
 define([
    'angular'
   ,'services/STLLoader'
+  ,'services/VRMLLoader'
   ,'util/FileSaver.min'
   ], 
   function (angular, STLLoader) {
@@ -28,13 +29,20 @@ define([
     };
 
     var addEventListeners = function(){
-      loader.addEventListener('load', onFileLoaded);      
       $rootScope.$on('menu:loadProfile', load);
     }
 
     var load = function(event, file){
       $log.debug('Loading from ' + file.name + ' ...');
-      loader.loadLocal(file);
+      switch(true){
+        case new RegExp('.stl').test(file.name):
+          loader = new THREE.STLLoader();
+          break;
+        case new RegExp('.wrl').test(file.name):
+          loader = new THREE.VRMLLoader();
+          break;
+      };
+      loader.loadLocal(file, onFileLoaded);
     };
 
     var save = function(objects){
@@ -49,10 +57,9 @@ define([
       });
     };
 
-    var onFileLoaded = function(event){
-      var geometry = event.content;
-      var fileName = event.file.name.substr(0, event.file.name.lastIndexOf("."));
-      $rootScope.$broadcast('io:model:loaded', {geometry: geometry, fileName: fileName});
+    var onFileLoaded = function(content, file){
+      var fileName = file.name.substr(0, file.name.lastIndexOf("."));
+      $rootScope.$broadcast('io:model:loaded', {geometry: content, fileName: fileName});
     };
 
     var generateStl = function(geometry){
