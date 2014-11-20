@@ -147,16 +147,18 @@ define([
       };
 
       var initScene = function(){        
-        var topLight = new THREE.PointLight( 0x404040, 2 );
-        topLight.position.set( 500, 500, 500 );       
+        var topLight = new THREE.PointLight( 0x404040, 1.8 );
+        topLight.position.set( 1000, 1000, 1000 );       
 
         var bottomLight = new THREE.PointLight( 0xffffff, 0.4 );  
         bottomLight.position.set(0, -500, 0);
 
-        var hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.6 ); 
+        var hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.3 ); 
         hemiLight.color.setHSL( 0.6, 1, 0.6 );
         hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
         hemiLight.position.set( 0, 500, 0 );        
+
+        var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 
         // red=X, green=Y, blue=Z
         // inset AxisHelper: http://jsfiddle.net/CBAyS/21/
@@ -167,6 +169,7 @@ define([
         scene.add( topLight );
         scene.add(hemiLight);
         scene.add( bottomLight );
+        scene.add(ambientLight);
         scene.add(axis);
         scene.add(grid);
         initCamera();     
