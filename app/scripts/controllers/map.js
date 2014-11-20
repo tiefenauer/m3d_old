@@ -13,7 +13,7 @@ define([
     var verticalSegments = 25;
     var horizontalSegments = 25;    
 
-    //var google = google;
+    var google = window.google;
 
     var MapController = function ($scope, $log, elevationDataService) {
         $log.debug('MapController created');

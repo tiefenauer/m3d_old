@@ -11,6 +11,7 @@ define([
     var searchBox, ladda;
     var buttonLabelDefault = 'Höhenprofil generieren';
     var buttonLabelProcessing = 'Abbrechen';  
+    var google = window.google;
 
     var MenuController = function ($rootScope, $scope, $log) {
       $log.debug('MenuController created');        
@@ -20,10 +21,10 @@ define([
       $scope.showInfo = showInfo;        
       $scope.showStats = showStats;        
       $scope.showFileUpload = showFileUpload;
+      $scope.saveModel = saveModel;      
       init($rootScope, $scope, $log);
-    }
+    };
 
-    //var google = google;
     /**
      * @ngdoc function
      * @name m3dApp.controller:MenuCtrl
@@ -31,10 +32,6 @@ define([
      * # MenuCtrl
      * Controller of the m3dApp
      */
-     /*
-    angular.module('m3dApp.controllers.MenuCtrl', [])
-      .controller('MenuCtrl', MenuController);
-      */
 
     var init = function(rootScope, scope, log){
       $rootScope = rootScope; 
@@ -44,20 +41,17 @@ define([
 
       $scope.$on('adapter:start', function(){
         ladda.start();
-        $scope.$apply();
       });
       $scope.$on('adapter:queue:progress', function(event, data){
         ladda.setProgress(data.progress/data.total);
         $scope.prog = Math.round(100*data.progress/data.total);
         $scope.buttonLabel = buttonLabelProcessing + ' (' + $scope.prog + '%)';
         $log.debug($scope.prog + '% loaded');
-        $scope.$apply();
       });
       $scope.$on('adapter:end', function(){
         ladda.stop();
         $scope.buttonLabel = buttonLabelDefault;
         $scope.prog = 0;
-        $scope.$apply();
       });      
 
       initSearchBox();
@@ -105,6 +99,11 @@ define([
       $log.debug('process button clicked');
       $rootScope.$broadcast('menu:process_button_clicked');
     };
+
+    var saveModel = function (event) {
+      $log.debug('save button clicker');
+      $rootScope.$broadcast('menu:save_button_clicked');
+    };    
 
     return MenuController;
 });

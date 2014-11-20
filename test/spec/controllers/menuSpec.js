@@ -10,7 +10,7 @@ define([
     describe('Controller: MenuCtrl', function () {
 
       // load the controller's module
-      beforeEach(module('m3dApp.controllers.MenuCtrl'));
+      beforeEach(module('m3d.controllers.MenuCtrl'));
 
       var MenuCtrl,
         scope;

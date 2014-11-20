@@ -1,10 +1,13 @@
 define([
   'angular'
+  ,'jquery'
+  ,'threejs'
+  ,'lodash'
   ,'util/GoogleMapsUtil'
   ,'util/RotationHelper'  
   ,'vendor/three/controls/OrbitControls'    
   ], 
-  function (angular, GoogleMapsUtil, RotationHelper) {
+  function (angular, $, THREE, _, GoogleMapsUtil, RotationHelper) {
     'use strict';
 
       var el, $el;
@@ -14,9 +17,9 @@ define([
       var objects = [];
       var io;
 
-      var ProfileController = function ($scope, $rootScope, $log) {
+      var ProfileController = function ($scope, $rootScope, $log, ProfileIOService) {
         $log.debug('ProfileController created');        
-        init($scope, $rootScope, $log);
+        init($scope, $rootScope, $log, ProfileIOService);
 
         initScene();
         initCamera();     
@@ -35,22 +38,19 @@ define([
        * # ProfileCtrl
        * Controller of the m3dApp
        */
-       /*
-      angular.module('m3dApp.controllers.ProfileCtrl', [])
-        .controller('ProfileCtrl', ProfileController);
-        */
 
-      var init = function(scope, rootScope, logger){
+      var init = function(scope, rootScope, logger, ProfileIOService){
         $log = logger;
         $scope = scope;
         $rootScope = rootScope;
+        io = ProfileIOService;
 
         el = $('#profile')[0];
         $el = $(el);
 
         $scope.$on('adapter:end', draw);
         $scope.$on('io:model:loaded', drawGeometry);
-        $scope.$on('menu:save_button_clicked', function(event){
+        $scope.$on('menu:save_button_clicked', function(){
           io.save(objects);
         });
       };  
@@ -61,7 +61,7 @@ define([
       var clearScene = function(){
         _.each(objects, function(object){
           scene.remove(object);
-        })
+        });
         objects = [];
       };
 
@@ -87,7 +87,7 @@ define([
         var minLat = _.min(_.pluck(elevationPoints, 'lat'));
         var maxLat = _.max(_.pluck(elevationPoints, 'lat'));
         var minElv = _.min(_.pluck(elevationPoints, 'elv'));
-        var maxElv = _.max(_.pluck(elevationPoints, 'elv'));
+        //var maxElv = _.max(_.pluck(elevationPoints, 'elv'));
 
         var sw = {'lat': minLat, 'lng': minLng};
         var nw = {'lat': maxLat, 'lng': minLng};
@@ -175,7 +175,7 @@ define([
         renderer.setSize( width, height );
         $el.append(renderer.domElement);        
         renderer.precision = 'highp';
-            renderer.setClearColor(0x000000, 1)
+            renderer.setClearColor(0x000000, 1);
             renderer.shadowMapEnabled = true;
       };
 
@@ -191,7 +191,6 @@ define([
       * render a single frame
       */
       var render = function(){
-        self = this;
         var animate = function(){         
           requestAnimationFrame(animate);
               controls.update();
@@ -204,5 +203,5 @@ define([
         animate();
       };       
 
-      return ProfileController;
+      return ['$scope', '$rootScope', '$log', 'ProfileIOService', ProfileController];
 });

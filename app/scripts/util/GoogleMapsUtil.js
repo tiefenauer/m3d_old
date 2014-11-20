@@ -1,3 +1,4 @@
+'use strict'
 /**
 * info.tiefenauer.maps3d.util.GoogleMapsUtil
 * Utility class with various static functions regarding GoogleMaps functionality.
@@ -5,7 +6,6 @@
 * @author: Daniel Tiefenauer
 */
 define([], function(){
-
 	/**
 	* Encode an array of coordinates for URL Request
 	* @param coords the coordinates to be encoded
@@ -16,13 +16,13 @@ define([], function(){
 		var plat = 0;
 		var plng = 0;
 	 
-		var encoded_points = "";
+		var encodedPoints = '';
 	 
 		for(i = 0; i < coords.length; ++i) {
 		    var lat = coords[i][0];				
 			var lng = coords[i][1];		
 	 
-			encoded_points += self.encodePoint(plat, plng, lat, lng);
+			encodedPoints += self.encodePoint(plat, plng, lat, lng);
 	 
 		    plat = lat;
 		    plng = lng;
@@ -31,7 +31,7 @@ define([], function(){
 		// close polyline
 		//encoded_points += self.encodePoint(plat, plng, coords[0][0], coords[0][1]);
 	 
-		return encoded_points;
+		return encodedPoints;
 	};
 
 	/**
@@ -56,13 +56,13 @@ define([], function(){
  	* @param num signed numeric value
  	*/
 	var encodeSignedNumber = function(num) {
-	  var sgn_num = num << 1;
+	  var sgnNum = num << 1;
 	 
 	  if (num < 0) {
-	    sgn_num = ~(sgn_num);
+	    sgnNum = ~(sgn_num);
 	  }
 	 
-	  return(self.encodeNumber(sgn_num));
+	  return(self.encodeNumber(sgnNum));
 	};
 	 
 	/**

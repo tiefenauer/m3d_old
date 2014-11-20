@@ -6,7 +6,7 @@ define([
   function (angular, $, _) {
     'use strict';
 
-    var google;
+    var google = window.google;
     var $log, $rootScope;
     var stop;
 

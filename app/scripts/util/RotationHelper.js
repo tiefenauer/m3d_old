@@ -1,7 +1,9 @@
 define(
 	['jquery'
 	,'threejs']
-	,function($, THREE){
+	,function($){
+
+		'use strict';
 
 		var canvas, camera, renderer;
 		var $canvas;
@@ -13,7 +15,6 @@ define(
 
 		var mouseX = 0;
 		var mouseXOnMouseDown = 0;
-		var mouseXOnMouseUp = 0;
 
 		var RotationHelper = function(canvasElement, threeCamera, threeRenderer){
 			camera = threeCamera;
@@ -25,7 +26,7 @@ define(
 				,get targetRotation(){
 					return targetRotation;
 				}
-			}
+			};
 		};
 
 		var initEvents = function(){
@@ -33,7 +34,7 @@ define(
 			canvas.addEventListener( 'touchstart', onDocumentTouchStart.bind(this), false );
 			canvas.addEventListener( 'touchmove', onDocumentTouchMove.bind(this), false );			
 			window.addEventListener( 'resize', onWindowResize.bind(this), false );
-		}
+		};
 
 		var onWindowResize = function() {
 			windowHalfX = $canvas.width() / 2;
@@ -43,7 +44,7 @@ define(
 			camera.updateProjectionMatrix();
 
 			renderer.setSize( $canvas.width(), $canvas.height() );
-		}
+		};
 
 		var onDocumentMouseDown = function( event ) {
 			event.preventDefault();
@@ -54,25 +55,25 @@ define(
 
 			mouseXOnMouseDown = event.clientX - windowHalfX;
 			targetRotationOnMouseDown = targetRotation;
-		}
+		};
 
 		var onDocumentMouseMove = function( event ) {
 			mouseX = event.clientX - windowHalfX;
 			targetRotation = targetRotationOnMouseDown + ( mouseX - mouseXOnMouseDown ) * 0.02;			
-		}
+		};
 
-		var onDocumentMouseUp = function( event ) {
+		var onDocumentMouseUp = function( ) {
 			canvas.removeEventListener( 'mousemove', onDocumentMouseMove, false );
 			canvas.removeEventListener( 'mouseup', onDocumentMouseUp, false );
 			canvas.removeEventListener( 'mouseout', onDocumentMouseOut, false );
-		}
+		};
 
-		var onDocumentMouseOut = function( event ) {
+		var onDocumentMouseOut = function( ) {
 			canvas.removeEventListener( 'mousemove', onDocumentMouseMove.bind(this), false );
 			canvas.removeEventListener( 'mouseup', onDocumentMouseUp.bind(this), false );
 			canvas.removeEventListener( 'mouseout', onDocumentMouseOut.bind(this), false );
 
-		}
+		};
 
 		var onDocumentTouchStart = function( event ) {
 			if ( event.touches.length === 1 ) {
@@ -81,7 +82,7 @@ define(
 				targetRotationOnMouseDown = targetRotation;
 			}
 
-		}
+		};
 
 		var onDocumentTouchMove = function( event ) {
 			if ( event.touches.length === 1 ) {
@@ -89,7 +90,7 @@ define(
 				mouseX = event.touches[ 0 ].pageX - windowHalfX;
 				targetRotation = targetRotationOnMouseDown + ( mouseX - mouseXOnMouseDown ) * 0.05;
 			}
-		}
+		};
 
 		return RotationHelper;
 	}

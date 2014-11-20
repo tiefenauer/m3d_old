@@ -7,8 +7,8 @@ define([
   ,'controllers'
   ,'models'
   ,'decorators'
-  ]/*deps*/, 
-  function (angular)/*invoke*/ {
+  , 'services/profileio']/*deps*/, 
+  function (angular, ProfileioService)/*invoke*/ {
   'use strict';
 
   /**

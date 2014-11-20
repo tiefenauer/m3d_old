@@ -5,7 +5,7 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
   describe('Controller: MapCtrl', function () {
 
     // load the controller's module
-    beforeEach(module('m3dApp.controllers.MapCtrl'));
+    beforeEach(module('m3d.controllers'));
 
     var MapCtrl,
       scope;

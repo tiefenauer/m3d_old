@@ -34,10 +34,4 @@ define([
      * # Log
      * Decorator of the m3dApp
      */
-     /*
-    angular.module('m3dApp.decorators.Log', [])
-      .config(['$provide', function ($provide) {
-        $provide.decorator('$log', ['$delegate', Logger]);
-    }]);
-*/
 });

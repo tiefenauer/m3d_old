@@ -5,7 +5,7 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
   describe('Controller: ProfileCtrl', function () {
 
     // load the controller's module
-    beforeEach(module('m3dApp.controllers.ProfileCtrl'));
+    beforeEach(module('m3d.controllers.ProfileCtrl'));
 
     var ProfileCtrl,
       scope;

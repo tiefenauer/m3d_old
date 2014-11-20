@@ -28,7 +28,7 @@
  *
  */
 (function( define ) {
-    "use strict";
+    'use strict';
 
     define( [], function ( )
     {
@@ -58,7 +58,7 @@
             return this;
         };
 
-        String.method("supplant", function( values, pattern ) {
+        String.method('supplant', function( values, pattern ) {
             var self = this;
             return supplant(self, values, pattern);
         });
