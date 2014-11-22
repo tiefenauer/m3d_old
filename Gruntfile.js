@@ -9,6 +9,8 @@
 
 module.exports = function (grunt) {
 
+  grunt.loadNpmTasks('grunt-karma-coveralls');
+
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
@@ -430,6 +432,16 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+
+    coveralls: {
+        options: {
+            debug: true,
+            coverage_dir: 'coverage',
+            dryRun: true,
+            force: true,
+            recursive: true
+        }
     }
   });
 

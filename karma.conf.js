@@ -73,6 +73,10 @@ module.exports = function(config) {
       ]
     },
 
+    plugins: [
+      'karma-coverage'
+    ]
+
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
