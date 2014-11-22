@@ -61,8 +61,16 @@ module.exports = function(config) {
     },
 
     coverageReporter: {
-      type: 'html',
-      dir: 'coverage/'
+      dir: 'coverage/',
+      reporters: [
+        { type: 'html', subdir: 'report-html'},
+        { type: 'lcov', subdir: 'report-lcov'},
+        { type: 'cobertura', subdir: '.', file: 'cobertura.txt' },
+        { type: 'lcovonly', subdir: '.', file: 'report-lcovonly.txt' },
+        { type: 'teamcity', subdir: '.', file: 'teamcity.txt' },
+        { type: 'text', subdir: '.', file: 'text.txt' },
+        { type: 'text-summary', subdir: '.', file: 'text-summary.txt' }
+      ]
     },
 
 
