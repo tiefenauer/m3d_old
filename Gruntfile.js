@@ -9,8 +9,6 @@
 
 module.exports = function (grunt) {
 
-  grunt.loadNpmTasks('grunt-karma-coveralls');
-
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
@@ -436,14 +434,23 @@ module.exports = function (grunt) {
 
     coveralls: {
         options: {
+          src: 'coverage/report-lcov/lcov.info'
+          ,force: true
+          /*
             debug: true,
-            coverage_dir: 'coverage',
+            coverage_dir: 'coverage/',
             dryRun: true,
             force: true,
             recursive: true
+            */
+        },
+        all: {
+          src: 'coverage/report-lcov/lcov.info'
         }
     }
   });
+
+  grunt.loadNpmTasks('grunt-coveralls');
 
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
