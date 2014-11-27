@@ -30,7 +30,8 @@ require.config({
     'threejs-OrbitControls': '../../bower_components/threejs-controls/controls/OrbitControls',
     'Markdown.Converter': '../../bower_components/requirejs-plugins/lib/Markdown.Converter',
     'angular-bootstrap': '../../bower_components/angular-bootstrap/ui-bootstrap-tpls',
-    'jquery-ui': '../../bower_components/jquery-ui/jquery-ui'
+    'jquery-ui': '../../bower_components/jquery-ui/jquery-ui',
+    'angular-google-maps': '../../bower_components/angular-google-maps/dist/angular-google-maps'
   },
   shim: {
     angular: {
@@ -61,6 +62,9 @@ require.config({
       'angular'
     ],
     'angular-bootstrap': [
+      'angular'
+    ],
+    'angular-google-maps': [
       'angular'
     ],
     'angular-mocks': {

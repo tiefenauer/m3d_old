@@ -17,6 +17,7 @@ define([
       $log.debug('MenuController created');  
       init($rootScope, $scope, $log, $modal);
       $scope.buttonLabel = buttonLabelDefault;
+      $scope.searchbox = { template:'searchbox.tpl.html'};
 
       $scope.calculateHeightMap = calculateHeightMap;
       $scope.showSettings = showSettings;
