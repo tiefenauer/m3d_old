@@ -1,4 +1,5 @@
 node_modules
+original_images
 dist
 .tmp
 .sass-cache
@@ -6,3 +7,4 @@ bower_components
 ftp.txt
 coverage
 .coveralls.yml
+app/images/Thumbs.db

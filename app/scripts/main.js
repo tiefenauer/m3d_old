@@ -30,7 +30,7 @@ require.config({
     'threejs-OrbitControls': '../../bower_components/threejs-controls/controls/OrbitControls',
     'Markdown.Converter': '../../bower_components/requirejs-plugins/lib/Markdown.Converter',
     'angular-bootstrap': '../../bower_components/angular-bootstrap/ui-bootstrap-tpls',
-    jqueryui: '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min'
+    'jquery-ui': '../../bower_components/jquery-ui/jquery-ui'
   },
   shim: {
     angular: {
@@ -70,9 +70,6 @@ require.config({
       exports: 'angular.mock'
     },
     bootstrap: [
-      'jquery'
-    ],
-    jqueryui: [
       'jquery'
     ],
     threejs: {
