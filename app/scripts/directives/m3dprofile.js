@@ -14,14 +14,4 @@ define([
 
     return ProfileDirective;
 
-  /**
-   * @ngdoc directive
-   * @name m3dApp.directive:m3dProfile
-   * @description
-   * # m3dProfile
-   */
-   /*
-  angular.module('m3dApp.directives.M3dprofile', [])
-    .directive('m3dProfile', ProfileDirective);
-    */
 });
