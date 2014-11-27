@@ -28,7 +28,9 @@ require.config({
     noext: '../../bower_components/requirejs-plugins/src/noext',
     propertyParser: '../../bower_components/requirejs-plugins/src/propertyParser',
     'threejs-OrbitControls': '../../bower_components/threejs-controls/controls/OrbitControls',
-    'Markdown.Converter': '../../bower_components/requirejs-plugins/lib/Markdown.Converter'
+    'Markdown.Converter': '../../bower_components/requirejs-plugins/lib/Markdown.Converter',
+    'angular-bootstrap': '../../bower_components/angular-bootstrap/ui-bootstrap-tpls',
+    jqueryui: '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min'
   },
   shim: {
     angular: {
@@ -58,6 +60,9 @@ require.config({
     'angular-touch': [
       'angular'
     ],
+    'angular-bootstrap': [
+      'angular'
+    ],
     'angular-mocks': {
       deps: [
         'angular'
@@ -65,6 +70,9 @@ require.config({
       exports: 'angular.mock'
     },
     bootstrap: [
+      'jquery'
+    ],
+    jqueryui: [
       'jquery'
     ],
     threejs: {
@@ -90,7 +98,8 @@ require([
   'angular-sanitize',
   'angular-resource',
   'angular-animate',
-  'angular-touch'
+  'angular-touch',
+  'angular-bootstrap'
 ], function(angular, app, ngRoutes, ngCookies, ngSanitize, ngResource, ngAnimate, ngTouch) {
   'use strict';
   /* jshint ignore:start */

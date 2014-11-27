@@ -13,16 +13,17 @@ define([
     var buttonLabelProcessing = 'Abbrechen';  
     var google = window.google;
 
-    var MenuController = function ($rootScope, $scope, $log) {
-      $log.debug('MenuController created');        
+    var MenuController = function ($rootScope, $scope, $log, $modal) {
+      $log.debug('MenuController created');  
+      init($rootScope, $scope, $log, $modal);
       $scope.buttonLabel = buttonLabelDefault;
 
       $scope.calculateHeightMap = calculateHeightMap;
+      $scope.showSettings = showSettings;
       $scope.showInfo = showInfo;        
       $scope.showStats = showStats;        
       $scope.showFileUpload = showFileUpload;
       $scope.saveModel = saveModel;      
-      init($rootScope, $scope, $log);
     };
 
     /**
@@ -33,10 +34,11 @@ define([
      * Controller of the m3dApp
      */
 
-    var init = function(rootScope, scope, log){
+    var init = function(rootScope, scope, log, modal){
       $rootScope = rootScope; 
       $scope = scope;
       $log = log;
+      $modal = modal;
       ladda = Ladda.create($('#ladda')[0]);
 
       $scope.$on('adapter:start', function(){
@@ -79,10 +81,18 @@ define([
       fileSelector.click(); 
     };    
 
+    var showSettings = function(){
+      $log.debug('showing settings...');
+      $modal.open({
+         templateUrl: 'views/templates/settings_popup.html'
+        ,controller: 'SettingsCtrl'
+      });
+    };
+
     var showStats = function(){
       $log.debug('showing stats...');
       $modal.open({
-         templateUrl: 'templates/stats_popup.html'
+         templateUrl: 'views/templates/stats_popup.html'
         ,controller: 'StatsController'
       });
     };
@@ -90,8 +100,8 @@ define([
     var showInfo = function(){
       $log.debug('showing info...');
       $modal.open({
-         templateUrl: 'templates/info_popup.html'
-        ,controller: 'InfoController'
+         templateUrl: 'views/templates/info_popup.html'
+        ,controller: 'InfoCtrl'
       });
     };    
 
@@ -105,5 +115,5 @@ define([
       $rootScope.$broadcast('menu:save_button_clicked');
     };    
 
-    return MenuController;
+    return ['$rootScope', '$scope', '$log', '$modal', MenuController];
 });

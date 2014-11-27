@@ -4,8 +4,9 @@ define([
 	,'directives/m3dmenu'
 	,'directives/m3dmap'
 	,'directives/m3dprofile'
+	,'directives/m3dslider'
 	], 
-	function(angular, services, MenuDirective, MapDirective, ProfileDirective) {
+	function(angular, services, MenuDirective, MapDirective, ProfileDirective, SliderDirective) {
 
 		'use strict';
 
@@ -14,6 +15,7 @@ define([
 			.directive('m3dMenu', MenuDirective)
 			.directive('m3dProfile', ProfileDirective)
 			.directive('m3dMap', MapDirective)
+			.directive('m3dSlider', SliderDirective)
 			.directive('appVersion', ['version', function(version) {
 				return function(scope, elm, attrs) {
 					elm.text(version);
