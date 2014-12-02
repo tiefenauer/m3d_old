@@ -13,6 +13,8 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   #Metriken neu erstellen
   npm run metrics
 
+  mkdir gh-pages/metrics
+  mkdir gh-pages/coverage
   cp -R metrics/* gh-pages/metrics
   cp -R coverage/report-html/* gh-pages/coverage
 
