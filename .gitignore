@@ -1,5 +1,6 @@
 node_modules
 original_images
+metrics
 dist
 .tmp
 .sass-cache
