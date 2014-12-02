@@ -1,6 +1,19 @@
 {
   "name": "m3d",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Maps3D+",
+  "author": "Daniel Tiefenauer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tiefenauer/m3d"
+  },
+  "homepage": "http://tiefenauer.github.io/m3d/",
+  "keywords": [
+    "m3d",
+    "maps3d",
+    "maps3dplus",
+    "maps3d+"
+  ],
   "dependencies": {},
   "devDependencies": {
     "grunt": "^0.4.5",
