@@ -10,3 +10,4 @@ coverage
 .coveralls.yml
 app/images/Thumbs.db
 oauth.txt
+update-gh-pages-local.sh

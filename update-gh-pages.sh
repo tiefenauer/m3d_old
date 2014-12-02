@@ -1,22 +1,25 @@
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   echo -e "Starting to update gh-pages\n"
 
-  #copy data we're interested in to other place
-  cp -R metrics $HOME/metrics
-  cp -R coverage/report-html/* $HOME/coverage  
+  #clone gh-pages
+  rm -rf gh-pages
+  git clone --quiet --branch=gh-pages https://282c3a02293a357c6bbd7bb494ff691f8bcd9ee0@github.com/tiefenauer/m3d.git  gh-pages > /dev/null
 
-  #go to home and setup git
-  cd $HOME
+  #bestehende Metriken ins Arbeitsverzeichnis kopieren (für History)
+  mkdir metrics
+  mkdir coverage
+  cp -Rf gh-pages/metrics/* metrics
+
+  #Metriken neu erstellen
+  npm run metrics
+
+  cp -R metrics gh-pages/metrics
+  cp -R coverage/report-html/* gh-pages/coverage
+
+  #go to updated pages and setup git
+  cd gh-pages
   git config --global user.email "travis@travis-ci.org"
   git config --global user.name "Travis"
-
-  #using token clone gh-pages branch
-  git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/tiefenauer/m3d.git  gh-pages > /dev/null
-
-  #go into diractory and copy data we're interested in to that directory
-  cd gh-pages
-  cp -Rf $HOME/metrics .
-  cp -Rf $HOME/coverage . 
 
   #add, commit and push files
   git add -f .

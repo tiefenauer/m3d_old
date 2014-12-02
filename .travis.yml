@@ -12,7 +12,6 @@ script:
 - grunt build
 - grunt test
 - grunt coveralls
-- npm run metrics
 after_success:
 - chmod +x ./update-gh-pages.sh
 - ./update-gh-pages.sh
