@@ -1,6 +1,9 @@
 language: node_js
 node_js:
 - '0.10'
+env:
+  global:
+    secure: RpDbeZbKIMQ5pg2MZI7I10dEqeH42ltOkQEVcg7UqvK6wHYp5ZmGwkQf9AIwsIgYpTPB+pT3m4LKD9KI2vT2dZYdONzLJiDGdi+hCAvT+HkdSQZd36VDcLeeQH5v52anllncwRcWz7lmSSQUl+ccZPeObdlRk1tr4IVX6IV0LEM=
 before_script:
 - npm install -g bower grunt-cli
 - gem update --system && gem install compass
@@ -12,9 +15,6 @@ script:
 - npm run metrics
 after_success:
 - cd dist
+- ./update-gh-pages.sh
 - find . -type f -exec curl -u $FTP_USER:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://ftp.tiefenauer.info/web/m3d/{}
   \;
-env:
-  global:
-  - secure: rLNb1EBs1tP8OfcldV8Tvd7/NYoOvBo7+sv7TZlCLgDfxakfEkI/JMxOatN9Ul+FPcyl1gjIUhf4Om1LZUG81VD58tv0fhd/XCe7XPOjHSn/Zku0ffLeq5Tg3bmGm23nuJO7K27Mm4TXn5ICWrUKdPNtpw11MIEQThgQxXqn3jM=
-  - secure: byoIfHum2JjqgYgElwNSYyWgrBoPAwr+BVlfSFUacuNJ13FK39YiyW1eIfNAEUKE5u2/hiUMBOdUgXNF/qQSoMSiagQuYjG7NhvccsNxySoInmJERevyhbzFBRunBXr+W/6hILyNBSa6/vErJP+iq0kfhPVvIbN9eumyXmz1DVc=
