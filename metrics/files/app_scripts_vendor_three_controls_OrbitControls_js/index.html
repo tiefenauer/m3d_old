@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - app/scripts/vendor/three/controls/OrbitControls.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>app/scripts/vendor/three/controls/OrbitControls.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.48</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">416</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">63.88</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">3.10</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">require([
+	&#039;threejs&#039;
+	], function(THREE){
+
+	/**
+	 * @author qiao / https://github.com/qiao
+	 * @author mrdoob / http://mrdoob.com
+	 * @author alteredq / http://alteredqualia.com/
+	 * @author WestLangley / http://github.com/WestLangley
+	 */
+	THREE.OrbitControls = function ( object, domElement ) {
+
+		this.object = object;
+		this.domElement = ( domElement !== undefined ) ? domElement : document;
+
+		// API
+
+		this.enabled = true;
+
+		this.center = new THREE.Vector3();
+
+		this.userZoom = true;
+		this.userZoomSpeed = 1.0;
+
+		this.userRotate = true;
+		this.userRotateSpeed = 1.0;
+
+		this.userPan = true;
+		this.userPanSpeed = 2.0;
+
+		this.autoRotate = false;
+		this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
+
+		this.minPolarAngle = 0; // radians
+		this.maxPolarAngle = Math.PI; // radians
+
+		// How far you can orbit horizontally, upper and lower limits.
+		// Range is - Math.PI to Math.PI radians.
+		this.constrainAzimuth = true;
+		this.minAzimuthAngle = - 0.5 * Math.PI; // radians
+		this.maxAzimuthAngle = 0.5 * Math.PI; // radians
+
+		this.minDistance = 0;
+		this.maxDistance = Infinity;
+
+		// 65 /*A*/, 83 /*S*/, 68 /*D*/
+		this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, ROTATE: 65, ZOOM: 83, PAN: 68 };
+
+		// internals
+
+		var scope = this;
+
+		var EPS = 0.000001;
+		var PIXELS_PER_ROUND = 1800;
+
+		var rotateStart = new THREE.Vector2();
+		var rotateEnd = new THREE.Vector2();
+		var rotateDelta = new THREE.Vector2();
+
+		var zoomStart = new THREE.Vector2();
+		var zoomEnd = new THREE.Vector2();
+		var zoomDelta = new THREE.Vector2();
+
+		var phiDelta = 0;
+		var thetaDelta = 0;
+		var scale = 1;
+
+		var lastPosition = new THREE.Vector3();
+
+		var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2 };
+		var state = STATE.NONE;
+
+		// events
+
+		var changeEvent = { type: &#039;change&#039; };
+
+
+		this.rotateLeft = function ( angle ) {
+
+			if ( angle === undefined ) {
+
+				angle = getAutoRotationAngle();
+
+			}
+
+			thetaDelta -= angle;
+
+		};
+
+		this.rotateRight = function ( angle ) {
+
+			if ( angle === undefined ) {
+
+				angle = getAutoRotationAngle();
+
+			}
+
+			thetaDelta += angle;
+
+		};
+
+		this.rotateUp = function ( angle ) {
+
+			if ( angle === undefined ) {
+
+				angle = getAutoRotationAngle();
+
+			}
+
+			phiDelta -= angle;
+
+		};
+
+		this.rotateDown = function ( angle ) {
+
+			if ( angle === undefined ) {
+
+				angle = getAutoRotationAngle();
+
+			}
+
+			phiDelta += angle;
+
+		};
+
+		this.zoomIn = function ( zoomScale ) {
+
+			if ( zoomScale === undefined ) {
+
+				zoomScale = getZoomScale();
+
+			}
+
+			scale /= zoomScale;
+
+		};
+
+		this.zoomOut = function ( zoomScale ) {
+
+			if ( zoomScale === undefined ) {
+
+				zoomScale = getZoomScale();
+
+			}
+
+			scale *= zoomScale;
+
+		};
+
+		this.pan = function ( distance ) {
+
+			distance.transformDirection( this.object.matrix );
+			distance.multiplyScalar( scope.userPanSpeed );
+
+			this.object.position.add( distance );
+			this.center.add( distance );
+
+		};
+
+		this.update = function () {
+
+			var position = this.object.position;
+			var offset = position.clone().sub( this.center );
+
+			// angle from z-axis around y-axis
+
+			var theta = Math.atan2( offset.x, offset.z );
+
+			// angle from y-axis
+
+			var phi = Math.atan2( Math.sqrt( offset.x * offset.x + offset.z * offset.z ), offset.y );
+
+			if ( this.autoRotate ) {
+
+				this.rotateLeft( getAutoRotationAngle() );
+
+			}
+
+			theta += thetaDelta;
+			phi += phiDelta;
+
+			// restrict phi to be between desired limits
+			phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, phi ) );
+		    if ( this.constrainAzimuth ) theta = Math.max( this.minAzimuthAngle, Math.min( this.maxAzimuthAngle, theta ) );
+
+
+			// restrict phi to be betwee EPS and PI-EPS
+			phi = Math.max( EPS, Math.min( Math.PI - EPS, phi ) );
+
+			var radius = offset.length() * scale;
+
+			// restrict radius to be between desired limits
+			radius = Math.max( this.minDistance, Math.min( this.maxDistance, radius ) );
+
+			offset.x = radius * Math.sin( phi ) * Math.sin( theta );
+			offset.y = radius * Math.cos( phi );
+			offset.z = radius * Math.sin( phi ) * Math.cos( theta );
+
+			position.copy( this.center ).add( offset );
+
+			this.object.lookAt( this.center );
+
+			thetaDelta = 0;
+			phiDelta = 0;
+			scale = 1;
+
+			if ( lastPosition.distanceTo( this.object.position ) &gt; 0 ) {
+
+				this.dispatchEvent( changeEvent );
+
+				lastPosition.copy( this.object.position );
+
+			}
+
+		};
+
+
+		function getAutoRotationAngle() {
+
+			return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
+
+		}
+
+		function getZoomScale() {
+
+			return Math.pow( 0.95, scope.userZoomSpeed );
+
+		}
+
+		function onMouseDown( event ) {
+
+			if ( scope.enabled === false ) return;
+			if ( scope.userRotate === false ) return;
+
+			event.preventDefault();
+
+			if ( state === STATE.NONE )
+			{
+				if ( event.button === 0 )
+					state = STATE.ROTATE;
+				if ( event.button === 1 )
+					state = STATE.ZOOM;
+				if ( event.button === 2 )
+					state = STATE.PAN;
+			}
+			
+			
+			if ( state === STATE.ROTATE ) {
+
+				//state = STATE.ROTATE;
+
+				rotateStart.set( event.clientX, event.clientY );
+
+			} else if ( state === STATE.ZOOM ) {
+
+				//state = STATE.ZOOM;
+
+				zoomStart.set( event.clientX, event.clientY );
+
+			} else if ( state === STATE.PAN ) {
+
+				//state = STATE.PAN;
+
+			}
+
+			document.addEventListener( &#039;mousemove&#039;, onMouseMove, false );
+			document.addEventListener( &#039;mouseup&#039;, onMouseUp, false );
+
+		}
+
+		function onMouseMove( event ) {
+
+			if ( scope.enabled === false ) return;
+
+			event.preventDefault();
+
+			
+			
+			if ( state === STATE.ROTATE ) {
+
+				rotateEnd.set( event.clientX, event.clientY );
+				rotateDelta.subVectors( rotateEnd, rotateStart );
+
+				scope.rotateLeft( 2 * Math.PI * rotateDelta.x / PIXELS_PER_ROUND * scope.userRotateSpeed );
+				scope.rotateUp( 2 * Math.PI * rotateDelta.y / PIXELS_PER_ROUND * scope.userRotateSpeed );
+
+				rotateStart.copy( rotateEnd );
+
+			} else if ( state === STATE.ZOOM ) {
+
+				zoomEnd.set( event.clientX, event.clientY );
+				zoomDelta.subVectors( zoomEnd, zoomStart );
+
+				if ( zoomDelta.y &gt; 0 ) {
+
+					scope.zoomIn();
+
+				} else {
+
+					scope.zoomOut();
+
+				}
+
+				zoomStart.copy( zoomEnd );
+
+			} else if ( state === STATE.PAN ) {
+
+				var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+				var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+				scope.pan( new THREE.Vector3( - movementX, movementY, 0 ) );
+
+			}
+
+		}
+
+		function onMouseUp( event ) {
+
+			if ( scope.enabled === false ) return;
+			if ( scope.userRotate === false ) return;
+
+			document.removeEventListener( &#039;mousemove&#039;, onMouseMove, false );
+			document.removeEventListener( &#039;mouseup&#039;, onMouseUp, false );
+
+			state = STATE.NONE;
+
+		}
+
+		function onMouseWheel( event ) {
+
+			if ( scope.enabled === false ) return;
+			if ( scope.userZoom === false ) return;
+
+			var delta = 0;
+
+			if ( event.wheelDelta ) { // WebKit / Opera / Explorer 9
+
+				delta = event.wheelDelta;
+
+			} else if ( event.detail ) { // Firefox
+
+				delta = - event.detail;
+
+			}
+
+			if ( delta &gt; 0 ) {
+
+				scope.zoomOut();
+
+			} else {
+
+				scope.zoomIn();
+
+			}
+
+		}
+
+		function onKeyDown( event ) {
+
+			if ( scope.enabled === false ) return;
+			if ( scope.userPan === false ) return;
+
+			switch ( event.keyCode ) {
+
+				/*case scope.keys.UP:
+					scope.pan( new THREE.Vector3( 0, 1, 0 ) );
+					break;
+				case scope.keys.BOTTOM:
+					scope.pan( new THREE.Vector3( 0, - 1, 0 ) );
+					break;
+				case scope.keys.LEFT:
+					scope.pan( new THREE.Vector3( - 1, 0, 0 ) );
+					break;
+				case scope.keys.RIGHT:
+					scope.pan( new THREE.Vector3( 1, 0, 0 ) );
+					break;
+				*/
+				case scope.keys.ROTATE:
+					state = STATE.ROTATE;
+					break;
+				case scope.keys.ZOOM:
+					state = STATE.ZOOM;
+					break;
+				case scope.keys.PAN:
+					state = STATE.PAN;
+					break;
+					
+			}
+
+		}
+		
+		function onKeyUp( event ) {
+
+			switch ( event.keyCode ) {
+
+				case scope.keys.ROTATE:
+				case scope.keys.ZOOM:
+				case scope.keys.PAN:
+					state = STATE.NONE;
+					break;
+			}
+
+		}
+
+		this.domElement.addEventListener( &#039;contextmenu&#039;, function ( event ) { event.preventDefault(); }, false );
+		this.domElement.addEventListener( &#039;mousedown&#039;, onMouseDown, false );
+		this.domElement.addEventListener( &#039;mousewheel&#039;, onMouseWheel, false );
+		this.domElement.addEventListener( &#039;DOMMouseScroll&#039;, onMouseWheel, false ); // firefox
+		window.addEventListener( &#039;keydown&#039;, onKeyDown, false );
+		window.addEventListener( &#039;keyup&#039;, onKeyUp, false );
+
+	};
+
+	THREE.OrbitControls.prototype = Object.create( THREE.EventDispatcher.prototype );		
+
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - app/scripts/controllers/profile.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>app/scripts/controllers/profile.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">61.70</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">226</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">36.73</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.52</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">define([
+  &#039;angular&#039;
+  ,&#039;jquery&#039;
+  ,&#039;threejs&#039;
+  ,&#039;lodash&#039;
+  ,&#039;util/GoogleMapsUtil&#039;
+  ,&#039;util/RotationHelper&#039;  
+  ,&#039;vendor/three/controls/OrbitControls&#039;    
+  ], 
+  function (angular, $, THREE, _, GoogleMapsUtil, RotationHelper) {
+    &#039;use strict&#039;;
+
+      var el, $el;
+      var $log, $rootScope, $scope;
+      var renderer, camera, controls, scene, mesh;
+      var rotationHelper;
+      var objects = [];
+      var io;
+
+      var ProfileController = function ($scope, $rootScope, $log, ProfileIOService) {
+        $log.debug(&#039;ProfileController created&#039;);        
+        init($scope, $rootScope, $log, ProfileIOService);
+
+        scene = new THREE.Scene();
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+
+        initScene();
+        initRenderer();
+        render();
+      };
+
+      /**
+       * @ngdoc function
+       * @name m3dApp.controller:ProfileCtrl
+       * @description
+       * # ProfileCtrl
+       * Controller of the m3dApp
+       */
+
+      var init = function(scope, rootScope, logger, ProfileIOService){
+        $log = logger;
+        $scope = scope;
+        $rootScope = rootScope;
+        io = ProfileIOService;
+
+        el = $(&#039;#profile&#039;)[0];
+        $el = $(el);
+
+        $scope.$on(&#039;adapter:end&#039;, draw);
+        $scope.$on(&#039;io:model:loaded&#039;, drawGeometry);
+        $scope.$on(&#039;menu:save_button_clicked&#039;, function(){
+          io.save(objects);
+        });
+      };  
+
+      /**
+      * Remove all objects from canvas
+      */
+      var clearScene = function(){
+        _.each(objects, function(object){
+          scene.remove(object);
+        });
+        objects = [];
+      };
+
+      var drawGeometry = function(event, data){
+        clearScene();
+        if (data.geometry instanceof THREE.Scene){
+          scene = data.geometry;
+          objects = data.geometry.children;
+          initScene();
+          initRenderer();
+          render();
+        }
+        else{
+          var mesh = new THREE.Mesh(data.geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
+          mesh.geometry.mergeVertices();
+          mesh.geometry.computeVertexNormals();
+          mesh.name = data.fileName;    
+          add(mesh);
+        }
+      };
+
+      /**
+      * Draw elevation profile
+      * @param elevationPoints the ProfilePoint objects (including elevation data) for which the elevation profile should be drawn
+      */
+      var draw = function(event, elevationPoints){
+        clearScene();
+
+        // Höhe/Breite und Anzahl Segments berechnen
+        var minLng = _.min(_.pluck(elevationPoints, &#039;lng&#039;));
+        var maxLng = _.max(_.pluck(elevationPoints, &#039;lng&#039;));
+        var minLat = _.min(_.pluck(elevationPoints, &#039;lat&#039;));
+        var maxLat = _.max(_.pluck(elevationPoints, &#039;lat&#039;));
+        var minElv = _.min(_.pluck(elevationPoints, &#039;elv&#039;));
+        //var maxElv = _.max(_.pluck(elevationPoints, &#039;elv&#039;));
+
+        var sw = {&#039;lat&#039;: minLat, &#039;lng&#039;: minLng};
+        var nw = {&#039;lat&#039;: maxLat, &#039;lng&#039;: minLng};
+        var ne = {&#039;lat&#039;: maxLat, &#039;lng&#039;: maxLng};
+        var height = Math.floor(GoogleMapsUtil.degreeToMeter(sw, nw) / 100) * 10;
+        var width = Math.floor(GoogleMapsUtil.degreeToMeter(nw, ne) / 100) * 10;
+        var segments = Math.sqrt(elevationPoints.length) - 1;
+        var thickness = localStorage.getItem(&#039;thickness&#039;) || 2;
+        
+        // Ebene konstruieren
+            var planeTop = new THREE.Mesh( new THREE.BoxGeometry(thickness, height, width, 1, segments, segments),
+                                        new THREE.MeshPhongMaterial({color: 0x00ff00
+                                                      ,dynamic: true
+                                                    //  ,shading: THREE.FlatShading
+                                                    })
+                                    );
+
+            var rotationZ = new THREE.Matrix4().makeRotationZ( - Math.PI/2 );
+            var rotationX = new THREE.Matrix4().makeRotationX( Math.PI );
+            planeTop.updateMatrix();
+            planeTop.geometry.applyMatrix(planeTop.matrix);
+            planeTop.geometry.applyMatrix(rotationZ);
+            planeTop.geometry.applyMatrix(rotationX);
+            planeTop.matrix.identity();
+
+
+        //plane.material.side = THREE.DoubleSide;
+        // Höhen der Punkte anpassen
+        var diff = 0;
+        var side = Math.sqrt(elevationPoints.length);
+        
+        //planeTop.geometry.vertices.length
+        for(var i=0; i &lt; elevationPoints.length; i++){
+          diff = elevationPoints[i].elv - minElv;         
+          var bottomIndex = (i-i%side) + elevationPoints.length + ((i-i%side)/side + 1)*side - i - 1;
+          planeTop.geometry.vertices[i].y += diff / 10; 
+          planeTop.geometry.vertices[bottomIndex].y += diff / 10;
+        }
+
+        planeTop.geometry.computeFaceNormals();
+        planeTop.geometry.computeVertexNormals();
+        mesh = planeTop;
+            add(planeTop);
+      };
+
+      var add = function(object){
+        mesh = object;
+        scene.add(object);
+        objects.push(object);
+      };
+
+      var initScene = function(){        
+        var topLight = new THREE.PointLight( 0x404040, 1.8 );
+        topLight.position.set( 1000, 1000, 1000 );       
+
+        var bottomLight = new THREE.PointLight( 0xffffff, 0.4 );  
+        bottomLight.position.set(0, -500, 0);
+
+        var hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.3 ); 
+        hemiLight.color.setHSL( 0.6, 1, 0.6 );
+        hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+        hemiLight.position.set( 0, 500, 0 );        
+
+        var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+
+        // red=X, green=Y, blue=Z
+        // inset AxisHelper: http://jsfiddle.net/CBAyS/21/
+        // Helpers: http://danni-three.blogspot.ch/2013/09/threejs-helpers.html
+        var axis = new THREE.AxisHelper(100);
+        var grid = new THREE.GridHelper(10,1);      
+
+        scene.add( topLight );
+        scene.add(hemiLight);
+        scene.add( bottomLight );
+        scene.add(ambientLight);
+        scene.add(axis);
+        scene.add(grid);
+        initCamera();     
+        initControls();               
+      };
+
+      var initCamera = function(){
+        var width = $el.width();
+        var height = $el.height();
+        camera = new THREE.PerspectiveCamera(45,  width/height, 0.1, 20000);
+        scene.add(camera);
+        camera.position.set(500,500,500);
+        camera.lookAt(scene.position);
+      };
+
+      var initRenderer = function(){
+        var width = $el.width();
+        var height = $el.height();
+        renderer.setSize( width, height );
+        $el.append(renderer.domElement);        
+        renderer.precision = &#039;highp&#039;;
+        renderer.setClearColor(0x000000, 1);
+        renderer.shadowMapEnabled = true;
+
+        rotationHelper = new RotationHelper(renderer.domElement, camera, renderer);     
+        rotationHelper.initEvents();         
+      };
+
+      var initControls = function(){
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.target = new THREE.Vector3(0,0,0);
+        controls.minAzimuthAngle = 0;
+        controls.maxAzimuthAngle = 0;
+        controls.noRotate = true;     
+      };
+
+      /**
+      * render a single frame
+      */
+      var render = function(){
+        var animate = function(){         
+          requestAnimationFrame(animate);
+              controls.update();
+              _.each(objects, function(mesh){
+                var rotation = (rotationHelper.targetRotation - mesh.rotation.y) * 0.05;
+                mesh.rotation.y += rotation;
+              });              
+          renderer.render(scene, camera);         
+        };
+        animate();
+      };       
+
+      return [&#039;$scope&#039;, &#039;$rootScope&#039;, &#039;$log&#039;, &#039;ProfileIOService&#039;, ProfileController];
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - app/scripts/util/GoogleMapsUtil.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>app/scripts/util/GoogleMapsUtil.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">66.71</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">130</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">44.70</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.97</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">&#039;use strict&#039;
+/**
+* info.tiefenauer.maps3d.util.GoogleMapsUtil
+* Utility class with various static functions regarding GoogleMaps functionality.
+* (c) 2014 Daniel Tiefenauer
+* @author: Daniel Tiefenauer
+*/
+define([], function(){
+	/**
+	* Encode an array of coordinates for URL Request
+	* @param coords the coordinates to be encoded
+	*/
+	var createEncodings = function (coords) {
+		var i = 0;
+	 
+		var plat = 0;
+		var plng = 0;
+	 
+		var encodedPoints = &#039;&#039;;
+	 
+		for(i = 0; i &lt; coords.length; ++i) {
+		    var lat = coords[i][0];				
+			var lng = coords[i][1];		
+	 
+			encodedPoints += self.encodePoint(plat, plng, lat, lng);
+	 
+		    plat = lat;
+		    plng = lng;
+		}
+	 
+		// close polyline
+		//encoded_points += self.encodePoint(plat, plng, coords[0][0], coords[0][1]);
+	 
+		return encodedPoints;
+	};
+
+	/**
+	* Encode a single points for URL Request
+	* @param the point to be encoded
+	*/	 
+	var encodePoint = function(plat, plng, lat, lng) {
+		var late5 = Math.round(lat * 1e5);
+	    var plate5 = Math.round(plat * 1e5);    
+	 
+		var lnge5 = Math.round(lng * 1e5);
+	    var plnge5 = Math.round(plng * 1e5);
+	 
+		dlng = lnge5 - plnge5;
+		dlat = late5 - plate5;
+	 
+	    return self.encodeSignedNumber(dlat) + self.encodeSignedNumber(dlng);
+	};
+ 
+ 	/**
+ 	* encode a signed number
+ 	* @param num signed numeric value
+ 	*/
+	var encodeSignedNumber = function(num) {
+	  var sgnNum = num &lt;&lt; 1;
+	 
+	  if (num &lt; 0) {
+	    sgnNum = ~(sgn_num);
+	  }
+	 
+	  return(self.encodeNumber(sgnNum));
+	};
+	 
+	/**
+	* Encode an unsigned number
+	* @param num unsigned numeric value
+	*/
+	var encodeNumber = function(num) {
+	  var encodeString = &quot;&quot;;
+	 
+	  while (num &gt;= 0x20) {
+	    encodeString += (String.fromCharCode((0x20 | (num &amp; 0x1f)) + 63));
+	    num &gt;&gt;= 5;
+	  }
+	 
+	  encodeString += (String.fromCharCode(num + 63));
+	  return encodeString;
+	};
+
+	/**
+	* Calculate distance between two points on earth in meters using the haversine formula.
+	* @param p1 first point
+	* @param p2 second point
+	* @see http://en.wikipedia.org/wiki/Haversine_formula
+	*/
+	var degreeToMeter = function(p1, p2){
+		Number.prototype.toRad = function () { return this * Math.PI / 180; }
+		var R = 6371; // Earth radius in km
+		var dLat = Number(Math.max(p1.lat, p2.lat)-Math.min(p1.lat, p2.lat)).toRad();
+		var dLng = Number(Math.max(p1.lng, p2.lng)-Math.min(p1.lng, p2.lng)).toRad();
+		var lat1 = Number(p1.lat).toRad();
+		var lat2 = Number(p2.lat).toRad();
+
+		var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+		        Math.sin(dLng/2) * Math.sin(dLng/2) * Math.cos(lat1) * Math.cos(lat2); 
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		var d = R * c;
+		return d*1000;
+	};
+
+	/**
+	* Convert an angle from radian to degree
+	* @param angle value in radian
+	*/ 
+	var toDegree = function(angle){
+		return angle * (180/Math.PI);
+	};
+
+	/**
+	* Convert an angle from degree to radian
+	* @param angle value in degree
+	*/
+	var toRad = function(angle){
+		return angle * (Math.PI/180);
+	};		
+
+	return {
+		 createEncodings: createEncodings
+		,encodePoint: encodePoint
+		,encodeSignedNumber: encodeSignedNumber
+		,encodeNumber: encodeNumber
+		,degreeToMeter: degreeToMeter
+		,toDegree: toDegree
+		,toRad: toRad
+	};
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
