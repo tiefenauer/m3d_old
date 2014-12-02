@@ -9,3 +9,4 @@ ftp.txt
 coverage
 .coveralls.yml
 app/images/Thumbs.db
+oauth.txt
