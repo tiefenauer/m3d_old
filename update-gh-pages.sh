@@ -2,7 +2,8 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   echo -e "Starting to update gh-pages\n"
 
   #copy data we're interested in to other place
-  cp -R metrics $HOME/coverage
+  cp -R metrics $HOME/metrics
+  cp -R coverage/report-html/* $HOME/coverage  
 
   #go to home and setup git
   cd $HOME
@@ -14,7 +15,8 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 
   #go into diractory and copy data we're interested in to that directory
   cd gh-pages
-  cp -Rf $HOME/coverage/* .
+  cp -Rf $HOME/metrics .
+  cp -Rf $HOME/coverage .  
 
   #add, commit and push files
   git add -f .
