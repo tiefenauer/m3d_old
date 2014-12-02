@@ -3,7 +3,7 @@ node_js:
 - '0.10'
 env:
   global:
-    secure: RpDbeZbKIMQ5pg2MZI7I10dEqeH42ltOkQEVcg7UqvK6wHYp5ZmGwkQf9AIwsIgYpTPB+pT3m4LKD9KI2vT2dZYdONzLJiDGdi+hCAvT+HkdSQZd36VDcLeeQH5v52anllncwRcWz7lmSSQUl+ccZPeObdlRk1tr4IVX6IV0LEM=
+    secure: CMCKwpeZ/T4mLZRaNCD/ss2Ukcm/GZtn78r7VKFMCAnKZaMkCIP/v4i+S4oPjILUEwIwit9ptFoOtW2ctwWGBhF5p6w5AkcpyGPdtl/ZljzRSpWoY1LK46aukzGXVOqh1vOujglnO5iJZL+EoaDnb8z+6oeeNOglrZZZA8RKeKY=
 before_script:
 - npm install -g bower grunt-cli
 - gem update --system && gem install compass

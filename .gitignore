@@ -11,3 +11,4 @@ coverage
 app/images/Thumbs.db
 oauth.txt
 update-gh-pages-local.sh
+create-oauth-token.sh

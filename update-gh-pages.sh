@@ -3,7 +3,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 
   #clone gh-pages
   rm -rf gh-pages
-  git clone --quiet --branch=gh-pages https://282c3a02293a357c6bbd7bb494ff691f8bcd9ee0@github.com/tiefenauer/m3d.git  gh-pages > /dev/null
+  git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/tiefenauer/m3d.git  gh-pages > /dev/null
 
   #bestehende Metriken ins Arbeitsverzeichnis kopieren (für History)
   mkdir metrics
