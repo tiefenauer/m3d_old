@@ -17,7 +17,7 @@ define([
 			.directive('m3dMap', MapDirective)
 			.directive('m3dSlider', SliderDirective)
 			.directive('appVersion', ['version', function(version) {
-				return function(scope, elm, attrs) {
+				return function(scope, elm) {
 					elm.text(version);
 			};
 		}]);

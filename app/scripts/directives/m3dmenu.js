@@ -1,8 +1,8 @@
-define([
-  'angular'
-  ], 
-  function (angular) {
-  'use strict';
+'use strict'
+
+define([], 
+  function () {
+  
 
   var MenuDirective = function () {
     return {

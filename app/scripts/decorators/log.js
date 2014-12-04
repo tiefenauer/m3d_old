@@ -27,11 +27,4 @@ define([
 
     return Logger;
 
-    /**
-     * @ngdoc function
-     * @name m3dApp.decorator:Log
-     * @description
-     * # Log
-     * Decorator of the m3dApp
-     */
 });

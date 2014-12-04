@@ -1,8 +1,7 @@
-define([
-  'angular'
-  ], 
-  function (angular) {
-    'use strict';
+'use strict'
+
+define([], 
+  function () {
 
     var ProfileDirective = function () {
       return {
