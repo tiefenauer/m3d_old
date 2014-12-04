@@ -1,0 +1,1 @@
+define([],function(){var QUERY_PARAM="noext";return{load:function(name,req,onLoad){req([req.toUrl(name)],function(mod){onLoad(mod)})},normalize:function(name){return name+=name.indexOf("?")<0?"?":"&",name+QUERY_PARAM+"=1"}}});

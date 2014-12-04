@@ -48,7 +48,7 @@
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">381</p>
+      <p class="stat">382</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">87.84</p>
+      <p class="stat">87.46</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">4.01</p>
+      <p class="stat">4.02</p>
     </div>
   </div>
 </div>
@@ -89,7 +89,10 @@
 
 <div class="container">
   <div class="row">
-    <textarea id="file-source" class="col-md-12">define([
+    <textarea id="file-source" class="col-md-12">/* jshint ignore:start */
+
+&#039;use strict&#039;;
+define([
 	&#039;threejs&#039;
 	],
 	function(THREE){
@@ -167,11 +170,11 @@
 
 			var isBinary = function () {
 
-				var expect, face_size, n_faces, reader;
+				var expect, faceSize, nFaces, reader;
 				reader = new DataView( binData );
-				face_size = (32 / 8 * 3) + ((32 / 8 * 3) * 3) + (16 / 8);
-				n_faces = reader.getUint32(80,true);
-				expect = 80 + (32 / 8) + (n_faces * face_size);
+				faceSize = (32 / 8 * 3) + ((32 / 8 * 3) * 3) + (16 / 8);
+				nFaces = reader.getUint32(80,true);
+				expect = 80 + (32 / 8) + (nFaces * faceSize);
 				return expect === reader.byteLength;
 
 			};
@@ -267,11 +270,11 @@
 
 		THREE.STLLoader.prototype.ensureString = function (buf) {
 
-			if (typeof buf !== &quot;string&quot;){
-				var array_buffer = new Uint8Array(buf);
+			if (typeof buf !== &#039;string&#039;){
+				var arrayBuffer = new Uint8Array(buf);
 				var str = &#039;&#039;;
 				for(var i = 0; i &lt; buf.byteLength; i++) {
-					str += String.fromCharCode(array_buffer[i]); // implicitly assumes little-endian
+					str += String.fromCharCode(arrayBuffer[i]); // implicitly assumes little-endian
 				}
 				return str;
 			} else {
@@ -282,12 +285,12 @@
 
 		THREE.STLLoader.prototype.ensureBinary = function (buf) {
 
-			if (typeof buf === &quot;string&quot;){
-				var array_buffer = new Uint8Array(buf.length);
+			if (typeof buf === &#039;string&#039;){
+				var arrayBuffer = new Uint8Array(buf.length);
 				for(var i = 0; i &lt; buf.length; i++) {
-					array_buffer[i] = buf.charCodeAt(i) &amp; 0xff; // implicitly assumes little-endian
+					arrayBuffer[i] = buf.charCodeAt(i) &amp; 0xff; // implicitly assumes little-endian
 				}
-				return array_buffer.buffer || array_buffer;
+				return arrayBuffer.buffer || arrayBuffer;
 			} else {
 				return buf;
 			}
@@ -303,7 +306,7 @@
 				this.buffer = buffer;
 				this.byteOffset = byteOffset || 0;
 				this.byteLength = byteLength || buffer.byteLength || buffer.length;
-				this._isString = typeof buffer === &quot;string&quot;;
+				this._isString = typeof buffer === &#039;string&#039;;
 
 			}
 
@@ -469,7 +472,9 @@
 		}
 
 	}
-);</textarea>
+);
+
+/* jshint ignore:end */</textarea>
   </div>
 </div>
 

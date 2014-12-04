@@ -598,7 +598,13 @@
 380
 381
 382
-383</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+383
+384
+385
+386</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -980,7 +986,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">define([
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* jshint ignore:start */
+&nbsp;
+'use strict';
+define([
 	'threejs'
 	],
 	function(THREE){
@@ -1058,11 +1067,11 @@
 &nbsp;
 <span class="cstat-no" title="statement not covered" >			var isBinary = <span class="fstat-no" title="function not covered" >function () {</span></span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >				var expect, face_size, n_faces, reader;</span>
+<span class="cstat-no" title="statement not covered" >				var expect, faceSize, nFaces, reader;</span>
 <span class="cstat-no" title="statement not covered" >				reader = new DataView( binData );</span>
-<span class="cstat-no" title="statement not covered" >				face_size = (32 / 8 * 3) + ((32 / 8 * 3) * 3) + (16 / 8);</span>
-<span class="cstat-no" title="statement not covered" >				n_faces = reader.getUint32(80,true);</span>
-<span class="cstat-no" title="statement not covered" >				expect = 80 + (32 / 8) + (n_faces * face_size);</span>
+<span class="cstat-no" title="statement not covered" >				faceSize = (32 / 8 * 3) + ((32 / 8 * 3) * 3) + (16 / 8);</span>
+<span class="cstat-no" title="statement not covered" >				nFaces = reader.getUint32(80,true);</span>
+<span class="cstat-no" title="statement not covered" >				expect = 80 + (32 / 8) + (nFaces * faceSize);</span>
 <span class="cstat-no" title="statement not covered" >				return expect === reader.byteLength;</span>
 &nbsp;
 			};
@@ -1158,11 +1167,11 @@
 &nbsp;
 		THREE.STLLoader.prototype.ensureString = <span class="fstat-no" title="function not covered" >function (buf) {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >			if (typeof buf !== "string"){</span>
-<span class="cstat-no" title="statement not covered" >				var array_buffer = new Uint8Array(buf);</span>
+<span class="cstat-no" title="statement not covered" >			if (typeof buf !== 'string'){</span>
+<span class="cstat-no" title="statement not covered" >				var arrayBuffer = new Uint8Array(buf);</span>
 <span class="cstat-no" title="statement not covered" >				var str = '';</span>
 <span class="cstat-no" title="statement not covered" >				for(var i = 0; i &lt; buf.byteLength; i++) {</span>
-<span class="cstat-no" title="statement not covered" >					str += String.fromCharCode(array_buffer[i]); </span>// implicitly assumes little-endian
+<span class="cstat-no" title="statement not covered" >					str += String.fromCharCode(arrayBuffer[i]); </span>// implicitly assumes little-endian
 				}
 <span class="cstat-no" title="statement not covered" >				return str;</span>
 			} else {
@@ -1173,12 +1182,12 @@
 &nbsp;
 		THREE.STLLoader.prototype.ensureBinary = <span class="fstat-no" title="function not covered" >function (buf) {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >			if (typeof buf === "string"){</span>
-<span class="cstat-no" title="statement not covered" >				var array_buffer = new Uint8Array(buf.length);</span>
+<span class="cstat-no" title="statement not covered" >			if (typeof buf === 'string'){</span>
+<span class="cstat-no" title="statement not covered" >				var arrayBuffer = new Uint8Array(buf.length);</span>
 <span class="cstat-no" title="statement not covered" >				for(var i = 0; i &lt; buf.length; i++) {</span>
-<span class="cstat-no" title="statement not covered" >					array_buffer[i] = buf.charCodeAt(i) &amp; 0xff; </span>// implicitly assumes little-endian
+<span class="cstat-no" title="statement not covered" >					arrayBuffer[i] = buf.charCodeAt(i) &amp; 0xff; </span>// implicitly assumes little-endian
 				}
-<span class="cstat-no" title="statement not covered" >				return array_buffer.buffer || array_buffer;</span>
+<span class="cstat-no" title="statement not covered" >				return arrayBuffer.buffer || arrayBuffer;</span>
 			} else {
 <span class="cstat-no" title="statement not covered" >				return buf;</span>
 			}
@@ -1194,7 +1203,7 @@
 <span class="cstat-no" title="statement not covered" >				this.buffer = buffer;</span>
 <span class="cstat-no" title="statement not covered" >				this.byteOffset = byteOffset || 0;</span>
 <span class="cstat-no" title="statement not covered" >				this.byteLength = byteLength || buffer.byteLength || buffer.length;</span>
-<span class="cstat-no" title="statement not covered" >				this._isString = typeof buffer === "string";</span>
+<span class="cstat-no" title="statement not covered" >				this._isString = typeof buffer === 'string';</span>
 &nbsp;
 			}
 &nbsp;
@@ -1362,12 +1371,12 @@
 	}
 );
 &nbsp;
-&nbsp;</pre></td></tr>
+/* jshint ignore:end */</pre></td></tr>
 </table></pre>
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2014 18:58:17 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2014 19:40:02 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>
