@@ -7,7 +7,7 @@
  */
 (function ()
 {
-    'use strict'
+    'use strict';
 
     /**
      * Register the class with RequireJS.

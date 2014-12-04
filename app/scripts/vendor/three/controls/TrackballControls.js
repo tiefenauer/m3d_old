@@ -593,5 +593,5 @@ require([
 		};
 
 	THREE.TrackballControls.prototype = Object.create( THREE.EventDispatcher.prototype );
-	return THREE.TrackballControls
-};
+	return THREE.TrackballControls;
+});
