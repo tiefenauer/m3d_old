@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">79.83</p>
+      <p class="stat">81.50</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">33</p>
+      <p class="stat">14</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">5.33</p>
+      <p class="stat">4.55</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.04</p>
+      <p class="stat">0.03</p>
     </div>
   </div>
 </div>
@@ -89,11 +89,8 @@
 
 <div class="container">
   <div class="row">
-    <textarea id="file-source" class="col-md-12">define([
-  &#039;angular&#039;
-  ], 
-  function (angular) {
-    &#039;use strict&#039;;
+    <textarea id="file-source" class="col-md-12">&#039;use strict&#039;
+define(function () {
 
     var MapDirective = function(){
         return {
@@ -105,22 +102,6 @@
 
     return MapDirective;
 
-    /**
-     * @ngdoc directive
-     * @name m3dApp.directive:m3dMap
-     * @description
-     * # m3dMap
-     */
-     /*
-    angular.module(&#039;m3d.directives.M3dmap&#039;, [])
-      .directive(&#039;m3dMap&#039;, function () {
-        return {
-          templateUrl: &#039;views/templates/map.html&#039;,
-          restrict: &#039;E&#039;,
-          controller: &#039;MapCtrl&#039;
-        };
-      });
-  */
 });</textarea>
   </div>
 </div>

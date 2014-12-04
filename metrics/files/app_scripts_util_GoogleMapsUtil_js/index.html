@@ -44,7 +44,7 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">66.71</p>
+      <p class="stat">66.72</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">44.70</p>
+      <p class="stat">45.31</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.97</p>
+      <p class="stat">0.95</p>
     </div>
   </div>
 </div>
@@ -89,7 +89,8 @@
 
 <div class="container">
   <div class="row">
-    <textarea id="file-source" class="col-md-12">&#039;use strict&#039;
+    <textarea id="file-source" class="col-md-12">/*jshint bitwise: false*/
+&#039;use strict&#039;;
 /**
 * info.tiefenauer.maps3d.util.GoogleMapsUtil
 * Utility class with various static functions regarding GoogleMaps functionality.
@@ -113,7 +114,7 @@ define([], function(){
 		    var lat = coords[i][0];				
 			var lng = coords[i][1];		
 	 
-			encodedPoints += self.encodePoint(plat, plng, lat, lng);
+			encodedPoints += encodePoint(plat, plng, lat, lng);
 	 
 		    plat = lat;
 		    plng = lng;
@@ -136,10 +137,10 @@ define([], function(){
 		var lnge5 = Math.round(lng * 1e5);
 	    var plnge5 = Math.round(plng * 1e5);
 	 
-		dlng = lnge5 - plnge5;
-		dlat = late5 - plate5;
+		var dlng = lnge5 - plnge5;
+		var dlat = late5 - plate5;
 	 
-	    return self.encodeSignedNumber(dlat) + self.encodeSignedNumber(dlng);
+	    return encodeSignedNumber(dlat) + encodeSignedNumber(dlng);
 	};
  
  	/**
@@ -150,10 +151,10 @@ define([], function(){
 	  var sgnNum = num &lt;&lt; 1;
 	 
 	  if (num &lt; 0) {
-	    sgnNum = ~(sgn_num);
+	    sgnNum = ~(sgnNum);
 	  }
 	 
-	  return(self.encodeNumber(sgnNum));
+	  return(encodeNumber(sgnNum));
 	};
 	 
 	/**
@@ -179,7 +180,7 @@ define([], function(){
 	* @see http://en.wikipedia.org/wiki/Haversine_formula
 	*/
 	var degreeToMeter = function(p1, p2){
-		Number.prototype.toRad = function () { return this * Math.PI / 180; }
+		Number.prototype.toRad = function () { return this * Math.PI / 180; };
 		var R = 6371; // Earth radius in km
 		var dLat = Number(Math.max(p1.lat, p2.lat)-Math.min(p1.lat, p2.lat)).toRad();
 		var dLng = Number(Math.max(p1.lng, p2.lng)-Math.min(p1.lng, p2.lng)).toRad();

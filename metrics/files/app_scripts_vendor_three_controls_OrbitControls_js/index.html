@@ -48,7 +48,7 @@
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">416</p>
+      <p class="stat">419</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,7 +62,7 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">63.88</p>
+      <p class="stat">63.46</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
@@ -89,9 +89,11 @@
 
 <div class="container">
   <div class="row">
-    <textarea id="file-source" class="col-md-12">require([
+    <textarea id="file-source" class="col-md-12">&#039;use strict&#039;
+require([
 	&#039;threejs&#039;
-	], function(THREE){
+	], 
+	function(THREE){
 
 	/**
 	 * @author qiao / https://github.com/qiao
@@ -272,7 +274,9 @@
 
 			// restrict phi to be between desired limits
 			phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, phi ) );
-		    if ( this.constrainAzimuth ) theta = Math.max( this.minAzimuthAngle, Math.min( this.maxAzimuthAngle, theta ) );
+		    if ( this.constrainAzimuth ) {
+		    	theta = Math.max( this.minAzimuthAngle, Math.min( this.maxAzimuthAngle, theta ) );
+		    }
 
 
 			// restrict phi to be betwee EPS and PI-EPS
@@ -298,7 +302,6 @@
 			if ( lastPosition.distanceTo( this.object.position ) &gt; 0 ) {
 
 				this.dispatchEvent( changeEvent );
-
 				lastPosition.copy( this.object.position );
 
 			}
@@ -405,7 +408,7 @@
 
 		}
 
-		function onMouseUp( event ) {
+		function onMouseUp( ) {
 
 			if ( scope.enabled === false ) return;
 			if ( scope.userRotate === false ) return;

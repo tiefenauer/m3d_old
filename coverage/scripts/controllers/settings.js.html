@@ -199,16 +199,16 @@
     <h1>Code coverage report for <span class="entity">scripts/controllers/settings.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">33.33% <small>(14 / 42)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">31.25% <small>(10 / 32)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Branches: <span class="metric">0% <small>(0 / 6)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">8.33% <small>(1 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">12.5% <small>(1 / 8)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">33.33% <small>(14 / 42)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">31.25% <small>(10 / 32)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -284,27 +284,8 @@
 66
 67
 68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+69</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -354,25 +335,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -390,20 +352,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">define([
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict'
+define([
   'angular'
   ,'jquery-ui'
   ], function (angular) {
-  'use strict';
 &nbsp;
   var $log, $modalInstance, $scope;
   var $resolutionSlider, $thicknessSlider;
 &nbsp;
   var SettingsController = <span class="fstat-no" title="function not covered" >function($scope, $log, $modalInstance){</span>
-<span class="cstat-no" title="statement not covered" >    $log.debug('SettingsController created')</span>
+<span class="cstat-no" title="statement not covered" >    $log.debug('SettingsController created');</span>
 <span class="cstat-no" title="statement not covered" >    init($scope, $log, $modalInstance);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    $scope.mockCallsEnabled = localStorage.getItem('mockCallsEnabled') == 'true' || false;</span>
+<span class="cstat-no" title="statement not covered" >    $scope.mockCallsEnabled = localStorage.getItem('mockCallsEnabled') === 'true' || false;</span>
 <span class="cstat-no" title="statement not covered" >    $scope.resolution = parseInt(localStorage.getItem('resolution')) || 25;</span>
 <span class="cstat-no" title="statement not covered" >    $scope.thickness = parseInt(localStorage.getItem('thickness')) || 2;</span>
 <span class="cstat-no" title="statement not covered" >    $scope.resolutionSlider = {        </span>
@@ -425,7 +387,7 @@
        showSettings: showSettings
       ,close: close
       ,cancel: cancel
-    }
+    };
   };
 &nbsp;
   var init = <span class="fstat-no" title="function not covered" >function(scope, log, modalInstance){</span>
@@ -441,39 +403,20 @@
 <span class="cstat-no" title="statement not covered" >    $scope.cancel = angular.bind(this, cancel);</span>
   };
 &nbsp;
-&nbsp;
-  var onResolutionSliderCreate = <span class="fstat-no" title="function not covered" >function(event, ui){</span>
-<span class="cstat-no" title="statement not covered" >    $resolutionSlider.slider({value: $scope.resolution});</span>
-  };
-&nbsp;
-  var onResolutionSliderChange = <span class="fstat-no" title="function not covered" >function(event, ui){</span>
-<span class="cstat-no" title="statement not covered" >    $scope.resolution = ui.value;</span>
-<span class="cstat-no" title="statement not covered" >    $scope.$apply();</span>
-  };
-&nbsp;
-  var onThicknessSliderCreate = <span class="fstat-no" title="function not covered" >function(event, ui){</span>
-<span class="cstat-no" title="statement not covered" >    $thicknessSlider.slider({value: $scope.thickness});</span>
-  };
-&nbsp;
-  var onThicknessSliderChange = <span class="fstat-no" title="function not covered" >function(event, ui){</span>
-<span class="cstat-no" title="statement not covered" >    $scope.thickness = ui.value;</span>
-<span class="cstat-no" title="statement not covered" >    $scope.$apply();</span>
-  };
-&nbsp;
   var close = <span class="fstat-no" title="function not covered" >function() {</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem('resolution', $resolutionSlider.slider('value'));</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem('mockCallsEnabled', $scope.mockCallsEnabled);  </span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem('thickness', $thicknessSlider.slider('value'));</span>
 <span class="cstat-no" title="statement not covered" >      $modalInstance.close(null);</span>
-    };
+  };
 &nbsp;
-    var cancel = <span class="fstat-no" title="function not covered" >function() {</span>
-<span class="cstat-no" title="statement not covered" >      $modalInstance.dismiss('cancel');</span>
-    }
+  var cancel = <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >    $modalInstance.dismiss('cancel');</span>
+  };
 &nbsp;
   var showSettings = <span class="fstat-no" title="function not covered" >function(){</span>
 <span class="cstat-no" title="statement not covered" >    $log.debug('showing settings');</span>
-  }
+  };
 &nbsp;
   return ['$scope', '$log', '$modalInstance', SettingsController];
 });
@@ -482,7 +425,7 @@
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 02 2014 17:50:29 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2014 18:58:17 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

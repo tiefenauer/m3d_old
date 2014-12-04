@@ -199,7 +199,7 @@
     <h1>Code coverage report for <span class="entity">scripts/services/profileio.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">27.14% <small>(19 / 70)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">27.54% <small>(19 / 69)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Branches: <span class="metric">0% <small>(0 / 6)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -208,7 +208,7 @@
         Functions: <span class="metric">36.36% <small>(4 / 11)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">27.14% <small>(19 / 70)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">27.54% <small>(19 / 69)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -331,7 +331,8 @@
 113
 114
 115
-116</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+116</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -386,7 +387,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -446,14 +446,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">define([
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+define([
    'angular'
+  ,'threejs'
   ,'services/STLLoader'
   ,'services/VRMLLoader'
   ,'util/FileSaver.min'
   ], 
-  function (angular, STLLoader) {
-    'use strict';
+  function (angular, THREE) {
 &nbsp;
     var $log, $rootScope;
     var loader;
@@ -478,7 +479,7 @@
 &nbsp;
     var addEventListeners = function(){
       $rootScope.$on('menu:loadProfile', load);
-    }
+    };
 &nbsp;
     var load = <span class="fstat-no" title="function not covered" >function(event, file){</span>
 <span class="cstat-no" title="statement not covered" >      $log.debug('Loading from ' + file.name + ' ...');</span>
@@ -489,36 +490,35 @@
         case new RegExp('.wrl').test(file.name):
 <span class="cstat-no" title="statement not covered" >          loader = new THREE.VRMLLoader();</span>
 <span class="cstat-no" title="statement not covered" >          break;</span>
-      };
+      }
 <span class="cstat-no" title="statement not covered" >      loader.loadLocal(file, onFileLoaded);</span>
     };
 &nbsp;
     var save = <span class="fstat-no" title="function not covered" >function(objects){</span>
-<span class="cstat-no" title="statement not covered" >      var modelNames = "";</span>
 <span class="cstat-no" title="statement not covered" >      objects.forEach(<span class="fstat-no" title="function not covered" >function(model){</span></span>
 <span class="cstat-no" title="statement not covered" >        var fileName = model.name || 'stlModel';</span>
-<span class="cstat-no" title="statement not covered" >        fileName += "_generated";</span>
+<span class="cstat-no" title="statement not covered" >        fileName += '_generated';</span>
 <span class="cstat-no" title="statement not covered" >        $log.debug('Saving model to ' + fileName + '.stl ...');</span>
 <span class="cstat-no" title="statement not covered" >        var stlString = generateStl(model.geometry);</span>
 <span class="cstat-no" title="statement not covered" >        var blob = new Blob([stlString], {type: 'text/plain'});</span>
-<span class="cstat-no" title="statement not covered" >        window.saveAs(blob, fileName + ".stl");</span>
+<span class="cstat-no" title="statement not covered" >        window.saveAs(blob, fileName + '.stl');</span>
       });
     };
 &nbsp;
     var onFileLoaded = <span class="fstat-no" title="function not covered" >function(content, file){</span>
-<span class="cstat-no" title="statement not covered" >      var fileName = file.name.substr(0, file.name.lastIndexOf("."));</span>
+<span class="cstat-no" title="statement not covered" >      var fileName = file.name.substr(0, file.name.lastIndexOf('.'));</span>
 <span class="cstat-no" title="statement not covered" >      $rootScope.$broadcast('io:model:loaded', {geometry: content, fileName: fileName});</span>
     };
 &nbsp;
     var generateStl = <span class="fstat-no" title="function not covered" >function(geometry){</span>
-<span class="cstat-no" title="statement not covered" >      var stl = "solid pixel\n";</span>
+<span class="cstat-no" title="statement not covered" >      var stl = 'solid pixel\n';</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      var stringifyVector = <span class="fstat-no" title="function not covered" >function(vec){</span></span>
-<span class="cstat-no" title="statement not covered" >          return ""+vec.x+" "+vec.y+" "+vec.z;</span>
+<span class="cstat-no" title="statement not covered" >          return ''+vec.x+' '+vec.y+' '+vec.z;</span>
       }
 <span class="cstat-no" title="statement not covered" >      var stringifyVertex = <span class="fstat-no" title="function not covered" >function(vec){</span></span>
-<span class="cstat-no" title="statement not covered" >          return "vertex "+vec.x+" "+vec.y+" "+vec.z+" \n";</span>
-      }
+<span class="cstat-no" title="statement not covered" >          return 'vertex ' + vec.x + ' ' + vec.y + ' ' + vec.z + ' \n';</span>
+      };
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      var vertices, tris;</span>
 <span class="cstat-no" title="statement not covered" >      if (geometry instanceof THREE.BufferGeometry){        </span>
@@ -528,33 +528,33 @@
 <span class="cstat-no" title="statement not covered" >          var n1 = normals[i];</span>
 <span class="cstat-no" title="statement not covered" >          var n2 = normals[i+1];</span>
 <span class="cstat-no" title="statement not covered" >          var n3 = normals[i+2];</span>
-<span class="cstat-no" title="statement not covered" >          stl += ("facet normal "+n1+" "+n2+" "+n3+" \n");</span>
-<span class="cstat-no" title="statement not covered" >            stl += ("outer loop \n");</span>
+<span class="cstat-no" title="statement not covered" >          stl += ('facet normal '+n1+' '+n2+' '+n3+' \n');</span>
+<span class="cstat-no" title="statement not covered" >            stl += ('outer loop \n');</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >          for (var j=i; j&lt;i+9; j+=3){</span>
 <span class="cstat-no" title="statement not covered" >            var x = positions[j];</span>
 <span class="cstat-no" title="statement not covered" >            var y = positions[j+1];</span>
 <span class="cstat-no" title="statement not covered" >            var z = positions[j+2];</span>
-<span class="cstat-no" title="statement not covered" >            stl += "vertex "+x+" "+y+" "+z+" \n";</span>
+<span class="cstat-no" title="statement not covered" >            stl += 'vertex '+x+' '+y+' '+z+' \n';</span>
           }
-<span class="cstat-no" title="statement not covered" >          stl += ("endloop \n");</span>
-<span class="cstat-no" title="statement not covered" >          stl += ("endfacet \n");         </span>
+<span class="cstat-no" title="statement not covered" >          stl += ('endloop \n');</span>
+<span class="cstat-no" title="statement not covered" >          stl += ('endfacet \n');         </span>
         }
       }
       else {
 <span class="cstat-no" title="statement not covered" >        vertices = geometry.vertices;</span>
 <span class="cstat-no" title="statement not covered" >        tris     = geometry.faces;</span>
 <span class="cstat-no" title="statement not covered" >        for(var i = 0; i&lt;tris.length; i++){</span>
-<span class="cstat-no" title="statement not covered" >          stl += ("facet normal "+stringifyVector( tris[i].normal )+" \n");</span>
-<span class="cstat-no" title="statement not covered" >          stl += ("outer loop \n");</span>
+<span class="cstat-no" title="statement not covered" >          stl += ('facet normal '+stringifyVector( tris[i].normal )+' \n');</span>
+<span class="cstat-no" title="statement not covered" >          stl += ('outer loop \n');</span>
 <span class="cstat-no" title="statement not covered" >          stl += stringifyVertex( vertices[ tris[i].a ]);</span>
 <span class="cstat-no" title="statement not covered" >          stl += stringifyVertex( vertices[ tris[i].b ]);</span>
 <span class="cstat-no" title="statement not covered" >          stl += stringifyVertex( vertices[ tris[i].c ]);</span>
-<span class="cstat-no" title="statement not covered" >          stl += ("endloop \n");</span>
-<span class="cstat-no" title="statement not covered" >          stl += ("endfacet \n");</span>
+<span class="cstat-no" title="statement not covered" >          stl += ('endloop \n');</span>
+<span class="cstat-no" title="statement not covered" >          stl += ('endfacet \n');</span>
         }
       }         
-<span class="cstat-no" title="statement not covered" >      stl += ("endsolid");</span>
+<span class="cstat-no" title="statement not covered" >      stl += ('endsolid');</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      return stl</span>
     };
@@ -566,7 +566,7 @@
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 02 2014 17:50:29 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2014 18:58:17 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

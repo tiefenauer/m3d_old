@@ -98,7 +98,7 @@
  */
 (function ()
 {
-    &quot;use strict&quot;;
+    &#039;use strict&#039;;
 
     /**
      * Register the class with RequireJS.
@@ -110,11 +110,11 @@
          */
         var buildTimeString = function (date, format)
         {
-            format = format || &quot;%h:%m:%s:%z&quot;;
+            format = format || &#039;%h:%m:%s:%z&#039;;
 
             function pad(value, isMilliSeconds)
             {
-                if(typeof (isMilliSeconds) === &quot;undefined&quot;)
+                if(typeof (isMilliSeconds) === &#039;undefined&#039;)
                 {
                     isMilliSeconds = false;
                 }
@@ -122,36 +122,36 @@
                 {
                     if(value &lt; 10)
                     {
-                        value = &quot;00&quot; + value;
+                        value = &#039;00&#039; + value;
                     }
                     else if(value &lt; 100)
                     {
-                        value = &quot;0&quot; + value;
+                        value = &#039;0&#039; + value;
                     }
                 }
-                return(value.toString().length &lt; 2) ? &quot;0&quot; + value : value;
+                return(value.toString().length &lt; 2) ? &#039;0&#039; + value : value;
             }
 
             return format.replace(/%([a-zA-Z])/g, function (_, fmtCode)
             {
                 switch(fmtCode)
                 {
-                case &quot;Y&quot;:
+                case &#039;Y&#039;:
                     return date.getFullYear();
-                case &quot;M&quot;:
+                case &#039;M&#039;:
                     return pad(date.getMonth() + 1);
-                case &quot;d&quot;:
+                case &#039;d&#039;:
                     return pad(date.getDate());
-                case &quot;h&quot;:
+                case &#039;h&#039;:
                     return pad(date.getHours());
-                case &quot;m&quot;:
+                case &#039;m&#039;:
                     return pad(date.getMinutes());
-                case &quot;s&quot;:
+                case &#039;s&#039;:
                     return pad(date.getSeconds());
-                case &quot;z&quot;:
+                case &#039;z&#039;:
                     return pad(date.getMilliseconds(), true);
                 default:
-                    throw new Error(&quot;Unsupported format code: &quot; + fmtCode);
+                    throw new Error(&#039;Unsupported format code: &#039; + fmtCode);
                 }
             });
         };
