@@ -1,5 +1,5 @@
 /* jshint ignore:start */
-'use strict';
+
 define([
 	'threejs'
 	],
@@ -84,8 +84,8 @@ define([
 			var parseV2 = function ( lines, scene ) {
 
 				var defines = {};
-				var floatPattern = /(\b|\-|\+)([\d\.e]+)/;
-				var float3Pattern = /([\d\.\+\-e]+)\s+([\d\.\+\-e]+)\s+([\d\.\+\-e]+)/g;
+				var float_pattern = /(\b|\-|\+)([\d\.e]+)/;
+				var float3_pattern = /([\d\.\+\-e]+)\s+([\d\.\+\-e]+)\s+([\d\.\+\-e]+)/g;
 
 				/**
 				* Interpolates colors a and b following their relative distance
@@ -230,7 +230,7 @@ define([
 
 					var point, index, angles, colors;
 
-					while (null !== ( part = regex.exec(line) ) ) {
+					while (null != ( part = regex.exec(line) ) ) {
 						parts.push(part[0]);
 					}
 
@@ -277,7 +277,7 @@ define([
 								}
 
 								// end of current face
-								if (parts[ind] === '-1') {
+								if (parts[ind] === "-1") {
 									if (index.length > 0) {
 									   this.indexes.push(index);
 									}
@@ -298,8 +298,8 @@ define([
 						}
 
 					} else if (this.isRecordingPoints) {
-						parts = float3Pattern.exec(line);
-						while ( null !== parts ) {
+
+						while ( null !== ( parts = float3_pattern.exec(line) ) ) {
 							point = {
 								x: parseFloat(parts[1]),
 								y: parseFloat(parts[2]),
@@ -320,10 +320,10 @@ define([
 						// the parts hold the angles as strings
 						if ( parts.length > 0 ) {
 
-							for ( var ind = 0; ind < parts.length; ind++ ) {
+							for ( var ind = 0;ind < parts.length; ind++ ) {
 
 								// the part should be a float
-								if ( ! floatPattern.test( parts[ind] ) ) {
+								if ( ! float_pattern.test( parts[ind] ) ) {
 									continue;
 								}
 
@@ -339,8 +339,8 @@ define([
 						}
 
 					} else if (this.isRecordingColors) {
-						parts = float3Pattern.exec(line);
-						while( null !== parts ) {
+
+						while( null !== ( parts = float3_pattern.exec(line) ) ) {
 
 							color = {
 								r: parseFloat(parts[1]),
@@ -367,7 +367,7 @@ define([
 							case 'specularColor':
 							case 'color':
 
-								if (parts.length !== 4) {
+								if (parts.length != 4) {
 									console.warn('Invalid color format detected for ' + fieldName );
 									break;
 								}
@@ -376,14 +376,14 @@ define([
 									r: parseFloat(parts[1]),
 									g: parseFloat(parts[2]),
 									b: parseFloat(parts[3])
-								};
+								}
 
 								break;
 
 							case 'translation':
 							case 'scale':
 							case 'size':
-								if (parts.length !== 4) {
+								if (parts.length != 4) {
 									console.warn('Invalid vector format detected for ' + fieldName);
 									break;
 								}
@@ -392,7 +392,7 @@ define([
 									x: parseFloat(parts[1]),
 									y: parseFloat(parts[2]),
 									z: parseFloat(parts[3])
-								};
+								}
 
 								break;
 
@@ -403,7 +403,7 @@ define([
 							case 'transparency':
 							case 'shininess':
 							case 'ambientIntensity':
-								if (parts.length !== 2) {
+								if (parts.length != 2) {
 									console.warn('Invalid single float value specification detected for ' + fieldName);
 									break;
 								}
@@ -413,7 +413,7 @@ define([
 								break;
 
 							case 'rotation':
-								if (parts.length !== 5) {
+								if (parts.length != 5) {
 									console.warn('Invalid quaternion format detected for ' + fieldName);
 									break;
 								}
@@ -423,7 +423,7 @@ define([
 									y: parseFloat(parts[2]),
 									z: parseFloat(parts[3]),
 									w: parseFloat(parts[4])
-								};
+								}
 
 								break;
 
@@ -431,7 +431,7 @@ define([
 							case 'solid':
 							case 'colorPerVertex':
 							case 'convex':
-								if (parts.length !== 2) {
+								if (parts.length != 2) {
 									console.warn('Invalid format detected for ' + fieldName);
 									break;
 								}
@@ -483,7 +483,7 @@ define([
 							comment = parts[1];
 						}
 
-						if ( matches = /([^\s]*){1}\s?{/.exec( line ) ) { // first subpattern should match the Node name 	// jshint ignore:line
+						if ( matches = /([^\s]*){1}\s?{/.exec( line ) ) { // first subpattern should match the Node name
 
 							var block = { 'nodeType' : matches[1], 'string': line, 'parent': current, 'children': [],'comment' : comment};
 							current.children.push( block );
@@ -573,7 +573,7 @@ define([
 							defines[ object.name ] = object;
 						}
 
-						if ( undefined !== data.translation ) {
+						if ( undefined !== data['translation'] ) {
 
 							var t = data.translation;
 
@@ -627,7 +627,7 @@ define([
 
 							paintFaces( skyGeometry, radius, data.skyAngle, data.skyColor, true );
 
-							skyMaterial.vertexColors = THREE.VertexColors;
+							skyMaterial.vertexColors = THREE.VertexColors
 
 						} else {
 
@@ -826,7 +826,7 @@ define([
 
 					}
 
-				};
+				}
 
 				parseNode( getTree( lines ), scene );
 
@@ -856,5 +856,4 @@ define([
 
 	THREE.EventDispatcher.prototype.apply( THREE.VRMLLoader.prototype );
 });
-
 /* jshint ignore:end */
