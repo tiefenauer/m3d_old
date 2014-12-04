@@ -1,6 +1,8 @@
+'use strict'
 require([
 	'threejs'
-	], function(THREE){
+	], 
+	function(THREE){
 
 	/**
 	 * @author qiao / https://github.com/qiao
@@ -181,7 +183,9 @@ require([
 
 			// restrict phi to be between desired limits
 			phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, phi ) );
-		    if ( this.constrainAzimuth ) theta = Math.max( this.minAzimuthAngle, Math.min( this.maxAzimuthAngle, theta ) );
+		    if ( this.constrainAzimuth ) {
+		    	theta = Math.max( this.minAzimuthAngle, Math.min( this.maxAzimuthAngle, theta ) );
+		    }
 
 
 			// restrict phi to be betwee EPS and PI-EPS
@@ -207,7 +211,6 @@ require([
 			if ( lastPosition.distanceTo( this.object.position ) > 0 ) {
 
 				this.dispatchEvent( changeEvent );
-
 				lastPosition.copy( this.object.position );
 
 			}
@@ -314,7 +317,7 @@ require([
 
 		}
 
-		function onMouseUp( event ) {
+		function onMouseUp( ) {
 
 			if ( scope.enabled === false ) return;
 			if ( scope.userRotate === false ) return;

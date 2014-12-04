@@ -7,12 +7,12 @@ define([
   var $log, $modalInstance, $scope;
 
   var InfoController = function($scope, $log, $modalInstance){
-    $log.debug('StatsController created')
+    $log.debug('StatsController created');
     init($scope, $log, $modalInstance);
 
     return {
        close: close
-    }
+    };
   };
 
   var init = function(scope, log, modalInstance){
@@ -28,8 +28,8 @@ define([
   };
 
   var close = function() {
-      $modalInstance.close(null);
-    };
+    $modalInstance.close(null);
+  };
 
   return ['$scope', '$log', '$modalInstance', InfoController];
 });

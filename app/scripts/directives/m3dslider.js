@@ -1,15 +1,15 @@
+'use strict'
 define([
-  'angular'
-  ], 
-  function (angular) {
-  'use strict';
+  'jquery'
+  ],
+  function ($) {
 
     var SliderDirective = function() {
       return {
         restrict: 'A',
         scope: {
-          config: "=config",
-          model: "=model"
+          config: '=config',
+          model: '=model'
         },
         link: function(scope, elem, attrs) {
           var setModel = function(value) {
@@ -27,9 +27,9 @@ define([
                     scope.model = ui.value;
                 });
             }
-        });
+          });
         }
-      }
+      };
     };
 
     return SliderDirective;

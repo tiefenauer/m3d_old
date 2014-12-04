@@ -1,16 +1,14 @@
+'use strict'
 define([
-	'angular', 
-	'services'
+	'angular'
 	], 
-	function (angular, services) {
-
-	'use strict';
+	function (angular) {
 
 	var InterpolateFilter = function(version) {
 		return function(text) {
 			return String(text).replace(/\%VERSION\%/mg, version);
-		}
-	}
+		};
+	};
 
 	/* Filters */
 	angular.module('m3d.filters', ['m3d.services'])

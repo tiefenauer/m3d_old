@@ -1,11 +1,12 @@
+'use strict';
 define([
    'angular'
+  ,'threejs'
   ,'services/STLLoader'
   ,'services/VRMLLoader'
   ,'util/FileSaver.min'
   ], 
-  function (angular, STLLoader) {
-    'use strict';
+  function (angular, THREE) {
 
     var $log, $rootScope;
     var loader;
@@ -30,7 +31,7 @@ define([
 
     var addEventListeners = function(){
       $rootScope.$on('menu:loadProfile', load);
-    }
+    };
 
     var load = function(event, file){
       $log.debug('Loading from ' + file.name + ' ...');
@@ -41,36 +42,35 @@ define([
         case new RegExp('.wrl').test(file.name):
           loader = new THREE.VRMLLoader();
           break;
-      };
+      }
       loader.loadLocal(file, onFileLoaded);
     };
 
     var save = function(objects){
-      var modelNames = "";
       objects.forEach(function(model){
         var fileName = model.name || 'stlModel';
-        fileName += "_generated";
+        fileName += '_generated';
         $log.debug('Saving model to ' + fileName + '.stl ...');
         var stlString = generateStl(model.geometry);
         var blob = new Blob([stlString], {type: 'text/plain'});
-        window.saveAs(blob, fileName + ".stl");
+        window.saveAs(blob, fileName + '.stl');
       });
     };
 
     var onFileLoaded = function(content, file){
-      var fileName = file.name.substr(0, file.name.lastIndexOf("."));
+      var fileName = file.name.substr(0, file.name.lastIndexOf('.'));
       $rootScope.$broadcast('io:model:loaded', {geometry: content, fileName: fileName});
     };
 
     var generateStl = function(geometry){
-      var stl = "solid pixel\n";
+      var stl = 'solid pixel\n';
 
       var stringifyVector = function(vec){
-          return ""+vec.x+" "+vec.y+" "+vec.z;
+          return ''+vec.x+' '+vec.y+' '+vec.z;
       }
       var stringifyVertex = function(vec){
-          return "vertex "+vec.x+" "+vec.y+" "+vec.z+" \n";
-      }
+          return 'vertex ' + vec.x + ' ' + vec.y + ' ' + vec.z + ' \n';
+      };
 
       var vertices, tris;
       if (geometry instanceof THREE.BufferGeometry){        
@@ -80,33 +80,33 @@ define([
           var n1 = normals[i];
           var n2 = normals[i+1];
           var n3 = normals[i+2];
-          stl += ("facet normal "+n1+" "+n2+" "+n3+" \n");
-            stl += ("outer loop \n");
+          stl += ('facet normal '+n1+' '+n2+' '+n3+' \n');
+            stl += ('outer loop \n');
 
           for (var j=i; j<i+9; j+=3){
             var x = positions[j];
             var y = positions[j+1];
             var z = positions[j+2];
-            stl += "vertex "+x+" "+y+" "+z+" \n";
+            stl += 'vertex '+x+' '+y+' '+z+' \n';
           }
-          stl += ("endloop \n");
-          stl += ("endfacet \n");         
+          stl += ('endloop \n');
+          stl += ('endfacet \n');         
         }
       }
       else {
         vertices = geometry.vertices;
         tris     = geometry.faces;
         for(var i = 0; i<tris.length; i++){
-          stl += ("facet normal "+stringifyVector( tris[i].normal )+" \n");
-          stl += ("outer loop \n");
+          stl += ('facet normal '+stringifyVector( tris[i].normal )+' \n');
+          stl += ('outer loop \n');
           stl += stringifyVertex( vertices[ tris[i].a ]);
           stl += stringifyVertex( vertices[ tris[i].b ]);
           stl += stringifyVertex( vertices[ tris[i].c ]);
-          stl += ("endloop \n");
-          stl += ("endfacet \n");
+          stl += ('endloop \n');
+          stl += ('endfacet \n');
         }
       }         
-      stl += ("endsolid");
+      stl += ('endsolid');
 
       return stl
     };

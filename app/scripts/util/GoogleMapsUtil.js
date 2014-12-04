@@ -1,4 +1,5 @@
-'use strict'
+/*jshint bitwise: false*/
+'use strict';
 /**
 * info.tiefenauer.maps3d.util.GoogleMapsUtil
 * Utility class with various static functions regarding GoogleMaps functionality.
@@ -22,7 +23,7 @@ define([], function(){
 		    var lat = coords[i][0];				
 			var lng = coords[i][1];		
 	 
-			encodedPoints += self.encodePoint(plat, plng, lat, lng);
+			encodedPoints += encodePoint(plat, plng, lat, lng);
 	 
 		    plat = lat;
 		    plng = lng;
@@ -45,10 +46,10 @@ define([], function(){
 		var lnge5 = Math.round(lng * 1e5);
 	    var plnge5 = Math.round(plng * 1e5);
 	 
-		dlng = lnge5 - plnge5;
-		dlat = late5 - plate5;
+		var dlng = lnge5 - plnge5;
+		var dlat = late5 - plate5;
 	 
-	    return self.encodeSignedNumber(dlat) + self.encodeSignedNumber(dlng);
+	    return encodeSignedNumber(dlat) + encodeSignedNumber(dlng);
 	};
  
  	/**
@@ -59,10 +60,10 @@ define([], function(){
 	  var sgnNum = num << 1;
 	 
 	  if (num < 0) {
-	    sgnNum = ~(sgn_num);
+	    sgnNum = ~(sgnNum);
 	  }
 	 
-	  return(self.encodeNumber(sgnNum));
+	  return(encodeNumber(sgnNum));
 	};
 	 
 	/**
@@ -88,7 +89,7 @@ define([], function(){
 	* @see http://en.wikipedia.org/wiki/Haversine_formula
 	*/
 	var degreeToMeter = function(p1, p2){
-		Number.prototype.toRad = function () { return this * Math.PI / 180; }
+		Number.prototype.toRad = function () { return this * Math.PI / 180; };
 		var R = 6371; // Earth radius in km
 		var dLat = Number(Math.max(p1.lat, p2.lat)-Math.min(p1.lat, p2.lat)).toRad();
 		var dLng = Number(Math.max(p1.lng, p2.lng)-Math.min(p1.lng, p2.lng)).toRad();

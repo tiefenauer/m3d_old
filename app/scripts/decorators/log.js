@@ -1,11 +1,10 @@
+'use strict'
 define([
-  'angular'
   ,'util/DateTime'
   ,'util/supplant'  
   ], 
-  function (angular) {
+  function () {
 
-    'use strict';
     var DateTime = require('util/DateTime');
     var supplant = require('util/supplant');
 

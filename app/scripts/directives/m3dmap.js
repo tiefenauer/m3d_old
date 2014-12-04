@@ -1,6 +1,5 @@
 'use strict'
-define([], 
-  function () {
+define(function () {
 
     var MapDirective = function(){
         return {

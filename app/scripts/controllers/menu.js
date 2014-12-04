@@ -111,7 +111,7 @@ define([
       $rootScope.$broadcast('menu:process_button_clicked');
     };
 
-    var saveModel = function (event) {
+    var saveModel = function () {
       $log.debug('save button clicker');
       $rootScope.$broadcast('menu:save_button_clicked');
     };    

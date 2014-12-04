@@ -1,7 +1,5 @@
 'use strict'
-
-define([], 
-  function () {
+define(function () {
 
     var ProfileDirective = function () {
       return {
