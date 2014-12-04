@@ -1,4 +1,5 @@
-'use strict'
+/* jslint unused: false */
+'use strict';
 define([
   'angular'
   ,'jquery-ui'
@@ -11,6 +12,7 @@ define([
     $log.debug('SettingsController created');
     init($scope, $log, $modalInstance);
 
+    $scope.close = close;
     $scope.mockCallsEnabled = localStorage.getItem('mockCallsEnabled') === 'true' || false;
     $scope.resolution = parseInt(localStorage.getItem('resolution')) || 25;
     $scope.thickness = parseInt(localStorage.getItem('thickness')) || 2;

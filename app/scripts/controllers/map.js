@@ -1,9 +1,9 @@
+'use strict';
 define([
    'angular'
   ,'jquery'
   ], 
   function (angular, $) {
-    'use strict';
 
     var $log, $scope;
     var elevationAdapter;

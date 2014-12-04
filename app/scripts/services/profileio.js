@@ -67,16 +67,16 @@ define([
 
       var stringifyVector = function(vec){
           return ''+vec.x+' '+vec.y+' '+vec.z;
-      }
+      };
       var stringifyVertex = function(vec){
           return 'vertex ' + vec.x + ' ' + vec.y + ' ' + vec.z + ' \n';
       };
 
-      var vertices, tris;
+      var vertices, tris, i;
       if (geometry instanceof THREE.BufferGeometry){        
         var positions = geometry.getAttribute('position').array;
         var normals = geometry.getAttribute('normal').array;
-        for (var i=0; i< normals.length; i+=3*3){         
+        for (i=0; i< normals.length; i+=3*3){         
           var n1 = normals[i];
           var n2 = normals[i+1];
           var n3 = normals[i+2];
@@ -96,7 +96,7 @@ define([
       else {
         vertices = geometry.vertices;
         tris     = geometry.faces;
-        for(var i = 0; i<tris.length; i++){
+        for(i = 0; i<tris.length; i++){
           stl += ('facet normal '+stringifyVector( tris[i].normal )+' \n');
           stl += ('outer loop \n');
           stl += stringifyVertex( vertices[ tris[i].a ]);
@@ -108,7 +108,7 @@ define([
       }         
       stl += ('endsolid');
 
-      return stl
+      return stl;
     };
 
     return ['$log', '$rootScope', ProfileIOService];    

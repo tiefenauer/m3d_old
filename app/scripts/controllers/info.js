@@ -9,6 +9,7 @@ define([
   var InfoController = function($scope, $log, $modalInstance){
     $log.debug('StatsController created');
     init($scope, $log, $modalInstance);
+    $scope.close = close;
 
     return {
        close: close
@@ -20,15 +21,7 @@ define([
     $scope = scope;
     $modalInstance = modalInstance;
 
-    addEventListeners();
-  };
-
-  var addEventListeners = function(){
-    $scope.ok = angular.bind(this, close);
-  };
-
-  var close = function() {
-    $modalInstance.close(null);
+    $scope.ok = angular.bind(this, $modalInstance.close);
   };
 
   return ['$scope', '$log', '$modalInstance', InfoController];

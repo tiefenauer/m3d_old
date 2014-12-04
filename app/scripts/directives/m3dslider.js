@@ -1,4 +1,5 @@
-'use strict'
+/* jslint unused: false */
+'use strict';
 define([
   'jquery'
   ],

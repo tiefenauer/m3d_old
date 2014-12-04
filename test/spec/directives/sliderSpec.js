@@ -7,8 +7,7 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
     // load the directive's module
     beforeEach(module('m3d.directives'));
 
-    var element,
-      scope;
+    var scope;
 
     beforeEach(inject(function ($rootScope) {
       scope = $rootScope.$new();

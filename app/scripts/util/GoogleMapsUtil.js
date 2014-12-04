@@ -71,7 +71,7 @@ define([], function(){
 	* @param num unsigned numeric value
 	*/
 	var encodeNumber = function(num) {
-	  var encodeString = "";
+	  var encodeString = '';
 	 
 	  while (num >= 0x20) {
 	    encodeString += (String.fromCharCode((0x20 | (num & 0x1f)) + 63));
