@@ -1,13 +1,11 @@
-'use strict'
+'use strict';
 define([
-  ,'util/DateTime'
-  ,'util/supplant'  
+  'util/DateTime'
+  ,'util/supplant'    
+  ,'angular'
   ], 
-  function () {
-
-    var DateTime = require('util/DateTime');
-    var supplant = require('util/supplant');
-
+  function (DateTime, supplant) {
+    
     var Logger = function( $delegate ){
       // Save the original $log.debug()
       var debugFn = $delegate.debug;
