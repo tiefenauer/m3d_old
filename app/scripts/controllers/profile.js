@@ -129,7 +129,7 @@ define([
         //planeTop.geometry.vertices.length
         for(var i=0; i < elevationPoints.length; i++){
           diff = elevationPoints[i].elv - minElv;         
-          var bottomIndex = (i-i%side) + elevationPoints.length + ((i-i%side)/side + 1)*side - i - 1;
+          var bottomIndex = elevationPoints.length + i + side - 2*(i%side) - 1;
           planeTop.geometry.vertices[i].y += diff / 10; 
           planeTop.geometry.vertices[bottomIndex].y += diff / 10;
         }

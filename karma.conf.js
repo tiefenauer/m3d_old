@@ -43,7 +43,6 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
-
     // Start these browsers, currently available:
     // - Chrome
     // - ChromeCanary
@@ -54,10 +53,14 @@ module.exports = function(config) {
     // - IE (only Windows)
     browsers: ['PhantomJS'],
 
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage', 'html'],
 
     preprocessors: {
       'app/scripts/**/*.js': ['coverage']
+    },
+
+    htmlReporter: {
+      outputFile: 'tests/units.html'
     },
 
     coverageReporter: {

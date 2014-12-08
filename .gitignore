@@ -1,6 +1,7 @@
 node_modules
 original_images
 metrics
+tests
 dist
 .tmp
 .sass-cache
