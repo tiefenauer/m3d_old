@@ -60,7 +60,7 @@ module.exports = function(config) {
     },
 
     htmlReporter: {
-      outputFile: 'tests/units.html'
+      outputFile: 'tests/index.html'
     },
 
     coverageReporter: {
