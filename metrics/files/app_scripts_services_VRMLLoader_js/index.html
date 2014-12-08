@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">46.27</p>
+      <p class="stat">46.30</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">857</p>
+      <p class="stat">856</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">86.99</p>
+      <p class="stat">89.45</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">7.58</p>
+      <p class="stat">7.57</p>
     </div>
   </div>
 </div>
@@ -90,7 +90,7 @@
 <div class="container">
   <div class="row">
     <textarea id="file-source" class="col-md-12">/* jshint ignore:start */
-&#039;use strict&#039;;
+
 define([
 	&#039;threejs&#039;
 	],
@@ -175,8 +175,8 @@ define([
 			var parseV2 = function ( lines, scene ) {
 
 				var defines = {};
-				var floatPattern = /(\b|\-|\+)([\d\.e]+)/;
-				var float3Pattern = /([\d\.\+\-e]+)\s+([\d\.\+\-e]+)\s+([\d\.\+\-e]+)/g;
+				var float_pattern = /(\b|\-|\+)([\d\.e]+)/;
+				var float3_pattern = /([\d\.\+\-e]+)\s+([\d\.\+\-e]+)\s+([\d\.\+\-e]+)/g;
 
 				/**
 				* Interpolates colors a and b following their relative distance
@@ -321,7 +321,7 @@ define([
 
 					var point, index, angles, colors;
 
-					while (null !== ( part = regex.exec(line) ) ) {
+					while (null != ( part = regex.exec(line) ) ) {
 						parts.push(part[0]);
 					}
 
@@ -368,7 +368,7 @@ define([
 								}
 
 								// end of current face
-								if (parts[ind] === &#039;-1&#039;) {
+								if (parts[ind] === &quot;-1&quot;) {
 									if (index.length &gt; 0) {
 									   this.indexes.push(index);
 									}
@@ -389,8 +389,8 @@ define([
 						}
 
 					} else if (this.isRecordingPoints) {
-						parts = float3Pattern.exec(line);
-						while ( null !== parts ) {
+
+						while ( null !== ( parts = float3_pattern.exec(line) ) ) {
 							point = {
 								x: parseFloat(parts[1]),
 								y: parseFloat(parts[2]),
@@ -411,10 +411,10 @@ define([
 						// the parts hold the angles as strings
 						if ( parts.length &gt; 0 ) {
 
-							for ( var ind = 0; ind &lt; parts.length; ind++ ) {
+							for ( var ind = 0;ind &lt; parts.length; ind++ ) {
 
 								// the part should be a float
-								if ( ! floatPattern.test( parts[ind] ) ) {
+								if ( ! float_pattern.test( parts[ind] ) ) {
 									continue;
 								}
 
@@ -430,8 +430,8 @@ define([
 						}
 
 					} else if (this.isRecordingColors) {
-						parts = float3Pattern.exec(line);
-						while( null !== parts ) {
+
+						while( null !== ( parts = float3_pattern.exec(line) ) ) {
 
 							color = {
 								r: parseFloat(parts[1]),
@@ -458,7 +458,7 @@ define([
 							case &#039;specularColor&#039;:
 							case &#039;color&#039;:
 
-								if (parts.length !== 4) {
+								if (parts.length != 4) {
 									console.warn(&#039;Invalid color format detected for &#039; + fieldName );
 									break;
 								}
@@ -467,14 +467,14 @@ define([
 									r: parseFloat(parts[1]),
 									g: parseFloat(parts[2]),
 									b: parseFloat(parts[3])
-								};
+								}
 
 								break;
 
 							case &#039;translation&#039;:
 							case &#039;scale&#039;:
 							case &#039;size&#039;:
-								if (parts.length !== 4) {
+								if (parts.length != 4) {
 									console.warn(&#039;Invalid vector format detected for &#039; + fieldName);
 									break;
 								}
@@ -483,7 +483,7 @@ define([
 									x: parseFloat(parts[1]),
 									y: parseFloat(parts[2]),
 									z: parseFloat(parts[3])
-								};
+								}
 
 								break;
 
@@ -494,7 +494,7 @@ define([
 							case &#039;transparency&#039;:
 							case &#039;shininess&#039;:
 							case &#039;ambientIntensity&#039;:
-								if (parts.length !== 2) {
+								if (parts.length != 2) {
 									console.warn(&#039;Invalid single float value specification detected for &#039; + fieldName);
 									break;
 								}
@@ -504,7 +504,7 @@ define([
 								break;
 
 							case &#039;rotation&#039;:
-								if (parts.length !== 5) {
+								if (parts.length != 5) {
 									console.warn(&#039;Invalid quaternion format detected for &#039; + fieldName);
 									break;
 								}
@@ -514,7 +514,7 @@ define([
 									y: parseFloat(parts[2]),
 									z: parseFloat(parts[3]),
 									w: parseFloat(parts[4])
-								};
+								}
 
 								break;
 
@@ -522,7 +522,7 @@ define([
 							case &#039;solid&#039;:
 							case &#039;colorPerVertex&#039;:
 							case &#039;convex&#039;:
-								if (parts.length !== 2) {
+								if (parts.length != 2) {
 									console.warn(&#039;Invalid format detected for &#039; + fieldName);
 									break;
 								}
@@ -574,7 +574,7 @@ define([
 							comment = parts[1];
 						}
 
-						if ( matches = /([^\s]*){1}\s?{/.exec( line ) ) { // first subpattern should match the Node name 	// jshint ignore:line
+						if ( matches = /([^\s]*){1}\s?{/.exec( line ) ) { // first subpattern should match the Node name
 
 							var block = { &#039;nodeType&#039; : matches[1], &#039;string&#039;: line, &#039;parent&#039;: current, &#039;children&#039;: [],&#039;comment&#039; : comment};
 							current.children.push( block );
@@ -664,7 +664,7 @@ define([
 							defines[ object.name ] = object;
 						}
 
-						if ( undefined !== data.translation ) {
+						if ( undefined !== data[&#039;translation&#039;] ) {
 
 							var t = data.translation;
 
@@ -718,7 +718,7 @@ define([
 
 							paintFaces( skyGeometry, radius, data.skyAngle, data.skyColor, true );
 
-							skyMaterial.vertexColors = THREE.VertexColors;
+							skyMaterial.vertexColors = THREE.VertexColors
 
 						} else {
 
@@ -917,7 +917,7 @@ define([
 
 					}
 
-				};
+				}
 
 				parseNode( getTree( lines ), scene );
 
@@ -947,7 +947,6 @@ define([
 
 	THREE.EventDispatcher.prototype.apply( THREE.VRMLLoader.prototype );
 });
-
 /* jshint ignore:end */</textarea>
   </div>
 </div>
