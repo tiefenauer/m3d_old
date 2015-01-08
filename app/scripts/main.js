@@ -27,7 +27,6 @@ require.config({
     mdown: '../../bower_components/requirejs-plugins/src/mdown',
     noext: '../../bower_components/requirejs-plugins/src/noext',
     propertyParser: '../../bower_components/requirejs-plugins/src/propertyParser',
-    'threejs-OrbitControls': '../../bower_components/threejs-controls/controls/OrbitControls',
     'Markdown.Converter': '../../bower_components/requirejs-plugins/lib/Markdown.Converter',
     'angular-bootstrap': '../../bower_components/angular-bootstrap/ui-bootstrap-tpls',
     'jquery-ui': '../../bower_components/jquery-ui/jquery-ui',
