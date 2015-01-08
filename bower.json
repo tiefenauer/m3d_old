@@ -12,7 +12,6 @@
     "angular-animate": "~1.2.0",
     "angular-touch": "~1.2.0",
     "angular-route": "~1.2.0",
-    "threejs-controls": "*",
     "bluebird": "~2.3.11",
     "lodash": "~2.4.1",
     "text": "~2.0.12",
