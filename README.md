@@ -2,8 +2,8 @@
 [![Dependency Status](https://david-dm.org/tiefenauer/m3d.svg)](https://david-dm.org/tiefenauer/m3d)
 [![devDependency Status](https://david-dm.org/tiefenauer/m3d/dev-status.svg)](https://david-dm.org/tiefenauer/m3d#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/tiefenauer/m3d/badge.svg?branch=master)](https://coveralls.io/r/tiefenauer/m3d?branch=master)
-[![Code Metrics](http://img.shields.io/badge/metrics-report-yellowgreen.svg)](http://tiefenauer.github.io/m3d/metrics/)
-[![Code Metrics](http://img.shields.io/badge/test-report-yellowgreen.svg)](http://tiefenauer.github.io/m3d/tests/)
+[![Code Metrics](http://img.shields.io/badge/metrics-report-yellowgreen.svg?style=flat)](http://tiefenauer.github.io/m3d/metrics/)
+[![Code Metrics](http://img.shields.io/badge/test-report-yellowgreen.svg?style=flat)](http://tiefenauer.github.io/m3d/tests/)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 m3d
 ===
