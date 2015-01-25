@@ -53,10 +53,16 @@ define([
         $log.debug('Saving model to ' + fileName + '.stl ...');
         var stlString = generateStl(model.geometry);
         // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
-        // var blob = new Blob([stlString], {type: 'text/plain'}); ==> funktioniert nicht
-        var builder = new WebKitBlobBuilder();
-        builder.append(stlString);
-        var blob = builder.getBlob();
+        var blob;
+        if (typeof WebKitBlobBuilder !== 'undefined'){
+          var builder = new WebKitBlobBuilder();
+          builder.append(stlString);
+          blob = builder.getBlob();
+        }
+        // funktioniert nur in Browsern
+        else {
+          blob = new Blob([stlString], {type: 'text/plain'});
+        }
         
         window.saveAs(blob, fileName + '.stl');
       });

@@ -14,10 +14,12 @@ define([
       $log.debug('HeightMapService created');
       init($log, $rootScope);
 
-      return {
-        calculateHeightMap: calculateHeightMap
-      };
+      this.calculateHeightMap = calculateHeightMap
+      this.DELAY = 1010;
+      this.CHUNK_SIZE = 150;
     };
+    
+
 
     var init =function(log, rootScope){
       $log = log;
@@ -31,7 +33,7 @@ define([
       var service = new google.maps.ElevationService();
 
       // Koordinaten-Array aufsplitten (max 512 coordinates pro request)
-      var delay = 1000;
+      var delay = 1010;
 
       var chunkSize = 150;
       var requestQueue = [];
@@ -48,13 +50,16 @@ define([
       
       stop = false;
       var index = 0;
+      var queueItem;
       // Queue-Item abarbeiten
       var processNextQueueItem = function(){
-        if (stop){
+        if (stop || index >= requestQueue.length){
           stop = false;
+          $rootScope.$broadcast('adapter:end', coordinates);
         }
         else{
-          var request = {locations: requestQueue[index]};
+          queueItem = requestQueue[index];
+          var request = {locations: queueItem};
           service.getElevationForLocations(request, onServiceResponse);           
         }
       };
@@ -69,24 +74,20 @@ define([
         switch(status){
           case google.maps.ElevationStatus.OK:              
 
-            $.each(result, function(i){
-              $rootScope.$broadcast('adapter:item:progress');
-              var searchResult = _.findWhere(coordinates, { 
-                          lat: Number(parseFloat(result[i].location.lat()).toFixed(4)), 
-                          lng: Number(parseFloat(result[i].location.lng()).toFixed(4))
-                        });
-              if (searchResult){
-                searchResult.elv = result[i].elevation;
+            $.each(queueItem, function(i, coord){              
+              var searchResult = $.grep(result, function(entry, index){
+                var lat = Number(parseFloat(entry.location.lat())).toFixed(4);
+                var lng = Number(parseFloat(entry.location.lng())).toFixed(4);
+                return lat == coord.lat && lng == coord.lng;
+              });
+              if (searchResult && searchResult.length > 0){
+                $rootScope.$broadcast('adapter:item:progress');
+                coord.elv = searchResult[0].elevation;
               }                
             });
 
-            if (++index < requestQueue.length){           
-              processNextQueueItem();
-            }
-            else{
-              stop = false;
-              $rootScope.$broadcast('adapter:end', coordinates);
-            }
+            stop = ++index >= requestQueue.length
+            processNextQueueItem();
           break;
 
           default:
