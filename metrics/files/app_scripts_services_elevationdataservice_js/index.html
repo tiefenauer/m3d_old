@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">64.13</p>
+      <p class="stat">65.34</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">114</p>
+      <p class="stat">115</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">26.18</p>
+      <p class="stat">33.00</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.70</p>
+      <p class="stat">0.80</p>
     </div>
   </div>
 </div>
@@ -105,10 +105,12 @@
       $log.debug(&#039;HeightMapService created&#039;);
       init($log, $rootScope);
 
-      return {
-        calculateHeightMap: calculateHeightMap
-      };
+      this.calculateHeightMap = calculateHeightMap
+      this.DELAY = 1010;
+      this.CHUNK_SIZE = 150;
     };
+    
+
 
     var init =function(log, rootScope){
       $log = log;
@@ -122,7 +124,7 @@
       var service = new google.maps.ElevationService();
 
       // Koordinaten-Array aufsplitten (max 512 coordinates pro request)
-      var delay = 1000;
+      var delay = 1010;
 
       var chunkSize = 150;
       var requestQueue = [];
@@ -139,13 +141,16 @@
       
       stop = false;
       var index = 0;
+      var queueItem;
       // Queue-Item abarbeiten
       var processNextQueueItem = function(){
-        if (stop){
+        if (stop || index &gt;= requestQueue.length){
           stop = false;
+          $rootScope.$broadcast(&#039;adapter:end&#039;, coordinates);
         }
         else{
-          var request = {locations: requestQueue[index]};
+          queueItem = requestQueue[index];
+          var request = {locations: queueItem};
           service.getElevationForLocations(request, onServiceResponse);           
         }
       };
@@ -160,24 +165,20 @@
         switch(status){
           case google.maps.ElevationStatus.OK:              
 
-            $.each(result, function(i){
-              $rootScope.$broadcast(&#039;adapter:item:progress&#039;);
-              var searchResult = _.findWhere(coordinates, { 
-                          lat: Number(parseFloat(result[i].location.lat()).toFixed(4)), 
-                          lng: Number(parseFloat(result[i].location.lng()).toFixed(4))
-                        });
-              if (searchResult){
-                searchResult.elv = result[i].elevation;
+            $.each(queueItem, function(i, coord){              
+              var searchResult = $.grep(result, function(entry, index){
+                var lat = Number(parseFloat(entry.location.lat())).toFixed(4);
+                var lng = Number(parseFloat(entry.location.lng())).toFixed(4);
+                return lat == coord.lat &amp;&amp; lng == coord.lng;
+              });
+              if (searchResult &amp;&amp; searchResult.length &gt; 0){
+                $rootScope.$broadcast(&#039;adapter:item:progress&#039;);
+                coord.elv = searchResult[0].elevation;
               }                
             });
 
-            if (++index &lt; requestQueue.length){           
-              processNextQueueItem();
-            }
-            else{
-              stop = false;
-              $rootScope.$broadcast(&#039;adapter:end&#039;, coordinates);
-            }
+            stop = ++index &gt;= requestQueue.length
+            processNextQueueItem();
           break;
 
           default:
