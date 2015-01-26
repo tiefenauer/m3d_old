@@ -460,13 +460,15 @@ module.exports = function (grunt) {
 
     protractor: {
       options: {
+        directConnect: true,
         configFile: "protractor-conf.js",
         keepAlive: true, // If false, the grunt process stops when the test fails.
         noColor: false, // If true, protractor will not use colors in its output.
         // http://stackoverflow.com/questions/19066747/integrating-protractor-for-e2e-testing-with-yeoman-in-grunt-file-for-angular-j
         args: {
           seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.44.0.jar'
-          ,chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
+          //,chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
+          ,chromeDriver: 'node_modules/chromedriver/bin/chromedriver'          
         }
       },
       all: {} 

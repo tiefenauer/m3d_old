@@ -16,6 +16,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
+    "chromedriver": "^2.13.0",
     "grunt": "^0.4.5",
     "grunt-autoprefixer": "^0.7.3",
     "grunt-bower-requirejs": "^0.11.0",
