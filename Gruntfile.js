@@ -498,17 +498,19 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('test', 'runs all tests', function(target){
-    if (target == null || typeof(target) == 'undefined'){
-      grunt.log.writeln('running all tests');
-      return grunt.task.run(['test-e2e', 'test-unit']);
-    }
-    else if (target === 'unit'){
-      grunt.log.writeln('running unit tests');
-      grunt.task.run(['test-unit']);
-    }
-    else if (target === 'e2e'){
-      grunt.log.writeln('running End-to-End tests');
-      grunt.task.run('test-e2e');
+    switch(target){
+      case 'unit':
+        grunt.log.writeln('running unit tests');
+        grunt.task.run(['test-unit']);
+        break;
+      case 'e2e':
+        grunt.log.writeln('running End-to-End tests');
+        grunt.task.run('test-e2e');
+        break;
+      default:
+        grunt.log.writeln('running all tests');
+        grunt.task.run(['test-unit', 'test-e2e']);
+        break;
     }
   });
 
