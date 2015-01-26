@@ -449,6 +449,15 @@ module.exports = function (grunt) {
         }
     },
 
+    protractor_webdriver: {
+      start: {
+        options: {
+            path: 'node_modules/protractor/bin/',
+            command: 'webdriver-manager start'
+        }
+      }
+    },
+
     protractor: {
       options: {
         configFile: "protractor-conf.js",
@@ -456,8 +465,8 @@ module.exports = function (grunt) {
         noColor: false, // If true, protractor will not use colors in its output.
         // http://stackoverflow.com/questions/19066747/integrating-protractor-for-e2e-testing-with-yeoman-in-grunt-file-for-angular-j
         args: {
-          seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.44.0.jar',
-          chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
+          seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.44.0.jar'
+          ,chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
         }
       },
       all: {} 
@@ -465,8 +474,8 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks('grunt-coveralls');
+  grunt.loadNpmTasks('grunt-protractor-webdriver');
   grunt.loadNpmTasks('grunt-protractor-runner');
-
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
@@ -488,16 +497,38 @@ module.exports = function (grunt) {
     grunt.task.run(['serve:' + target]);
   });
 
-  grunt.registerTask('test', [
-    'clean:server',
-    'bower:app',
-    'replace:test',
-    'concurrent:test',
-    'autoprefixer',
-    'connect:test',
-    'karma',
-    'protractor:all'
-  ]);
+  grunt.registerTask('test', 'runs all tests', function(target){
+    if (target == null || typeof(target) == 'undefined'){
+      grunt.log.writeln('running all tests');
+      return grunt.task.run(['test-e2e', 'test-unit']);
+    }
+    else if (target === 'unit'){
+      grunt.log.writeln('running unit tests');
+      grunt.task.run(['test-unit']);
+    }
+    else if (target === 'e2e'){
+      grunt.log.writeln('running End-to-End tests');
+      grunt.task.run('test-e2e');
+    }
+  });
+
+  grunt.registerTask('test-unit', 'runs unit tests',
+    [
+      'clean:server',
+      'bower:app',
+      'replace:test',
+      'concurrent:test',
+      'autoprefixer',
+      'connect:test',
+      'karma'
+    ]
+  );
+
+  grunt.registerTask('test-e2e', 'runs End-to-End-tests', 
+    [
+      'protractor_webdriver',
+      'protractor'    
+    ]);
 
   grunt.registerTask('build', [
     'clean:dist',
