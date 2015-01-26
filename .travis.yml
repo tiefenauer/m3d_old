@@ -5,6 +5,8 @@ env:
   global:
     secure: CMCKwpeZ/T4mLZRaNCD/ss2Ukcm/GZtn78r7VKFMCAnKZaMkCIP/v4i+S4oPjILUEwIwit9ptFoOtW2ctwWGBhF5p6w5AkcpyGPdtl/ZljzRSpWoY1LK46aukzGXVOqh1vOujglnO5iJZL+EoaDnb8z+6oeeNOglrZZZA8RKeKY=
 before_script:
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
 - npm install -g bower grunt-cli
 - gem update --system && gem install compass
 - bower install
