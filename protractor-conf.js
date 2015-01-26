@@ -3,6 +3,8 @@ var HtmlReporter = require('protractor-html-screenshot-reporter');
 var path = require('path');
 
 exports.config = {
+  //seleniumAddress: 'http://localhost:4444/wd/hub',
+
   onPrepare: function() {
     require('jasmine-reporters');
     jasmine.getEnv().addReporter(
@@ -12,14 +14,6 @@ exports.config = {
             return path.join(descriptions.join('-'));
          }
       })
-      /*
-      new ScreenShotReporter({
-         baseDirectory: 'tests/e2e',
-         pathBuilder: function pathBuilder(spec, descriptions, results, capabilities) {
-            return path.join(descriptions.join('-'));
-         }
-      })
-      */
     );
   },
 

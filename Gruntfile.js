@@ -447,10 +447,25 @@ module.exports = function (grunt) {
         all: {
           src: 'coverage/report-lcov/lcov.info'
         }
+    },
+
+    protractor: {
+      options: {
+        configFile: "protractor-conf.js",
+        keepAlive: true, // If false, the grunt process stops when the test fails.
+        noColor: false, // If true, protractor will not use colors in its output.
+        // http://stackoverflow.com/questions/19066747/integrating-protractor-for-e2e-testing-with-yeoman-in-grunt-file-for-angular-j
+        args: {
+          seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.44.0.jar',
+          chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
+        }
+      },
+      all: {} 
     }
   });
 
   grunt.loadNpmTasks('grunt-coveralls');
+  grunt.loadNpmTasks('grunt-protractor-runner');
 
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
@@ -480,7 +495,8 @@ module.exports = function (grunt) {
     'concurrent:test',
     'autoprefixer',
     'connect:test',
-    'karma'
+    'karma',
+    'protractor:all'
   ]);
 
   grunt.registerTask('build', [

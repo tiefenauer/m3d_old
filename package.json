@@ -37,6 +37,8 @@
     "grunt-karma": "^0.9.0",
     "grunt-newer": "^0.7.0",
     "grunt-ng-annotate": "^0.4.0",
+    "grunt-protractor-runner": "^1.2.1",
+    "grunt-protractor-webdriver": "^0.2.0",
     "grunt-requirejs": "^0.4.2",
     "grunt-svgmin": "^0.4.0",
     "grunt-text-replace": "^0.3.12",
@@ -57,6 +59,7 @@
     "karma-requirejs": "^0.2.2",
     "load-grunt-tasks": "^0.4.0",
     "plato": "^1.2.2",
+    "protractor": "^1.6.1",
     "protractor-html-screenshot-reporter": "0.0.19",
     "protractor-screenshot-reporter": "0.0.5",
     "request": "^2.49.0",
@@ -68,6 +71,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "metrics": "plato -d metrics -r -x .json -t \"M3D Complexity Report\" -l .jshintrc app/scripts"
+    "metrics": "plato -d metrics -r -x .json -t \"M3D Complexity Report\" -l .jshintrc app/scripts",
+    "install": "node node_modules/protractor/bin/webdriver-manager update"
   }
 }
