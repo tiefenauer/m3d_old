@@ -468,7 +468,7 @@ module.exports = function (grunt) {
         args: {
           seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.44.0.jar'
           //,chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
-          ,chromeDriver: 'node_modules/chromedriver/lib/chromedriver'
+          //,chromeDriver: 'node_modules/chromedriver/lib/chromedriver'
         }
       },
       all: {} 
