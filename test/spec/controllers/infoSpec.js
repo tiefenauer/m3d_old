@@ -7,8 +7,7 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
     // load the controller's module
     beforeEach(module('m3d.controllers'));
 
-    var InfoCtrl,
-      scope;
+    var InfoCtrl, scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope) {
