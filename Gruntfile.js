@@ -467,17 +467,31 @@ module.exports = function (grunt) {
         // http://stackoverflow.com/questions/19066747/integrating-protractor-for-e2e-testing-with-yeoman-in-grunt-file-for-angular-j
         args: {
           seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.44.0.jar'
-          //,chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
+          ,chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
           //,chromeDriver: 'node_modules/chromedriver/lib/chromedriver'
         }
       },
       all: {} 
+    },
+
+    jsdoc: {
+      dist: {
+        src: ['app/scripts/**/*.js'],
+        options: {
+          verbose: true,
+          destination: 'doc',
+          configure: 'jsdoc/conf.json',
+          template: './jsdoc/',
+          'private': false
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-coveralls');
   grunt.loadNpmTasks('grunt-protractor-webdriver');
   grunt.loadNpmTasks('grunt-protractor-runner');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
@@ -558,6 +572,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', [
     'newer:jshint',
     'test',
+    'jsdoc',
     'build'
   ]);
 };

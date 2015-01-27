@@ -11,61 +11,73 @@ define([
     var $log, $rootScope;
     var loader;
 
+    /**
+     * ProfileIOService
+     * Service to load and save files from/to file
+     * @class
+     * @name m3d.services.ProfileIOService 
+     * @namespace
+     */
     var ProfileIOService = function($log, $rootScope){
       $log.debug('ProfileIOService created...');
-      init($log, $rootScope);
-      addEventListeners();
-
-      return {
-         load: angular.bind(this, load)
-        ,save: angular.bind(this, save)
-        //,generateStl: generateStl
-      };
+      this.init($log, $rootScope);
     };
 
-    var init = function(logger, scope){
-      $log = logger;
-      $rootScope = scope;
-      loader = new THREE.STLLoader();
-    };
+    ProfileIOService.prototype = /** @lends m3d.services.ProfileIOService.prototype */{
+      /**
+      * initialize
+      */
+      init: function(logger, scope){
+        $log = logger;
+        $rootScope = scope;
+        $rootScope.$on('menu:loadProfile', this.load);        
+      },
 
-    var addEventListeners = function(){
-      $rootScope.$on('menu:loadProfile', load);
-    };
+      /**
+      * load model from file
+      * @param {m3d.events.io} event the event that was fired
+      * @fires io:model:loaded
+      */
+      load: function(event, file){
+        $log.debug('Loading from ' + file.name + ' ...');
+        switch(true){
+          case new RegExp('.stl').test(file.name):
+            loader = new THREE.STLLoader();
+            break;
+          case new RegExp('.wrl').test(file.name):
+            loader = new THREE.VRMLLoader();
+            break;
+        }
+        if(loader)
+          loader.loadLocal(file, onFileLoaded);
+      },
 
-    var load = function(event, file){
-      $log.debug('Loading from ' + file.name + ' ...');
-      switch(true){
-        case new RegExp('.stl').test(file.name):
-          loader = new THREE.STLLoader();
-          break;
-        case new RegExp('.wrl').test(file.name):
-          loader = new THREE.VRMLLoader();
-          break;
+      /**
+      * save model to file
+      * @param {Object[]} Objects to be saved. Each object will be saved to a separate file
+      */
+      save: function(objects){
+        objects.forEach(function(model){
+          var fileName = model.name || 'stlModel';
+          fileName += '_generated';
+          $log.debug('Saving model to ' + fileName + '.stl ...');
+          var stlString = generateStl(model.geometry);
+          // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
+          var blob;
+          if (typeof WebKitBlobBuilder !== 'undefined'){
+            var builder = new WebKitBlobBuilder();
+            builder.append(stlString);
+            blob = builder.getBlob();
+          }
+          // funktioniert nur in Browsern
+          else {
+            blob = new Blob([stlString], {type: 'text/plain'});
+          }
+          
+          window.saveAs(blob, fileName + '.stl');
+        });
       }
-      loader.loadLocal(file, onFileLoaded);
-    };
 
-    var save = function(objects){
-      objects.forEach(function(model){
-        var fileName = model.name || 'stlModel';
-        fileName += '_generated';
-        $log.debug('Saving model to ' + fileName + '.stl ...');
-        var stlString = generateStl(model.geometry);
-        // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
-        var blob;
-        if (typeof WebKitBlobBuilder !== 'undefined'){
-          var builder = new WebKitBlobBuilder();
-          builder.append(stlString);
-          blob = builder.getBlob();
-        }
-        // funktioniert nur in Browsern
-        else {
-          blob = new Blob([stlString], {type: 'text/plain'});
-        }
-        
-        window.saveAs(blob, fileName + '.stl');
-      });
     };
 
     var onFileLoaded = function(content, file){
@@ -124,3 +136,11 @@ define([
 
     return ['$log', '$rootScope', ProfileIOService];    
 });
+
+/**
+* This event indicates that a model has been loaded
+* @name m3d.events.io
+* @event io:model:loaded
+* @property {THREE.geometry} geometry of the model
+* @property {String} fileName name of the file the model was loaded from
+*/

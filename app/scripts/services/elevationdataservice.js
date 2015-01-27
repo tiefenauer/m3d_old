@@ -7,65 +7,93 @@ define([
     'use strict';
 
     var google = window.google;
+    var service, coords;
     var $log, $rootScope;
-    var stop;
+    var stop, index, requestQueue, queueItem;
 
+    /**
+     * ElevationDataService
+     * Default Service to get elevation data from Google
+     * @class
+     * @name m3d.services.ElevationDataService 
+     */
     var ElevationDataService = function($log, $rootScope){
       $log.debug('HeightMapService created');
-      init($log, $rootScope);
-
-      this.calculateHeightMap = calculateHeightMap
-      this.DELAY = 1010;
-      this.CHUNK_SIZE = 150;
+      this.init($log, $rootScope);
     };
     
 
+    ElevationDataService.prototype = /** @lends m3d.services.ElevationDataService.prototype */ {
+      /** 
+      * Default delay between service calls in ms 
+      * @static 
+      */
+      DELAY: 1010,
+      /** 
+      * Number of coordinates to process in one go
+      * @static 
+      */
+      CHUNK_SIZE: 150,
 
-    var init =function(log, rootScope){
-      $log = log;
-      $rootScope = rootScope;
+      /**
+      * initialize Service
+      */
+      init: function(log, rootScope){
+        $log = log;
+        $rootScope = rootScope;
+      },
+
+      /**
+      * Calculate a height map from a list of coordinates
+      * @param {Object[]} coordinates list of coordinates to process      
+      * @fires adapter:start
+      * @fires adapter:end
+      * @fires adapter:queue:progress
+      */
+      calculateHeightMap: function(coordinates){
+        $log.debug('calculating heigth map in service ...');
+        $log.debug(coordinates.length + ' points');
+        coords = coordinates;
+
+        service = new google.maps.ElevationService();
+
+        // Koordinaten-Array aufsplitten (max 512 coordinates pro request)
+        var delay = 1010;
+
+        var chunkSize = 150;
+        requestQueue = [];
+        for(var i=0; i<coordinates.length; i+=chunkSize){
+          requestQueue.push(coordinates.slice(i, i+chunkSize));
+        }
+        
+        $rootScope.$broadcast('adapter:start', {
+           numItems: coordinates.length
+          ,numCalls: requestQueue.length
+          ,chunkSize: chunkSize
+          ,delay: delay
+        });
+        
+        stop = false;
+        index = 0;
+        processNextQueueItem();        
+      }
     };
 
-    var calculateHeightMap = function(coordinates){
-      $log.debug('calculating heigth map in service ...');
-      $log.debug(coordinates.length + ' points');
-
-      var service = new google.maps.ElevationService();
-
-      // Koordinaten-Array aufsplitten (max 512 coordinates pro request)
-      var delay = 1010;
-
-      var chunkSize = 150;
-      var requestQueue = [];
-      for(var i=0; i<coordinates.length; i+=chunkSize){
-        requestQueue.push(coordinates.slice(i, i+chunkSize));
+    // Queue-Item abarbeiten
+    var processNextQueueItem = function(){
+      if (stop || index >= requestQueue.length){
+        stop = false;
+        $rootScope.$broadcast('adapter:end', coords);
       }
-      
-      $rootScope.$broadcast('adapter:start', {
-         numItems: coordinates.length
-        ,numCalls: requestQueue.length
-        ,chunkSize: chunkSize
-        ,delay: delay
-      });
-      
-      stop = false;
-      var index = 0;
-      var queueItem;
-      // Queue-Item abarbeiten
-      var processNextQueueItem = function(){
-        if (stop || index >= requestQueue.length){
-          stop = false;
-          $rootScope.$broadcast('adapter:end', coordinates);
-        }
-        else{
-          queueItem = requestQueue[index];
-          var request = {locations: queueItem};
-          service.getElevationForLocations(request, onServiceResponse);           
-        }
-      };
+      else{
+        queueItem = requestQueue[index];
+        var request = {locations: queueItem};
+        service.getElevationForLocations(request, onServiceResponse);           
+      }
+    };    
 
       // Response handler
-      var onServiceResponse = function(result, status){
+    var onServiceResponse = function(result, status){
         $rootScope.$broadcast('adapter:queue:progress', {
            status: status
           ,progress: index+1
@@ -95,21 +123,34 @@ define([
           break;
         }
         
-      };
-
-      processNextQueueItem();
     };
 
+
     return ElevationDataService;
-    /**
-     * @ngdoc service
-     * @name m3dApp.Elevationdataservice
-     * @description
-     * # Elevationdataservice
-     * Service in the m3dApp.
-     */
-     /*
-    angular.module('m3d.services.ElevationDataService', [])
-  	.service('ElevationDataService', ElevationDataService);
-    */
 });
+
+/**
+* Adapter start event.
+* This event indicates the start of processing a number of coordinates
+* @event adapter:start
+* @property {Number} numItems number of coordinates that are going to be processed
+* @property {Number} numCalls number of calls that are going to be made to get elevation data
+* @property {Number} chunkSize number of coordinates processed in one go
+* @property {Number} delay delay between service calls in ms
+*/
+
+/**
+* Adapter progress event.
+* This event indicates a progress while processing a number of coordinates
+* @event adapter:queue:progress
+* @property {Number} status Status response of last service call
+* @property {Number} progress number of calls made
+* @property {Number} total number of calls to be made
+*/
+
+/**
+* Adapter end event.
+* This event indicates the end of processing a number of coordinates
+* @event adapter:end
+* @property {Object[]} coords the processed coordinates including their elevation
+*/

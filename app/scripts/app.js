@@ -12,13 +12,13 @@ define([
   function (angular)/*invoke*/ {
   'use strict';
 
-  /**
+
+  /**  
+   * Main module of the application.
    * @ngdoc overview
    * @name m3dApp
    * @description
    * # m3dApp
-   *
-   * Main module of the application.
    */
   return angular.module('m3d', [
            'm3d.filters'
