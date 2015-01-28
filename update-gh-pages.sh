@@ -16,9 +16,11 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   mkdir gh-pages/metrics
   mkdir gh-pages/coverage
   mkdir gh-pages/tests
+  mkdir gh-pages/doc
   cp -R metrics/* gh-pages/metrics
   cp -R coverage/report-html/* gh-pages/coverage
   cp -R tests/* gh-pages/tests
+  cp -R doc/* gh-pages/doc
   cp -R dist/* gh-pages
 
   #go to updated pages and setup git
