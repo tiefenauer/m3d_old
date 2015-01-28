@@ -5,6 +5,7 @@
 [![devDependency Status](https://david-dm.org/tiefenauer/m3d/dev-status.svg)](https://david-dm.org/tiefenauer/m3d#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/tiefenauer/m3d/badge.svg?branch=master)](https://coveralls.io/r/tiefenauer/m3d?branch=master)
 
+* [Coverage report (alternative)](http://tiefenauer.github.io/m3d/coverage/)
 * [Lint report](http://tiefenauer.github.io/m3d/jshint)
 * [Test report](http://tiefenauer.github.io/m3d/tests)
 * [Code Metrics](http://tiefenauer.github.io/m3d/metrics)
