@@ -11,9 +11,7 @@ before_script:
 - gem update --system && gem install compass
 - bower install
 script:
-- grunt build
-- grunt test
-- grunt coveralls
+- grunt
 after_success:
 - chmod +x ./update-gh-pages.sh
 - ./update-gh-pages.sh
