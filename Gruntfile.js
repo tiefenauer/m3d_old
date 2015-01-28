@@ -447,7 +447,7 @@ module.exports = function (grunt) {
             */
         },
         all: {
-          src: 'coverage/report-lcov/lcov.info'
+          src: 'reports/coverage/report-lcov/lcov.info'
         }
     },
 
