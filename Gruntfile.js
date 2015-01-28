@@ -115,8 +115,10 @@ module.exports = function (grunt) {
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
+		force: true,
         jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
+        reporter: require('jshint-html-reporter'),
+        reporterOutput: 'reports/jshint/index.html'
       },
       all: {
         src: [
@@ -467,8 +469,8 @@ module.exports = function (grunt) {
         // http://stackoverflow.com/questions/19066747/integrating-protractor-for-e2e-testing-with-yeoman-in-grunt-file-for-angular-j
         args: {
           seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.44.0.jar'
-          ,chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
-          //,chromeDriver: 'node_modules/chromedriver/lib/chromedriver'
+          //,chromeDriver: 'node_modules/protractor/selenium/chromedriver.exe'          
+          ,chromeDriver: 'node_modules/chromedriver/lib/chromedriver'
         }
       },
       all: {} 

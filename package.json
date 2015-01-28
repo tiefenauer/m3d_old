@@ -48,6 +48,7 @@
     "grunt-wiredep": "^1.9.0",
     "jasmine-core": "^2.1.2",
     "jasmine-reporters": "^1.0.1",
+    "jshint-html-reporter": "^0.2.3",
     "jshint-stylish": "^0.2.0",
     "karma": "^0.12.25",
     "karma-chrome-launcher": "^0.1.5",
