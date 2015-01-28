@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">64.07</p>
+      <p class="stat">63.39</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">126</p>
+      <p class="stat">138</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">34.04</p>
+      <p class="stat">33.11</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.32</p>
+      <p class="stat">1.26</p>
     </div>
   </div>
 </div>
@@ -102,61 +102,73 @@ define([
     var $log, $rootScope;
     var loader;
 
+    /**
+     * ProfileIOService
+     * Service to load and save files from/to file
+     * @class
+     * @name m3d.services.ProfileIOService 
+     * @namespace
+     */
     var ProfileIOService = function($log, $rootScope){
       $log.debug(&#039;ProfileIOService created...&#039;);
-      init($log, $rootScope);
-      addEventListeners();
-
-      return {
-         load: angular.bind(this, load)
-        ,save: angular.bind(this, save)
-        //,generateStl: generateStl
-      };
+      this.init($log, $rootScope);
     };
 
-    var init = function(logger, scope){
-      $log = logger;
-      $rootScope = scope;
-      loader = new THREE.STLLoader();
-    };
+    ProfileIOService.prototype = /** @lends m3d.services.ProfileIOService.prototype */{
+      /**
+      * initialize
+      */
+      init: function(logger, scope){
+        $log = logger;
+        $rootScope = scope;
+        $rootScope.$on(&#039;menu:loadProfile&#039;, this.load);        
+      },
 
-    var addEventListeners = function(){
-      $rootScope.$on(&#039;menu:loadProfile&#039;, load);
-    };
+      /**
+      * load model from file
+      * @param {m3d.events.io} event the event that was fired
+      * @fires io:model:loaded
+      */
+      load: function(event, file){
+        $log.debug(&#039;Loading from &#039; + file.name + &#039; ...&#039;);
+        switch(true){
+          case new RegExp(&#039;.stl&#039;).test(file.name):
+            loader = new THREE.STLLoader();
+            break;
+          case new RegExp(&#039;.wrl&#039;).test(file.name):
+            loader = new THREE.VRMLLoader();
+            break;
+        }
+        if(loader)
+          loader.loadLocal(file, onFileLoaded);
+      },
 
-    var load = function(event, file){
-      $log.debug(&#039;Loading from &#039; + file.name + &#039; ...&#039;);
-      switch(true){
-        case new RegExp(&#039;.stl&#039;).test(file.name):
-          loader = new THREE.STLLoader();
-          break;
-        case new RegExp(&#039;.wrl&#039;).test(file.name):
-          loader = new THREE.VRMLLoader();
-          break;
+      /**
+      * save model to file
+      * @param {Object[]} Objects to be saved. Each object will be saved to a separate file
+      */
+      save: function(objects){
+        objects.forEach(function(model){
+          var fileName = model.name || &#039;stlModel&#039;;
+          fileName += &#039;_generated&#039;;
+          $log.debug(&#039;Saving model to &#039; + fileName + &#039;.stl ...&#039;);
+          var stlString = generateStl(model.geometry);
+          // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
+          var blob;
+          if (typeof WebKitBlobBuilder !== &#039;undefined&#039;){
+            var builder = new WebKitBlobBuilder();
+            builder.append(stlString);
+            blob = builder.getBlob();
+          }
+          // funktioniert nur in Browsern
+          else {
+            blob = new Blob([stlString], {type: &#039;text/plain&#039;});
+          }
+          
+          window.saveAs(blob, fileName + &#039;.stl&#039;);
+        });
       }
-      loader.loadLocal(file, onFileLoaded);
-    };
 
-    var save = function(objects){
-      objects.forEach(function(model){
-        var fileName = model.name || &#039;stlModel&#039;;
-        fileName += &#039;_generated&#039;;
-        $log.debug(&#039;Saving model to &#039; + fileName + &#039;.stl ...&#039;);
-        var stlString = generateStl(model.geometry);
-        // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
-        var blob;
-        if (typeof WebKitBlobBuilder !== &#039;undefined&#039;){
-          var builder = new WebKitBlobBuilder();
-          builder.append(stlString);
-          blob = builder.getBlob();
-        }
-        // funktioniert nur in Browsern
-        else {
-          blob = new Blob([stlString], {type: &#039;text/plain&#039;});
-        }
-        
-        window.saveAs(blob, fileName + &#039;.stl&#039;);
-      });
     };
 
     var onFileLoaded = function(content, file){
@@ -214,7 +226,15 @@ define([
     };
 
     return [&#039;$log&#039;, &#039;$rootScope&#039;, ProfileIOService];    
-});</textarea>
+});
+
+/**
+* This event indicates that a model has been loaded
+* @name m3d.events.io
+* @event io:model:loaded
+* @property {THREE.geometry} geometry of the model
+* @property {String} fileName name of the file the model was loaded from
+*/</textarea>
   </div>
 </div>
 
