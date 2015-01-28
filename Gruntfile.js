@@ -482,8 +482,8 @@ module.exports = function (grunt) {
         options: {
           verbose: true,
           destination: 'doc',
-          configure: 'jsdoc/conf.json',
-          template: './jsdoc/',
+          configure: 'resources/jsdoc/conf.json',
+          template: './resources/jsdoc/',
           'private': false
         }
       }
