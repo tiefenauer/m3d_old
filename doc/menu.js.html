@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: controllers/menu.js</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"Demo","disqus":"","googleAnalytics":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"","description":"","keyword":""},"linenums":false};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">Demo</a></h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="m3d.services.ProfileIOService">
+            <span class="title">
+                <a href="m3d.services.ProfileIOService.html">m3d.services.ProfileIOService</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="m3d.services.ProfileIOService#init"><a href="m3d.services.ProfileIOService.html#init">init</a></li>
+            
+                <li data-name="m3d.services.ProfileIOService#load"><a href="m3d.services.ProfileIOService.html#load">load</a></li>
+            
+                <li data-name="m3d.services.ProfileIOService#save"><a href="m3d.services.ProfileIOService.html#save">save</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.services.ElevationDataService">
+            <span class="title">
+                <a href="m3d.services.ElevationDataService.html">m3d.services.ElevationDataService</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="m3d.services.ElevationDataService#CHUNK_SIZE"><a href="m3d.services.ElevationDataService.html#CHUNK_SIZE">CHUNK_SIZE</a></li>
+            
+                <li data-name="m3d.services.ElevationDataService#DELAY"><a href="m3d.services.ElevationDataService.html#DELAY">DELAY</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="m3d.services.ElevationDataService#calculateHeightMap"><a href="m3d.services.ElevationDataService.html#calculateHeightMap">calculateHeightMap</a></li>
+            
+                <li data-name="m3d.services.ElevationDataService#init"><a href="m3d.services.ElevationDataService.html#init">init</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        <h1 class="page-title" data-filename="menu.js.html">Source: controllers/menu.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source "><code>define([
+  'angular',
+  'jquery',
+  'ladda-bootstrap'
+  ],
+   function (angular, $, Ladda) {
+    'use strict';
+
+    var $scope, $rootScope, $log, $modal;
+
+    var searchBox, ladda;
+    var buttonLabelDefault = 'Höhenprofil generieren';
+    var buttonLabelProcessing = 'Abbrechen';  
+    var google = window.google;
+
+    var MenuController = function ($rootScope, $scope, $log, $modal) {
+      $log.debug('MenuController created');  
+      init($rootScope, $scope, $log, $modal);
+      $scope.buttonLabel = buttonLabelDefault;
+      $scope.searchbox = { template:'searchbox.tpl.html'};
+
+      $scope.calculateHeightMap = calculateHeightMap;
+      $scope.showSettings = showSettings;
+      $scope.showInfo = showInfo;        
+      $scope.showStats = showStats;        
+      $scope.showFileUpload = showFileUpload;
+      $scope.saveModel = saveModel;      
+    };
+
+    /**
+     * @ngdoc function
+     * @name m3dApp.controller:MenuCtrl
+     * @description
+     * # MenuCtrl
+     * Controller of the m3dApp
+     */
+
+    var init = function(rootScope, scope, log, modal){
+      $rootScope = rootScope; 
+      $scope = scope;
+      $log = log;
+      $modal = modal;
+      ladda = Ladda.create($('#ladda')[0]);
+
+      $scope.$on('adapter:start', function(){
+        ladda.start();
+      });
+      $scope.$on('adapter:queue:progress', function(event, data){
+        ladda.setProgress(data.progress/data.total);
+        $scope.prog = Math.round(100*data.progress/data.total);
+        $scope.buttonLabel = buttonLabelProcessing + ' (' + $scope.prog + '%)';
+        $log.debug($scope.prog + '% loaded');
+      });
+      $scope.$on('adapter:end', function(){
+        ladda.stop();
+        $scope.buttonLabel = buttonLabelDefault;
+        $scope.prog = 0;
+      });      
+
+      initSearchBox();
+    };
+
+    var initSearchBox = function(){
+      var searchInput = $('#pac-input')[0];
+      searchBox = new google.maps.places.SearchBox(searchInput);
+      google.maps.event.addListener(searchBox, 'places_changed', onPlacesChanged);
+    };
+
+    var onPlacesChanged = function(/* places */){
+      $log.debug('menu:places_changed');
+      $rootScope.$broadcast('menu:places_changed', searchBox.getPlaces());
+    };    
+
+    var showFileUpload = function(){
+      var fileSelector = $('&lt;input>&lt;/input>').attr({type: 'file', accept: '.stl,.wrl'});
+      fileSelector.change(function(evt){
+        var file = evt.target.files[0];
+        if (file) {
+          $rootScope.$broadcast('menu:loadProfile', file);          
+        }        
+      });
+      fileSelector.click(); 
+    };    
+
+    var showSettings = function(){
+      $log.debug('showing settings...');
+      $modal.open({
+         templateUrl: 'views/templates/settings_popup.html'
+        ,controller: 'SettingsCtrl'
+      });
+    };
+
+    var showStats = function(){
+      $log.debug('showing stats...');
+      $modal.open({
+         templateUrl: 'views/templates/stats_popup.html'
+        ,controller: 'StatsController'
+      });
+    };
+
+    var showInfo = function(){
+      $log.debug('showing info...');
+      $modal.open({
+         templateUrl: 'views/templates/info_popup.html'
+        ,controller: 'InfoCtrl'
+      });
+    };    
+
+    var calculateHeightMap = function(){
+      $log.debug('process button clicked');
+      $rootScope.$broadcast('menu:process_button_clicked');
+    };
+
+    var saveModel = function () {
+      $log.debug('save button clicker');
+      $rootScope.$broadcast('menu:save_button_clicked');
+    };    
+
+    return ['$rootScope', '$scope', '$log', '$modal', MenuController];
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jan 28 2015 19:03:41 GMT-0000 (UTC)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
