@@ -6,9 +6,11 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/tiefenauer/m3d.git  gh-pages > /dev/null
 
   #bestehende Metriken ins Arbeitsverzeichnis kopieren (für History)
-  mkdir metrics
-  mkdir coverage
-  cp -Rf gh-pages/metrics/* metrics
+  mkdir reports
+  mkdir reports/metrics
+  mkdir reports/coverage
+  mkdir reports/jshint
+  cp -Rf gh-pages/metrics/* reports/metrics
 
   #Metriken neu erstellen
   npm run metrics
@@ -16,11 +18,13 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   mkdir gh-pages/metrics
   mkdir gh-pages/coverage
   mkdir gh-pages/tests
+  mkdir gh-pages/jshint
   mkdir gh-pages/doc
-  cp -R metrics/* gh-pages/metrics
-  cp -R coverage/report-html/* gh-pages/coverage
-  cp -R tests/* gh-pages/tests
-  cp -R doc/* gh-pages/doc
+  cp -R reports/metrics/* gh-pages/metrics
+  cp -R reports/coverage/report-html/* gh-pages/coverage
+  cp -R reports/tests/* gh-pages/tests
+  cp -R reports/jshint/* gh-pages/jshint
+  cp -R reports/doc/* gh-pages/doc
   cp -R dist/* gh-pages
 
   #go to updated pages and setup git

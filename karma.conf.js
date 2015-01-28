@@ -60,11 +60,11 @@ module.exports = function(config) {
     },
 
     htmlReporter: {
-      outputFile: 'tests/unit/index.html'
+      outputFile: 'reports/tests/unit/index.html'
     },
 
     coverageReporter: {
-      dir: 'coverage/',
+      dir: 'reports/coverage/',
       reporters: [
         { type: 'html', subdir: 'report-html'}
         ,{ type: 'lcov', subdir: 'report-lcov'}

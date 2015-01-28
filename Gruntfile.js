@@ -436,7 +436,7 @@ module.exports = function (grunt) {
 
     coveralls: {
         options: {
-          src: 'coverage/report-lcov/lcov.info'
+          src: 'reports/coverage/report-lcov/lcov.info'
           ,force: true
           /*
             debug: true,
@@ -481,7 +481,7 @@ module.exports = function (grunt) {
         src: ['app/scripts/**/*.js'],
         options: {
           verbose: true,
-          destination: 'doc',
+          destination: 'reports/doc',
           configure: 'resources/jsdoc/conf.json',
           template: './resources/jsdoc/',
           'private': false
@@ -546,6 +546,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test-e2e', 'runs End-to-End-tests', 
     [
+      'connect:livereload',
       'protractor_webdriver',
       'protractor'    
     ]);

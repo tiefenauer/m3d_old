@@ -74,7 +74,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "metrics": "plato -d metrics -r -x .json -t \"M3D Complexity Report\" -l .jshintrc app/scripts",
+    "metrics": "plato -d reports/metrics -r -x .json -t \"M3D Complexity Report\" -l .jshintrc app/scripts",
     "install": "node node_modules/protractor/bin/webdriver-manager update"
   }
 }
