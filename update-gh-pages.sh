@@ -17,7 +17,8 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 
   mkdir gh-pages/metrics
   mkdir gh-pages/coverage
-  mkdir gh-pages/tests
+  mkdir gh-pages/tests/unit
+  mkdir gh-pages/tests/e2e
   mkdir gh-pages/jshint
   mkdir gh-pages/doc
   cp -R reports/metrics/* gh-pages/metrics
