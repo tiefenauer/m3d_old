@@ -7,7 +7,8 @@
 
 * [Coverage report (alternative)](http://tiefenauer.github.io/m3d/coverage/)
 * [Lint report](http://tiefenauer.github.io/m3d/jshint)
-* [Test report](http://tiefenauer.github.io/m3d/tests)
+* [Unit Test report](http://tiefenauer.github.io/m3d/tests/unit)
+* [E2E Test report](http://tiefenauer.github.io/m3d/tests/e2e)
 * [Code Metrics](http://tiefenauer.github.io/m3d/metrics)
 * [Code documentation](http://tiefenauer.github.io/m3d/doc)
 
