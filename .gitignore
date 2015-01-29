@@ -11,7 +11,7 @@ coverage
 .coveralls.yml
 app/images/Thumbs.db
 oauth.txt
-update-gh-pages-local.sh
+update-gh-pages.local.sh
 create-oauth-token.sh
 doc
 reports
