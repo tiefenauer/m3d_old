@@ -16,22 +16,82 @@
             <th>Evidence</th>
             <th>Reason</th>
         </tr>
-        <tr><td colspan="5"><b>..\..\Gruntfile.js</b></td></tr><tr class="warning">
-    <td class="text-center">W106</td>
-    <td class="text-center">454</td>
-    <td class="text-center">0</td>
-    <td><code>    protractor_webdriver: &#123;</code></td>
-    <td>Identifier &#39;protractor_webdriver&#39; is not in camel case.</td>
+        <tr><td colspan="5"><b>../../test/spec/services/elevationdataserviceSpec.js</b></td></tr><tr class="warning">
+    <td class="text-center">W033</td>
+    <td class="text-center">33</td>
+    <td class="text-center">47</td>
+    <td><code>              lat: function&#40;&#41;&#123;return coord.lat&#125;&#44;</code></td>
+    <td>Missing semicolon.</td>
 </tr><tr class="warning">
-    <td class="text-center">W109</td>
-    <td class="text-center">466</td>
-    <td class="text-center">41</td>
-    <td><code>        configFile: &quot;protractor-conf.js&quot;&#44;</code></td>
-    <td>Strings must use singlequote.</td>
+    <td class="text-center">W033</td>
+    <td class="text-center">34</td>
+    <td class="text-center">47</td>
+    <td><code>              lng: function&#40;&#41;&#123;return coord.lng&#125;</code></td>
+    <td>Missing semicolon.</td>
+</tr><tr class="warning">
+    <td class="text-center">W033</td>
+    <td class="text-center">83</td>
+    <td class="text-center">90</td>
+    <td><code>        rootScope.&#36;on&#40;&#39;adapter:item:progress&#39;&#44; function&#40;event&#44; args&#41;&#123; itemProgressCount&#43;&#43; &#125;&#41;;</code></td>
+    <td>Missing semicolon.</td>
+</tr><tr class="warning">
+    <td class="text-center">W033</td>
+    <td class="text-center">84</td>
+    <td class="text-center">92</td>
+    <td><code>        rootScope.&#36;on&#40;&#39;adapter:queue:progress&#39;&#44; function&#40;event&#44; args&#41;&#123; queueProgressCount&#43;&#43; &#125;&#41;;</code></td>
+    <td>Missing semicolon.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">30</td>
+    <td class="text-center">9</td>
+    <td><code>        &#36;.each&#40;dummyCoordinates&#44; function&#40;i&#44; coord&#41;&#123;</code></td>
+    <td>&#39;&#36;&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">78</td>
+    <td class="text-center">30</td>
+    <td><code>            callback&#40;result&#44; google.maps.ElevationStatus.OK&#41;;</code></td>
+    <td>&#39;google&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">94</td>
+    <td class="text-center">15</td>
+    <td><code>        spyOn&#40;google.maps.ElevationService.prototype&#44; &#39;getElevationForLocations&#39;&#41;.and.callFake&#40;dummyGoogleMapsFunction&#41;;</code></td>
+    <td>&#39;google&#39; is not defined.</td>
+</tr><tr><td colspan="5"><b>../../test/spec/services/profileioSpec.js</b></td></tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">48</td>
+    <td class="text-center">13</td>
+    <td><code>      spyOn&#40;THREE.STLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;function&#40;fileArg&#44; callbackArg&#41;&#123;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">65</td>
+    <td class="text-center">13</td>
+    <td><code>      spyOn&#40;THREE.STLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;dummyLoadLocal&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">66</td>
+    <td class="text-center">13</td>
+    <td><code>      spyOn&#40;THREE.VRMLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;dummyLoadLocal&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">70</td>
+    <td class="text-center">14</td>
+    <td><code>      expect&#40;THREE.STLLoader.prototype.loadLocal&#41;.toHaveBeenCalled&#40;&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">74</td>
+    <td class="text-center">14</td>
+    <td><code>      expect&#40;THREE.VRMLLoader.prototype.loadLocal&#41;.toHaveBeenCalled&#40;&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
 </tr>
     </table>
     <div class="well">
-    Found <span class="label label-default">2</span> failures - <span class="label label-danger">0 errors</span> &amp; <span class="label label-warning">2 warnings</span>
+    Found <span class="label label-default">12</span> failures - <span class="label label-danger">0 errors</span> &amp; <span class="label label-warning">12 warnings</span>
 </div>
 </div>
 
