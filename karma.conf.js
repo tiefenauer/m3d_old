@@ -5,6 +5,10 @@ module.exports = function(config) {
   config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
+	
+	plugins: [
+		'karma-htmlfile-reporter', 'karma-jasmine', 'karma-requirejs', 'karma-coverage', 'karma-phantomjs-launcher'
+	],		
 
     // testing framework to use (jasmine/mocha/qunit/...)
     frameworks: ['jasmine', 'requirejs'],
