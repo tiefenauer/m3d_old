@@ -454,6 +454,7 @@ module.exports = function (grunt) {
     protractor_webdriver: {
       start: {
         options: {
+            // kill-command: http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer
             path: 'node_modules/protractor/bin/',
             command: 'webdriver-manager start'
         }

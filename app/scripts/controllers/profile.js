@@ -15,8 +15,8 @@ define([
     var el, $el;
     var $log, $rootScope, $scope;
     var objects = [];
-    var scene = new THREE.Scene();
-    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    var scene;
+    var renderer;
     var camera, controls, currentMesh;
     var rotationHelper;
 
@@ -29,6 +29,8 @@ define([
    */
     var ProfileController = function ($scope, $rootScope, $log, ProfileIOService) {
       $log.debug('ProfileController created');        
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      scene = new THREE.Scene();
       this.init($scope, $rootScope, $log, ProfileIOService);
     };
 
