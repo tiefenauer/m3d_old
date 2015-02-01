@@ -1,9 +1,11 @@
 define([
-  'angular',
-  'jquery',
-  'lodash'  
+  'angular'
+  ,'jquery'
+  ,'lodash'
+  ,'models/m3dProfilePoint'
+  ,'models/m3dProfile'
   ], 
-  function (angular, $, _) {
+  function (angular, $, _, ProfilePoint, Profile) {
     'use strict';
 
     var google = window.google;
@@ -45,7 +47,7 @@ define([
 
       /**
       * Calculate a height map from a list of coordinates
-      * @param {Object[]} coordinates list of coordinates to process      
+      * @param {m3d.models.ProfilePoint[]} coordinates list of coordinates to process      
       * @fires adapter:start
       * @fires adapter:end
       * @fires adapter:queue:progress

@@ -30,7 +30,7 @@ define([
       init: function(logger, scope){
         $log = logger;
         $rootScope = scope;
-        $rootScope.$on('menu:loadProfile', this.load);        
+        $rootScope.$on('menu:model:load', this.load);        
       },
 
       /**
@@ -75,6 +75,16 @@ define([
           }
           
           window.saveAs(blob, fileName + '.stl');
+        });
+      },
+
+      /**
+      * create a mold by inverting the objects
+      * @param {m3d.models.Profile[]} objects the profiles to be inverted
+      */
+      invert: function(objects){
+        objects.forEach(function(object){
+          $log.debug(object);
         });
       }
 

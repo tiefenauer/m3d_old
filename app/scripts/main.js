@@ -11,7 +11,7 @@ require.config({
     'angular-scenario': '../../bower_components/angular-scenario/angular-scenario',
     'angular-touch': '../../bower_components/angular-touch/angular-touch',
     bootstrap: '../../bower_components/bootstrap/dist/js/bootstrap',
-    threejs: '../../bower_components/threejs/build/three',
+    threejs: '../../bower_components/threejs/build/three.min',
     bluebird: '../../bower_components/bluebird/js/browser/bluebird',
     lodash: '../../bower_components/lodash/dist/lodash.compat',
     text: '../../bower_components/text/text',

@@ -18,7 +18,7 @@
       		<ul class="nav navbar-nav">
 		        <li>
 		        	<input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px" multiple />
-		        	<a href="#" ng-click="showFileUpload()"><span class="glyphicon glyphicon-open"></span></a>
+		        	<a href="#" ng-click="loadModel()"><span class="glyphicon glyphicon-open"></span></a>
 		        </li>
 		        <li><a href="#" ng-click="saveModel()"><span class="glyphicon glyphicon-save"></span></a></li>
 		        <li class="dropdown">
@@ -56,6 +56,7 @@
 			<button type="button" class="btn btn-default navbar-btn" ng-click="showMunicipalities()">Gemeinde w&auml;hlen</button>
 
 			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#" ng-click="invertModel()"><span class="fa fa-cube"></span></a></li>
 				<li><a href="#" ng-click="showStats()"><span class="glyphicon glyphicon-stats"></span></a></li>
 				<li><a href="#" ng-click="showInfo()"><span class="fa fa-info-circle fa-lg"></span></a></li>
 				<li class="dropdown">
