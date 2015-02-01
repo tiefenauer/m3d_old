@@ -77,7 +77,16 @@ require.config({
     ],
     threejs: {
       exports: 'THREE'
-    }
+    },
+    app: [
+      'angular-route',
+      'angular-cookies',
+      'angular-sanitize',
+      'angular-resource',
+      'angular-animate',
+      'angular-touch',
+      'angular-bootstrap'
+    ]
   },
   priority: [
     'angular'
@@ -88,9 +97,9 @@ require.config({
 });
 
 //http://code.angularjs.org/1.2.1/docs/guide/bootstrap#overview_deferred-bootstrap
-window.name = 'NG_DEFER_BOOTSTRAP!';
+//window.name = 'NG_DEFER_BOOTSTRAP!';
 
-require([
+require(['app'/*
   'angular',
   'app',
   'angular-route',
@@ -99,15 +108,15 @@ require([
   'angular-resource',
   'angular-animate',
   'angular-touch',
-  'angular-bootstrap'
+  'angular-bootstrap'*/
 ], function(angular, app, ngRoutes, ngCookies, ngSanitize, ngResource, ngAnimate, ngTouch) {
   'use strict';
   /* jshint ignore:start */
-  var $html = angular.element(document.getElementsByTagName('html')[0]);
+  //var $html = angular.element(document.getElementsByTagName('html')[0]);
   /* jshint ignore:end */
-  
+  /*
   angular.element().ready(function() {
-    angular.resumeBootstrap([app.name]);
+    angular.resumeBootstrap();
   });  
-
+  */
 });

@@ -1,13 +1,13 @@
 'use strict';
 
 define([
-	'angular', 
-	'app'
+	'angular'
+	//,'app'	
 	], 
 	function(angular, app) {
 
+		/*
 		return app.config(['$routeProvider', function($routeProvider) {
-			/*
 			$routeProvider.when('/view1', {
 				templateUrl: 'app/partials/partial1.html',
 				controller: 'MyCtrl1'
@@ -16,8 +16,7 @@ define([
 				templateUrl: 'app/partials/partial2.html',
 				controller: 'MyCtrl2'
 			});
-			*/
 			$routeProvider.otherwise({redirectTo: '/'});
 		}]);
-
+		*/
 });
