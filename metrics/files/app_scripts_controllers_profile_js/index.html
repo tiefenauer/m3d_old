@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">61.79</p>
+      <p class="stat">67.86</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">226</p>
+      <p class="stat">190</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">36.40</p>
+      <p class="stat">24.77</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">2.49</p>
+      <p class="stat">1.69</p>
     </div>
   </div>
 </div>
@@ -96,224 +96,188 @@
   ,&#039;lodash&#039;
   ,&#039;util/GoogleMapsUtil&#039;
   ,&#039;util/RotationHelper&#039;  
-  ,&#039;vendor/three/controls/OrbitControls&#039;    
+  ,&#039;models/m3dProfilePoint&#039;
+  ,&#039;models/m3dProfile&#039;  
+  ,&#039;vendor/three/controls/OrbitControls&#039;      
   ], 
-  function (angular, $, THREE, _, GoogleMapsUtil, RotationHelper) {
+  function (angular, $, THREE, _, GoogleMapsUtil, RotationHelper, ProfilePoint, Profile) {
     &#039;use strict&#039;;
 
-      var el, $el;
-      var $log, $rootScope, $scope;
-      var renderer, camera, controls, scene, mesh;
-      var rotationHelper;
-      var objects = [];
-      var io;
+    var el, $el;
+    var $log, $rootScope, $scope;
+    var objects = [];
+    var scene;
+    var renderer;
+    var camera, controls, currentMesh;
+    var rotationHelper;
 
-      var ProfileController = function ($scope, $rootScope, $log, ProfileIOService) {
-        $log.debug(&#039;ProfileController created&#039;);        
-        init($scope, $rootScope, $log, ProfileIOService);
+  /**
+   * ProfileController
+   * Controller for digital elevation profile
+   * @class
+   * @name m3d.controller.ProfileController
+   * @namespace
+   */
+    var ProfileController = function ($scope, $rootScope, $log, ProfileIOService) {
+      $log.debug(&#039;ProfileController created&#039;);        
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      scene = new THREE.Scene();
+      this.init($scope, $rootScope, $log, ProfileIOService);
+    };
 
-        scene = new THREE.Scene();
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-
-        initScene();
-        initRenderer();
-        render();
-      };
+    ProfileController.prototype = /** @lends m3d.controller.MenuController.prototype */{
 
       /**
-       * @ngdoc function
-       * @name m3dApp.controller:ProfileCtrl
-       * @description
-       * # ProfileCtrl
-       * Controller of the m3dApp
-       */
-
-      var init = function(scope, rootScope, logger, ProfileIOService){
+      * initalize controller
+      */
+      init: function(scope, rootScope, logger, ProfileIOService){
         $log = logger;
         $scope = scope;
         $rootScope = rootScope;
-        io = ProfileIOService;
 
         el = $(&#039;#profile&#039;)[0];
         $el = $(el);
 
-        $scope.$on(&#039;adapter:end&#039;, draw);
+        $scope.$on(&#039;adapter:end&#039;, this.draw);
         $scope.$on(&#039;io:model:loaded&#039;, drawGeometry);
-        $scope.$on(&#039;menu:save_button_clicked&#039;, function(){
-          io.save(objects);
+        $scope.$on(&#039;menu:model:save&#039;, function(){
+          ProfileIOService.save(objects);
         });
-      };  
+        $scope.$on(&#039;menu:model:invert&#039;, function(){
+          ProfileIOService.invert(objects);
+        });
+
+        initScene();
+        initRenderer();
+        this.render();
+      },
 
       /**
-      * Remove all objects from canvas
+      * Draw elevation points
+      * @param {Object} event the event that caused the function to be called
+      * @param {m3d.models.ProfilePoint[]} array of processed ProfilePoints (including elevation data) for which the elevation profile should be drawn
       */
-      var clearScene = function(){
-        _.each(objects, function(object){
-          scene.remove(object);
-        });
-        objects = [];
-      };
-
-      var drawGeometry = function(event, data){
-        clearScene();
-        if (data.geometry instanceof THREE.Scene){
-          scene = data.geometry;
-          objects = data.geometry.children;
-          initScene();
-          initRenderer();
-          render();
-        }
-        else{
-          var mesh = new THREE.Mesh(data.geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
-          mesh.geometry.mergeVertices();
-          mesh.geometry.computeVertexNormals();
-          mesh.name = data.fileName;    
-          add(mesh);
-        }
-      };
-
-      /**
-      * Draw elevation profile
-      * @param elevationPoints the ProfilePoint objects (including elevation data) for which the elevation profile should be drawn
-      */
-      var draw = function(event, elevationPoints){
+      draw: function(event, elevationPoints){
         clearScene();
 
-        // Höhe/Breite und Anzahl Segments berechnen
-        var minLng = _.min(_.pluck(elevationPoints, &#039;lng&#039;));
-        var maxLng = _.max(_.pluck(elevationPoints, &#039;lng&#039;));
-        var minLat = _.min(_.pluck(elevationPoints, &#039;lat&#039;));
-        var maxLat = _.max(_.pluck(elevationPoints, &#039;lat&#039;));
-        var minElv = _.min(_.pluck(elevationPoints, &#039;elv&#039;));
-        //var maxElv = _.max(_.pluck(elevationPoints, &#039;elv&#039;));
-
-        var sw = {&#039;lat&#039;: minLat, &#039;lng&#039;: minLng};
-        var nw = {&#039;lat&#039;: maxLat, &#039;lng&#039;: minLng};
-        var ne = {&#039;lat&#039;: maxLat, &#039;lng&#039;: maxLng};
-        var height = Math.floor(GoogleMapsUtil.degreeToMeter(sw, nw) / 100) * 10;
-        var width = Math.floor(GoogleMapsUtil.degreeToMeter(nw, ne) / 100) * 10;
-        var segments = Math.sqrt(elevationPoints.length) - 1;
         var thickness = localStorage.getItem(&#039;thickness&#039;) || 2;
-        
-        // Ebene konstruieren
-            var planeTop = new THREE.Mesh( new THREE.BoxGeometry(thickness, height, width, 1, segments, segments),
-                                        new THREE.MeshPhongMaterial({color: 0x00ff00
-                                                      ,dynamic: true
-                                                    //  ,shading: THREE.FlatShading
-                                                    })
-                                    );
-
-            var rotationZ = new THREE.Matrix4().makeRotationZ( - Math.PI/2 );
-            var rotationX = new THREE.Matrix4().makeRotationX( Math.PI );
-            planeTop.updateMatrix();
-            planeTop.geometry.applyMatrix(planeTop.matrix);
-            planeTop.geometry.applyMatrix(rotationZ);
-            planeTop.geometry.applyMatrix(rotationX);
-            planeTop.matrix.identity();
-
-
-        //plane.material.side = THREE.DoubleSide;
-        // Höhen der Punkte anpassen
-        var diff = 0;
-        var side = Math.sqrt(elevationPoints.length);
-        
-        //planeTop.geometry.vertices.length
-        for(var i=0; i &lt; elevationPoints.length; i++){
-          diff = elevationPoints[i].elv - minElv;         
-          var bottomIndex = elevationPoints.length + i + side - 2*(i%side) - 1;
-          planeTop.geometry.vertices[i].y += diff / 10; 
-          planeTop.geometry.vertices[bottomIndex].y += diff / 10;
-        }
-
-        planeTop.geometry.computeFaceNormals();
-        planeTop.geometry.computeVertexNormals();
-        mesh = planeTop;
-            add(planeTop);
-      };
-
-      var add = function(object){
-        mesh = object;
-        scene.add(object);
-        objects.push(object);
-      };
-
-      var initScene = function(){        
-        var topLight = new THREE.PointLight( 0x404040, 1.8 );
-        topLight.position.set( 1000, 1000, 1000 );       
-
-        var bottomLight = new THREE.PointLight( 0xffffff, 0.4 );  
-        bottomLight.position.set(0, -500, 0);
-
-        var hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.3 ); 
-        hemiLight.color.setHSL( 0.6, 1, 0.6 );
-        hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-        hemiLight.position.set( 0, 500, 0 );        
-
-        var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
-
-        // red=X, green=Y, blue=Z
-        // inset AxisHelper: http://jsfiddle.net/CBAyS/21/
-        // Helpers: http://danni-three.blogspot.ch/2013/09/threejs-helpers.html
-        var axis = new THREE.AxisHelper(100);
-        var grid = new THREE.GridHelper(10,1);      
-
-        scene.add( topLight );
-        scene.add(hemiLight);
-        scene.add( bottomLight );
-        scene.add(ambientLight);
-        scene.add(axis);
-        scene.add(grid);
-        initCamera();     
-        initControls();               
-      };
-
-      var initCamera = function(){
-        var width = $el.width();
-        var height = $el.height();
-        camera = new THREE.PerspectiveCamera(45,  width/height, 0.1, 20000);
-        scene.add(camera);
-        camera.position.set(500,500,500);
-        camera.lookAt(scene.position);
-      };
-
-      var initRenderer = function(){
-        var width = $el.width();
-        var height = $el.height();
-        renderer.setSize( width, height );
-        $el.append(renderer.domElement);        
-        renderer.precision = &#039;highp&#039;;
-        renderer.setClearColor(0x000000, 1);
-        renderer.shadowMapEnabled = true;
-
-        rotationHelper = new RotationHelper(renderer.domElement, camera, renderer);     
-        rotationHelper.initEvents();         
-      };
-
-      var initControls = function(){
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.target = new THREE.Vector3(0,0,0);
-        controls.minAzimuthAngle = 0;
-        controls.maxAzimuthAngle = 0;
-        controls.noRotate = true;     
-      };
+        var m3dModel = new Profile(elevationPoints, thickness);
+        add(m3dModel);
+      },
 
       /**
-      * render a single frame
+      * Render objects on canvas
+      * @param {Object[]} objects the objects to render
       */
-      var render = function(){
+      render: function(){
         var animate = function(){         
           requestAnimationFrame(animate);
               controls.update();
-              _.each(objects, function(mesh){
-                var rotation = (rotationHelper.targetRotation - mesh.rotation.y) * 0.05;
-                mesh.rotation.y += rotation;
+                _.each(objects, function(m3dProfile){
+                var rotation = (rotationHelper.targetRotation - m3dProfile.mesh.rotation.y) * 0.05;
+                m3dProfile.mesh.rotation.y += rotation;
               });              
           renderer.render(scene, camera);         
         };
         animate();
-      };       
+      }
+    };
 
-      return [&#039;$scope&#039;, &#039;$rootScope&#039;, &#039;$log&#039;, &#039;ProfileIOService&#039;, ProfileController];
+    /**
+    * Remove all objects from canvas
+    */
+    var clearScene = function(){
+      _.each(objects, function(object){
+        scene.remove(object);
+      });
+      objects = [];
+    };
+
+    var drawGeometry = function(event, data){
+      clearScene();
+      if (data.geometry instanceof THREE.Scene){
+        scene = data.geometry;
+        objects = data.geometry.children;
+        initScene();
+        initRenderer();
+        render();
+      }
+      else{
+        var mesh = new THREE.Mesh(data.geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
+        mesh.geometry.mergeVertices();
+        mesh.geometry.computeVertexNormals();
+        mesh.name = data.fileName;    
+        add(mesh);
+      }
+    };
+
+    var add = function(m3dModel){
+      currentMesh = m3dModel.mesh;
+      scene.add(m3dModel.mesh);
+      objects.push(m3dModel);
+    };
+
+    var initScene = function(){        
+      var topLight = new THREE.PointLight( 0x404040, 1.8 );
+      topLight.position.set( 1000, 1000, 1000 );       
+
+      var bottomLight = new THREE.PointLight( 0xffffff, 0.4 );  
+      bottomLight.position.set(0, -500, 0);
+
+      var hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.3 ); 
+      hemiLight.color.setHSL( 0.6, 1, 0.6 );
+      hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+      hemiLight.position.set( 0, 500, 0 );        
+
+      var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+
+      // red=X, green=Y, blue=Z
+      // inset AxisHelper: http://jsfiddle.net/CBAyS/21/
+      // Helpers: http://danni-three.blogspot.ch/2013/09/threejs-helpers.html
+      var axis = new THREE.AxisHelper(100);
+      var grid = new THREE.GridHelper(10,1);      
+
+      scene.add( topLight );
+      scene.add(hemiLight);
+      scene.add( bottomLight );
+      scene.add(ambientLight);
+      scene.add(axis);
+      scene.add(grid);
+      initCamera();     
+      initControls();               
+    };
+
+    var initCamera = function(){
+      var width = $el.width();
+      var height = $el.height();
+      camera = new THREE.PerspectiveCamera(45,  width/height, 0.1, 20000);
+      scene.add(camera);
+      camera.position.set(500,500,500);
+      camera.lookAt(scene.position);
+    };
+
+    var initRenderer = function(){
+      var width = $el.width();
+      var height = $el.height();
+      renderer.setSize( width, height );
+      $el.append(renderer.domElement);        
+      renderer.precision = &#039;highp&#039;;
+      renderer.setClearColor(0x000000, 1);
+      renderer.shadowMapEnabled = true;
+
+      rotationHelper = new RotationHelper(renderer.domElement, camera, renderer);     
+      rotationHelper.initEvents();         
+    };
+
+    var initControls = function(){
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.target = new THREE.Vector3(0,0,0);
+      controls.minAzimuthAngle = 0;
+      controls.maxAzimuthAngle = 0;
+      controls.noRotate = true;     
+    };
+
+    return [&#039;$scope&#039;, &#039;$rootScope&#039;, &#039;$log&#039;, &#039;ProfileIOService&#039;, ProfileController];
 });</textarea>
   </div>
 </div>

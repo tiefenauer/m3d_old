@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">63.52</p>
+      <p class="stat">63.56</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">160</p>
+      <p class="stat">176</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">28.07</p>
+      <p class="stat">28.43</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.88</p>
+      <p class="stat">1.93</p>
     </div>
   </div>
 </div>
@@ -93,11 +93,11 @@
 define([
    &#039;angular&#039;
   ,&#039;jquery&#039;
+  ,&#039;models/m3dProfilePoint&#039;
   ], 
-  function (angular, $) {
+  function (angular, $, ProfilePoint) {
 
     var $log, $scope;
-    var elevationAdapter;
     var map, rect;
     var markers = [];
     var gridSize;
@@ -106,22 +106,73 @@ define([
 
     var google = window.google;
 
-    var MapController = function ($scope, $log, elevationDataService) {
+    /**
+     * MapController
+     * Controller for GoogleMap
+     * @class
+     * @name m3d.controller.MapController
+     * @namespace
+     */
+    var MapController = function ($scope, $log, ElevationDataService) {
         $log.debug(&#039;MapController created&#039;);
-        init($scope, $log);
-        elevationAdapter = elevationDataService;
+        this.init($scope, $log, ElevationDataService);
     };
 
-    var init = function(scope, log){
-      $scope = scope;
-      $log = log;
+    MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
 
-      $scope.$on(&#039;menu:places_changed&#039;, onPlacesChanged);
-      $scope.$on(&#039;menu:process_button_clicked&#039;, function(){
-        elevationAdapter.calculateHeightMap(getProfilePoints());
-      });
-      initMap();
-    };      
+      /**
+      * initialize controller
+      */
+      init: function(scope, log, ElevationDataService){
+        $scope = scope;
+        $log = log;
+
+        $scope.getProfilePoints = this.getProfilePoints;
+        $scope.$on(&#039;menu:places_changed&#039;, onPlacesChanged);
+        $scope.$on(&#039;menu:model:generate&#039;, function(event){
+          ElevationDataService.calculateHeightMap($scope.getProfilePoints());
+        });
+        initMap();
+      },
+
+      /**
+      * Rasterize selection rectangle to determine points for which the elevation must be determined.
+      * @return {m3d.models.ProfilePoint[]} list of single profile Points for the rasterized selection rectangle. The elevation is zero for each point.
+      */
+      getProfilePoints: function(){
+        var resolution = localStorage.getItem(&#039;resolution&#039;) || 25;
+        gridSize = horizontalSegments = verticalSegments = parseInt(resolution);
+
+        // Positionen der Ecken bestimmen
+        var ne = rect.getBounds().getNorthEast();
+        var sw = rect.getBounds().getSouthWest();
+        var nw = new google.maps.LatLng(ne.lat(), sw.lng());
+        var se = new google.maps.LatLng(sw.lat(), ne.lng());
+        
+        // get values on x-axis
+        var xFrom = nw.lng();
+        var xTo = ne.lng(); 
+        var xStep = (xTo-xFrom)/(horizontalSegments - 1);
+        
+        // get values on y-axis
+        var yFrom = se.lat();
+        var yTo = ne.lat();
+        var yStep = (yTo-yFrom)/(verticalSegments - 1);
+        
+        var profilePoints = [];
+        for(var y=0; y&lt;verticalSegments; y++){
+          var yVal = yTo - y*yStep;
+          
+          for (var x=0; x&lt;horizontalSegments; x++){
+            var xVal = xFrom + x*xStep;
+            var lat = Number(parseFloat(yVal).toFixed(4));
+            var lng = Number(parseFloat(xVal).toFixed(4));
+            profilePoints.push(new ProfilePoint(lat, lng, 0));
+          }
+        }
+        return profilePoints;
+      }
+    };
 
     var initMap = function(){
       var el = $(&#039;#map&#039;)[0];
@@ -174,41 +225,6 @@ define([
       return bounds;
     };
 
-    /**
-    * Rasterize selection rectangle to determine points for which the elevation must be determined.
-    * @return a ProfilePoint object with all the coordinates from the rasterized selection rectangle. The elevation is zero for each poitn.
-    */
-    var getProfilePoints = function(){
-      var resolution = localStorage.getItem(&#039;resolution&#039;) || 25;
-      gridSize = horizontalSegments = verticalSegments = parseInt(resolution);
-
-      // Positionen der Ecken bestimmen
-      var ne = rect.getBounds().getNorthEast();
-      var sw = rect.getBounds().getSouthWest();
-      var nw = new google.maps.LatLng(ne.lat(), sw.lng());
-      var se = new google.maps.LatLng(sw.lat(), ne.lng());
-      
-      // get values on x-axis
-      var xFrom = nw.lng();
-      var xTo = ne.lng(); 
-      var xStep = (xTo-xFrom)/(horizontalSegments - 1);
-      
-      // get values on y-axis
-      var yFrom = se.lat();
-      var yTo = ne.lat();
-      var yStep = (yTo-yFrom)/(verticalSegments - 1);
-      
-      var profilePoints = [];
-      for(var y=0; y&lt;verticalSegments; y++){
-        var yVal = yTo - y*yStep;
-        
-        for (var x=0; x&lt;horizontalSegments; x++){
-          var xVal = xFrom + x*xStep;
-          profilePoints.push({lng: Number(parseFloat(xVal).toFixed(4)), lat: Number(parseFloat(yVal).toFixed(4))});
-        }
-      }
-      return profilePoints;
-    };    
 
     var onPlacesChanged = function(event, places){
       $log.debug(&#039;onPlacesChanged&#039; + places.length);

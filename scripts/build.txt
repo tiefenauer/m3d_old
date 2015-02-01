@@ -10,6 +10,9 @@ async!https://maps.googleapis.com/maps/api/js?key=AIzaSyC7Uu6dvnQka6EL0MAiCCr7_6
 gmaps.js
 angular.js
 filters.js
+models/m3dProfilePoint.js
+util/GoogleMapsUtil.js
+models/m3dProfile.js
 services/elevationdataservice.js
 services/STLLoader.js
 services/VRMLLoader.js
@@ -25,7 +28,6 @@ spin.js
 ladda-bootstrap.js
 controllers/menu.js
 controllers/map.js
-util/GoogleMapsUtil.js
 util/RotationHelper.js
 vendor/three/controls/OrbitControls.js
 controllers/profile.js

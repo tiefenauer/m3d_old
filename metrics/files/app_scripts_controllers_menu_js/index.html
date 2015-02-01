@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">72.15</p>
+      <p class="stat">72.05</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">120</p>
+      <p class="stat">148</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">16.44</p>
+      <p class="stat">16.90</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.00</p>
+      <p class="stat">1.07</p>
     </div>
   </div>
 </div>
@@ -104,51 +104,123 @@
     var buttonLabelProcessing = &#039;Abbrechen&#039;;  
     var google = window.google;
 
+    /**
+     * MenuController
+     * Controller for menu
+     * @class
+     * @name m3d.controller.MenuController
+     * @namespace
+     */
     var MenuController = function ($rootScope, $scope, $log, $modal) {
       $log.debug(&#039;MenuController created&#039;);  
-      init($rootScope, $scope, $log, $modal);
-      $scope.buttonLabel = buttonLabelDefault;
-      $scope.searchbox = { template:&#039;searchbox.tpl.html&#039;};
+      this.init($rootScope, $scope, $log, $modal);
 
-      $scope.calculateHeightMap = calculateHeightMap;
-      $scope.showSettings = showSettings;
-      $scope.showInfo = showInfo;        
-      $scope.showStats = showStats;        
-      $scope.showFileUpload = showFileUpload;
-      $scope.saveModel = saveModel;      
+      $scope.calculateHeightMap = this.calculateHeightMap;
+      $scope.showSettings = this.showSettings;
+      $scope.showInfo = this.showInfo;        
+      $scope.showStats = this.showStats;        
+      $scope.loadModel = this.loadModel;
+      $scope.saveModel = this.saveModel;      
     };
 
-    /**
-     * @ngdoc function
-     * @name m3dApp.controller:MenuCtrl
-     * @description
-     * # MenuCtrl
-     * Controller of the m3dApp
-     */
+    MenuController.prototype = /** @lends m3d.controller.MenuController.prototype */{
 
-    var init = function(rootScope, scope, log, modal){
-      $rootScope = rootScope; 
-      $scope = scope;
-      $log = log;
-      $modal = modal;
-      ladda = Ladda.create($(&#039;#ladda&#039;)[0]);
+      /**
+      * initialize menu
+      */
+      init: function(rootScope, scope, log, modal){        
+        $rootScope = rootScope; 
+        $scope = scope;
+        $log = log;
+        $modal = modal;
+        ladda = Ladda.create($(&#039;#ladda&#039;)[0]);
 
-      $scope.$on(&#039;adapter:start&#039;, function(){
-        ladda.start();
-      });
-      $scope.$on(&#039;adapter:queue:progress&#039;, function(event, data){
-        ladda.setProgress(data.progress/data.total);
-        $scope.prog = Math.round(100*data.progress/data.total);
-        $scope.buttonLabel = buttonLabelProcessing + &#039; (&#039; + $scope.prog + &#039;%)&#039;;
-        $log.debug($scope.prog + &#039;% loaded&#039;);
-      });
-      $scope.$on(&#039;adapter:end&#039;, function(){
-        ladda.stop();
         $scope.buttonLabel = buttonLabelDefault;
-        $scope.prog = 0;
-      });      
+        $scope.searchbox = { template:&#039;searchbox.tpl.html&#039;};        
 
-      initSearchBox();
+        $scope.$on(&#039;adapter:start&#039;, function(){
+          ladda.start();
+        });
+        $scope.$on(&#039;adapter:queue:progress&#039;, function(event, data){
+          ladda.setProgress(data.progress/data.total);
+          $scope.prog = Math.round(100*data.progress/data.total);
+          $scope.buttonLabel = buttonLabelProcessing + &#039; (&#039; + $scope.prog + &#039;%)&#039;;
+          $log.debug($scope.prog + &#039;% loaded&#039;);
+        });
+        $scope.$on(&#039;adapter:end&#039;, function(){
+          ladda.stop();
+          $scope.buttonLabel = buttonLabelDefault;
+          $scope.prog = 0;
+        });      
+
+        $scope.invertModel = function(){
+          $log.debug(&#039;inverting model&#039;);
+          $rootScope.$broadcast(&#039;menu:model:invert&#039;);
+        };
+
+        initSearchBox();
+      },
+
+      /**
+      * load model from file
+      */
+      loadModel: function(){
+        var fileSelector = $(&#039;&lt;input&gt;&lt;/input&gt;&#039;).attr({type: &#039;file&#039;, accept: &#039;.stl,.wrl&#039;});
+        fileSelector.change(function(evt){
+          var file = evt.target.files[0];
+          if (file) {
+            $rootScope.$broadcast(&#039;menu:model:load&#039;, file);          
+          }        
+        });
+        fileSelector.click(); 
+      },
+
+      /**
+      * save model to file
+      */
+      saveModel: function () {
+        $log.debug(&#039;save button clicked&#039;);
+        $rootScope.$broadcast(&#039;menu:model:save&#039;);
+      },
+
+      /**
+      * Show popup with settings
+      */
+      showSettings: function(){
+        $log.debug(&#039;showing settings...&#039;);
+        $modal.open({
+           templateUrl: &#039;views/templates/settings_popup.html&#039;
+          ,controller: &#039;SettingsCtrl&#039;
+        });
+      },
+
+      /**
+      * Show popup with statistics
+      */
+      showStats: function(){
+        $log.debug(&#039;showing stats...&#039;);
+        $modal.open({
+           templateUrl: &#039;views/templates/stats_popup.html&#039;
+          ,controller: &#039;StatsController&#039;
+        });
+      },
+
+      /**
+      * Show popup with information about the app
+      */
+      showInfo: function(){
+        $log.debug(&#039;showing info...&#039;);
+        $modal.open({
+           templateUrl: &#039;views/templates/info_popup.html&#039;
+          ,controller: &#039;InfoCtrl&#039;
+        });
+      },
+
+      calculateHeightMap: function(){
+        $log.debug(&#039;process button clicked&#039;);
+        $rootScope.$broadcast(&#039;menu:model:generate&#039;);
+      }
+
     };
 
     var initSearchBox = function(){
@@ -162,50 +234,6 @@
       $rootScope.$broadcast(&#039;menu:places_changed&#039;, searchBox.getPlaces());
     };    
 
-    var showFileUpload = function(){
-      var fileSelector = $(&#039;&lt;input&gt;&lt;/input&gt;&#039;).attr({type: &#039;file&#039;, accept: &#039;.stl,.wrl&#039;});
-      fileSelector.change(function(evt){
-        var file = evt.target.files[0];
-        if (file) {
-          $rootScope.$broadcast(&#039;menu:loadProfile&#039;, file);          
-        }        
-      });
-      fileSelector.click(); 
-    };    
-
-    var showSettings = function(){
-      $log.debug(&#039;showing settings...&#039;);
-      $modal.open({
-         templateUrl: &#039;views/templates/settings_popup.html&#039;
-        ,controller: &#039;SettingsCtrl&#039;
-      });
-    };
-
-    var showStats = function(){
-      $log.debug(&#039;showing stats...&#039;);
-      $modal.open({
-         templateUrl: &#039;views/templates/stats_popup.html&#039;
-        ,controller: &#039;StatsController&#039;
-      });
-    };
-
-    var showInfo = function(){
-      $log.debug(&#039;showing info...&#039;);
-      $modal.open({
-         templateUrl: &#039;views/templates/info_popup.html&#039;
-        ,controller: &#039;InfoCtrl&#039;
-      });
-    };    
-
-    var calculateHeightMap = function(){
-      $log.debug(&#039;process button clicked&#039;);
-      $rootScope.$broadcast(&#039;menu:process_button_clicked&#039;);
-    };
-
-    var saveModel = function () {
-      $log.debug(&#039;save button clicker&#039;);
-      $rootScope.$broadcast(&#039;menu:save_button_clicked&#039;);
-    };    
 
     return [&#039;$rootScope&#039;, &#039;$scope&#039;, &#039;$log&#039;, &#039;$modal&#039;, MenuController];
 });</textarea>
