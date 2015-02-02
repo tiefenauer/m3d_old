@@ -48,6 +48,14 @@ define([
         $el = $(el);
 
         $scope.$on('adapter:end', this.draw);
+        /*
+        $scope.$on('adapter:end', function(event, elevationPoints){
+          clearScene();
+          var thickness = localStorage.getItem('thickness') || 2;
+          var m3dModel = new Profile(elevationPoints, thickness);
+          ProfileIOService.invert([m3dModel]);
+        });
+        */
         $scope.$on('io:model:loaded', drawGeometry);
         $scope.$on('menu:model:save', function(){
           ProfileIOService.save(objects);
@@ -97,27 +105,14 @@ define([
     */
     var clearScene = function(){
       _.each(objects, function(object){
-        scene.remove(object);
+        remove(object);
       });
       objects = [];
     };
 
     var drawGeometry = function(event, data){
       clearScene();
-      if (data.geometry instanceof THREE.Scene){
-        scene = data.geometry;
-        objects = data.geometry.children;
-        initScene();
-        initRenderer();
-        render();
-      }
-      else{
-        var mesh = new THREE.Mesh(data.geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
-        mesh.geometry.mergeVertices();
-        mesh.geometry.computeVertexNormals();
-        mesh.name = data.fileName;    
-        add(mesh);
-      }
+      add(data.model);
     };
 
     var add = function(m3dModel){
@@ -125,6 +120,16 @@ define([
       scene.add(m3dModel.mesh);
       objects.push(m3dModel);
     };
+
+    var remove = function(m3dModel){
+      var remObj;
+      if (typeof m3dModel.name != 'undefined' && m3dModel.name != null && m3dModel.name.length > 0)
+        remObj = scene.getObjectByName(m3dModel.name);
+      else
+        remObj = m3dModel.mesh;
+      scene.remove(remObj);      
+    };
+
 
     var initScene = function(){        
       var topLight = new THREE.PointLight( 0x404040, 1.8 );

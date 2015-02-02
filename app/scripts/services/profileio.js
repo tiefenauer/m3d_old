@@ -2,11 +2,12 @@
 define([
    'angular'
   ,'threejs'
+  ,'models/m3dProfile'
   ,'services/STLLoader'
   ,'services/VRMLLoader'
   ,'util/FileSaver.min'
   ], 
-  function (angular, THREE) {
+  function (angular, THREE, Profile) {
 
     var $log, $rootScope;
     var loader;
@@ -83,15 +84,43 @@ define([
       * @param {m3d.models.Profile[]} objects the profiles to be inverted
       */
       invert: function(objects){
-        objects.forEach(function(object){
-          $log.debug(object);
-        });
+        objects.forEach(function(m3dProfile){
+          // Modell kopieren und Sockel erstellen
+          var profileCopy = new Profile(m3dProfile.profilePoints, 2);
+
+          for(var i=0;i<profileCopy.profilePoints.length; i++){
+            var bottomIndex = profileCopy.getBottomIndex(i);            
+            profileCopy.mesh.geometry.vertices[bottomIndex].y = 0;            
+          }
+          profileCopy.mesh.geometry.verticesNeedUpdate = true;
+          profileCopy.mesh.geometry.mergeVertices();
+          profileCopy.mesh.geometry.computeVertexNormals();
+
+          var boxGeometry = new THREE.BoxGeometry(profileCopy.thickness, profileCopy.getWidth(), profileCopy.getHeight());
+          var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
+          var invertedProfile = new THREE.Mesh(boxGeometry, material);
+          $rootScope.$broadcast('io:model:loaded', {model: {name: 'mold', mesh: invertedProfile}, fileName: 'test'});
+        });        
       }
 
     };
 
     var onFileLoaded = function(content, file){
       var fileName = file.name.substr(0, file.name.lastIndexOf('.'));
+      if (data.geometry instanceof THREE.Scene){
+        scene = data.geometry;
+        objects = data.geometry.children;
+        initScene();
+        initRenderer();
+        render();
+      }
+      else{
+        var mesh = new THREE.Mesh(data.geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
+        mesh.geometry.mergeVertices();
+        mesh.geometry.computeVertexNormals();
+        mesh.name = data.fileName;    
+        add(mesh);
+      }
       $rootScope.$broadcast('io:model:loaded', {geometry: content, fileName: fileName});
     };
 
