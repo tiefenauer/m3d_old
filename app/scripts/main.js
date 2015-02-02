@@ -79,6 +79,7 @@ require.config({
       exports: 'THREE'
     },
     app: [
+      'angular',
       'angular-route',
       'angular-cookies',
       'angular-sanitize',
@@ -88,9 +89,6 @@ require.config({
       'angular-bootstrap'
     ]
   },
-  priority: [
-    'angular'
-  ],
   packages: [
 
   ]
@@ -98,8 +96,11 @@ require.config({
 
 //http://code.angularjs.org/1.2.1/docs/guide/bootstrap#overview_deferred-bootstrap
 //window.name = 'NG_DEFER_BOOTSTRAP!';
-
-require(['app'/*
+require(['app'], function(){
+  angular.bootstrap(document, ['m3d'])
+});
+/*
+require(['app'
   'angular',
   'app',
   'angular-route',
@@ -108,7 +109,7 @@ require(['app'/*
   'angular-resource',
   'angular-animate',
   'angular-touch',
-  'angular-bootstrap'*/
+  'angular-bootstrap'
 ], function(angular, app, ngRoutes, ngCookies, ngSanitize, ngResource, ngAnimate, ngTouch) {
   'use strict';
   /* jshint ignore:start */
@@ -118,5 +119,5 @@ require(['app'/*
   angular.element().ready(function() {
     angular.resumeBootstrap();
   });  
-  */
 });
+*/

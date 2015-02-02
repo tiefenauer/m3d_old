@@ -1,6 +1,8 @@
 'use strict';
 define([
-	'angular'
+	 'angular'
+	,'models/m3dProfile'
+	,'models/m3dProfilePoint'
 	],
 	function(angular){
 		
