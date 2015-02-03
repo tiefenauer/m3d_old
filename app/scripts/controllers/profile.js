@@ -14,10 +14,10 @@ define([
 
     var el, $el;
     var $log, $rootScope, $scope;
-    var objects = [];
+    var profiles = {};
     var scene;
     var renderer;
-    var camera, controls, currentMesh;
+    var camera, controls, currentMesh, currentProfile;
     var rotationHelper;
 
   /**
@@ -48,20 +48,18 @@ define([
         $el = $(el);
 
         $scope.$on('adapter:end', this.draw);
-        /*
-        $scope.$on('adapter:end', function(event, elevationPoints){
-          clearScene();
-          var thickness = localStorage.getItem('thickness') || 2;
-          var m3dModel = new Profile(elevationPoints, thickness);
-          ProfileIOService.invert([m3dModel]);
+        $scope.$on('io:model:inverted', function(event, profile){
+          drawMold(profile);
         });
-        */
-        $scope.$on('io:model:loaded', drawGeometry);
+        $scope.$on('io:model:loaded', function(event, profile){
+          drawProfile(profile);
+        });
         $scope.$on('menu:model:save', function(){
-          ProfileIOService.save(objects);
+          ProfileIOService.save(profiles);
         });
         $scope.$on('menu:model:invert', function(){
-          ProfileIOService.invert(objects);
+          invertProfile();
+          //ProfileIOService.invert(profiles);
         });
 
         initScene();
@@ -74,26 +72,32 @@ define([
       * @param {Object} event the event that caused the function to be called
       * @param {m3d.models.ProfilePoint[]} array of processed ProfilePoints (including elevation data) for which the elevation profile should be drawn
       */
-      draw: function(event, elevationPoints){
+      draw: function(event, profilePoints){
         clearScene();
 
-        var thickness = localStorage.getItem('thickness') || 2;
-        var m3dModel = new Profile(elevationPoints, thickness);
-        add(m3dModel);
+        var thickness = localStorage.getItem('thickness') || undefined;
+        var m3dProfile = new Profile({
+          profilePoints: profilePoints,
+          thickness: thickness
+        });
+        drawProfile(m3dProfile);
       },
 
       /**
-      * Render objects on canvas
-      * @param {Object[]} objects the objects to render
+      * Render profiles on canvas
+      * @param {Object[]} profiles the profiles to render
       */
       render: function(){
         var animate = function(){         
           requestAnimationFrame(animate);
               controls.update();
-                _.each(objects, function(m3dProfile){
-                var rotation = (rotationHelper.targetRotation - m3dProfile.mesh.rotation.y) * 0.05;
-                m3dProfile.mesh.rotation.y += rotation;
-              });              
+                _.each(profiles, function(m3dProfile){
+                  m3dProfile.rotate(rotationHelper.targetRotation, 0.05);
+                  /*
+                  var rotation = (rotationHelper.targetRotation - m3dProfile.mesh.rotation.y) * 0.05;
+                  m3dProfile.mesh.rotation.y += rotation;
+                  */
+                });              
           renderer.render(scene, camera);         
         };
         animate();
@@ -101,24 +105,37 @@ define([
     };
 
     /**
-    * Remove all objects from canvas
+    * Remove all profiles from canvas
     */
     var clearScene = function(){
-      _.each(objects, function(object){
-        remove(object);
+      _.each(profiles, function(profile){
+        remove(profile);
       });
-      objects = [];
     };
 
-    var drawGeometry = function(event, data){
+    var drawProfile = function(m3dProfile){
       clearScene();
-      add(data.model);
+      profiles[m3dProfile.name] = m3dProfile;
+      add(m3dProfile.mesh);
     };
 
-    var add = function(m3dModel){
-      currentMesh = m3dModel.mesh;
-      scene.add(m3dModel.mesh);
-      objects.push(m3dModel);
+    var drawMold = function(m3dProfile){
+      clearScene();
+      add(m3dProfile.mold);
+    };
+
+    var invertProfile = function(){
+      if (currentMesh == currentProfile.mesh){
+        drawMold(currentProfile);
+      }
+      else {
+        drawProfile(currentProfile);
+      }
+    };
+
+    var add = function(mesh){
+      currentMesh = mesh;
+      scene.add(mesh);      
     };
 
     var remove = function(m3dModel){
@@ -133,15 +150,15 @@ define([
 
     var initScene = function(){        
       var topLight = new THREE.PointLight( 0x404040, 1.8 );
-      topLight.position.set( 1000, 1000, 1000 );       
+      topLight.position.set( 10000, 10000, 10000 );       
 
       var bottomLight = new THREE.PointLight( 0xffffff, 0.4 );  
-      bottomLight.position.set(0, -500, 0);
+      bottomLight.position.set(0, -5000, 0);
 
       var hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.3 ); 
       hemiLight.color.setHSL( 0.6, 1, 0.6 );
       hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-      hemiLight.position.set( 0, 500, 0 );        
+      hemiLight.position.set( 0, 5000, 0 );        
 
       var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 
@@ -164,9 +181,9 @@ define([
     var initCamera = function(){
       var width = $el.width();
       var height = $el.height();
-      camera = new THREE.PerspectiveCamera(45,  width/height, 0.1, 20000);
+      camera = new THREE.PerspectiveCamera(45,  width/height, 0.1, 200000);
       scene.add(camera);
-      camera.position.set(500,500,500);
+      camera.position.set(5000,5000,5000);
       camera.lookAt(scene.position);
     };
 

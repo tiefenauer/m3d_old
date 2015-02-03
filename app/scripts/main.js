@@ -87,7 +87,8 @@ require.config({
       'angular-animate',
       'angular-touch',
       'angular-bootstrap'
-    ]
+    ],
+    'vendor/three/ThreeCSG': ['threejs', 'vendor/three/csg']
   },
   packages: [
 

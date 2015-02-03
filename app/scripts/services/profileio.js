@@ -3,11 +3,13 @@ define([
    'angular'
   ,'threejs'
   ,'models/m3dProfile'
+  ,'lodash'
   ,'services/STLLoader'
   ,'services/VRMLLoader'
   ,'util/FileSaver.min'
+  ,'vendor/three/ThreeCSG'
   ], 
-  function (angular, THREE, Profile) {
+  function (angular, THREE, Profile, _) {
 
     var $log, $rootScope;
     var loader;
@@ -41,28 +43,31 @@ define([
       */
       load: function(event, file){
         $log.debug('Loading from ' + file.name + ' ...');
+        var callback;
         switch(true){
           case new RegExp('.stl').test(file.name):
             loader = new THREE.STLLoader();
+            callback = onStlLoaded;
             break;
           case new RegExp('.wrl').test(file.name):
             loader = new THREE.VRMLLoader();
+            callback = onVrmlLoaded;
             break;
         }
         if(loader)
-          loader.loadLocal(file, onFileLoaded);
+          loader.loadLocal(file, callback);
       },
 
       /**
       * save model to file
-      * @param {Object[]} Objects to be saved. Each object will be saved to a separate file
+      * @param {m3d.models.Profile[]} profiles the profiles to be saved. Each object will be saved to a separate file.
       */
-      save: function(objects){
-        objects.forEach(function(model){
-          var fileName = model.name || 'stlModel';
+      save: function(profiles){
+        _.each(profiles, function(profile){
+          var fileName = profile.name || 'stlModel';
           fileName += '_generated';
           $log.debug('Saving model to ' + fileName + '.stl ...');
-          var stlString = generateStl(model.geometry);
+          var stlString = generateStl(profile.mesh.geometry);
           // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
           var blob;
           if (typeof WebKitBlobBuilder !== 'undefined'){
@@ -81,47 +86,77 @@ define([
 
       /**
       * create a mold by inverting the objects
-      * @param {m3d.models.Profile[]} objects the profiles to be inverted
+      * @param {m3d.models.Profile[]} profiles the profiles to be inverted
       */
-      invert: function(objects){
-        objects.forEach(function(m3dProfile){
-          // Modell kopieren und Sockel erstellen
-          var profileCopy = new Profile(m3dProfile.profilePoints, 2);
+      invert: function(profiles){
+        _.each(profiles, function(profile){
+          // Quader für Gussform vorbereiten
+          var boxBorderThickness = profile.getDimensionY() * 1.1 - profile.getDimensionY();
+          var boxWidth = profile.getDimensionX() + boxBorderThickness;
+          var boxHeight = profile.getDimensionY() * 2 + boxBorderThickness;
+          var boxDepth =  profile.getDimensionZ() + boxBorderThickness;
+          var boxGeometry = new THREE.BoxGeometry(boxDepth, boxHeight, boxWidth);
+          boxGeometry.dynamic = true;
+          // y-Position der unteren Vertices anpassen
+          boxGeometry.vertices.forEach(function(vertex){
+            if (vertex.y < 0)
+              vertex.y = -1 * boxBorderThickness;
+          });
+          boxGeometry.verticesNeedUpdate = true;
 
+          // Modell kopieren und Sockel erstellen
+          var profileCopy = new Profile({
+            profilePoints: profile.profilePoints,
+          });
           for(var i=0;i<profileCopy.profilePoints.length; i++){
-            var bottomIndex = profileCopy.getBottomIndex(i);            
-            profileCopy.mesh.geometry.vertices[bottomIndex].y = 0;            
+            var bottomIndex = profileCopy.getBottomIndex(i);                        
+            profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;            
           }
           profileCopy.mesh.geometry.verticesNeedUpdate = true;
           profileCopy.mesh.geometry.mergeVertices();
           profileCopy.mesh.geometry.computeVertexNormals();
 
-          var boxGeometry = new THREE.BoxGeometry(profileCopy.thickness, profileCopy.getWidth(), profileCopy.getHeight());
+          // Gussform aus Quader konstruieren          
+          var csgBox = new THREE.ThreeBSP(boxGeometry);
+          var csgProfile = new THREE.ThreeBSP(profileCopy.mesh);
+          var csgMold = csgBox.subtract(csgProfile);
+          var geometry = csgMold.toGeometry();
+
           var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
-          var invertedProfile = new THREE.Mesh(boxGeometry, material);
-          $rootScope.$broadcast('io:model:loaded', {model: {name: 'mold', mesh: invertedProfile}, fileName: 'test'});
+          var mold = new THREE.Mesh(geometry, material);
+
+          // Gussform um 180° drehen
+          var moldRotation = new THREE.Matrix4().makeRotationX( Math.PI );
+          mold.updateMatrix();
+          mold.geometry.applyMatrix(mold.matrix);
+          mold.geometry.applyMatrix(moldRotation);
+          mold.matrix.identity();          
+          profile.mold = mold;
+
+          $rootScope.$broadcast('io:model:inverted', profile);
         });        
       }
 
     };
 
-    var onFileLoaded = function(content, file){
+    var onStlLoaded = function(geometry, file){
       var fileName = file.name.substr(0, file.name.lastIndexOf('.'));
-      if (data.geometry instanceof THREE.Scene){
-        scene = data.geometry;
-        objects = data.geometry.children;
-        initScene();
-        initRenderer();
-        render();
-      }
-      else{
-        var mesh = new THREE.Mesh(data.geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
-        mesh.geometry.mergeVertices();
-        mesh.geometry.computeVertexNormals();
-        mesh.name = data.fileName;    
-        add(mesh);
-      }
-      $rootScope.$broadcast('io:model:loaded', {geometry: content, fileName: fileName});
+      var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
+      mesh.geometry.mergeVertices();
+      mesh.geometry.computeVertexNormals();
+      var profile = new Profile({
+        mesh: mesh
+      });
+      $rootScope.$broadcast('io:model:loaded', profile);
+    };
+
+    var onVrmlLoaded = function(content, file){
+      var fileName = file.name.substr(0, file.name.lastIndexOf('.'));
+      scene = data.geometry;
+      objects = data.geometry.children;
+      initScene();
+      initRenderer();
+      render();
     };
 
     var generateStl = function(geometry){
