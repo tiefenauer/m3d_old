@@ -47,20 +47,22 @@ define([
         el = $('#profile')[0];
         $el = $(el);
 
-        $scope.$on('adapter:end', this.draw);
-        $scope.$on('io:model:inverted', function(event, profile){
-          drawMold(profile);
+        $scope.$on('adapter:end', function(event, profilePoints){
+          clearScene();
+          var thickness = localStorage.getItem('thickness') || undefined;
+          var m3dProfile = new Profile({
+            profilePoints: profilePoints,
+            thickness: thickness
+          });
+          drawProfile(m3dProfile);
         });
         $scope.$on('io:model:loaded', function(event, profile){
           drawProfile(profile);
         });
         $scope.$on('menu:model:save', function(){
-          ProfileIOService.save(profiles);
+          ProfileIOService.save(currentProfile);
         });
-        $scope.$on('menu:model:invert', function(){
-          invertProfile();
-          //ProfileIOService.invert(profiles);
-        });
+        $scope.$on('menu:model:invert', this.toggleInvert);
 
         initScene();
         initRenderer();
@@ -68,19 +70,15 @@ define([
       },
 
       /**
-      * Draw elevation points
-      * @param {Object} event the event that caused the function to be called
-      * @param {m3d.models.ProfilePoint[]} array of processed ProfilePoints (including elevation data) for which the elevation profile should be drawn
+      * Toggle between model and inverted model (mold)
       */
-      draw: function(event, profilePoints){
-        clearScene();
-
-        var thickness = localStorage.getItem('thickness') || undefined;
-        var m3dProfile = new Profile({
-          profilePoints: profilePoints,
-          thickness: thickness
-        });
-        drawProfile(m3dProfile);
+      toggleInvert: function(){
+        if (currentMesh == currentProfile.mesh){
+          drawMold(currentProfile);
+        }
+        else {
+          drawProfile(currentProfile);
+        }
       },
 
       /**
@@ -115,36 +113,29 @@ define([
 
     var drawProfile = function(m3dProfile){
       clearScene();
+      currentProfile = m3dProfile;
       profiles[m3dProfile.name] = m3dProfile;
-      add(m3dProfile.mesh);
+      draw(m3dProfile.mesh);
     };
 
     var drawMold = function(m3dProfile){
       clearScene();
-      add(m3dProfile.mold);
+      currentProfile = m3dProfile;
+      profiles[m3dProfile.name] = m3dProfile;
+      draw(m3dProfile.getMold());
     };
 
-    var invertProfile = function(){
-      if (currentMesh == currentProfile.mesh){
-        drawMold(currentProfile);
-      }
-      else {
-        drawProfile(currentProfile);
-      }
-    };
-
-    var add = function(mesh){
+    var draw = function(mesh){
       currentMesh = mesh;
       scene.add(mesh);      
     };
 
-    var remove = function(m3dModel){
-      var remObj;
-      if (typeof m3dModel.name != 'undefined' && m3dModel.name != null && m3dModel.name.length > 0)
-        remObj = scene.getObjectByName(m3dModel.name);
-      else
-        remObj = m3dModel.mesh;
-      scene.remove(remObj);      
+    var remove = function(m3dProfile){
+      var mesh = scene.getObjectByName(m3dProfile.mesh.name);
+      if (m3dProfile.mold)
+        var mold = scene.getObjectByName(m3dProfile.mold.name);
+      scene.remove(mesh);
+      scene.remove(mold);
     };
 
 

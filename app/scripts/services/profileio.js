@@ -62,81 +62,25 @@ define([
       * save model to file
       * @param {m3d.models.Profile[]} profiles the profiles to be saved. Each object will be saved to a separate file.
       */
-      save: function(profiles){
-        _.each(profiles, function(profile){
-          var fileName = profile.name || 'stlModel';
-          fileName += '_generated';
-          $log.debug('Saving model to ' + fileName + '.stl ...');
-          var stlString = generateStl(profile.mesh.geometry);
-          // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
-          var blob;
-          if (typeof WebKitBlobBuilder !== 'undefined'){
-            var builder = new WebKitBlobBuilder();
-            builder.append(stlString);
-            blob = builder.getBlob();
-          }
-          // funktioniert nur in Browsern
-          else {
-            blob = new Blob([stlString], {type: 'text/plain'});
-          }
-          
-          window.saveAs(blob, fileName + '.stl');
-        });
-      },
-
-      /**
-      * create a mold by inverting the objects
-      * @param {m3d.models.Profile[]} profiles the profiles to be inverted
-      */
-      invert: function(profiles){
-        _.each(profiles, function(profile){
-          // Quader für Gussform vorbereiten
-          var boxBorderThickness = profile.getDimensionY() * 1.1 - profile.getDimensionY();
-          var boxWidth = profile.getDimensionX() + boxBorderThickness;
-          var boxHeight = profile.getDimensionY() * 2 + boxBorderThickness;
-          var boxDepth =  profile.getDimensionZ() + boxBorderThickness;
-          var boxGeometry = new THREE.BoxGeometry(boxDepth, boxHeight, boxWidth);
-          boxGeometry.dynamic = true;
-          // y-Position der unteren Vertices anpassen
-          boxGeometry.vertices.forEach(function(vertex){
-            if (vertex.y < 0)
-              vertex.y = -1 * boxBorderThickness;
-          });
-          boxGeometry.verticesNeedUpdate = true;
-
-          // Modell kopieren und Sockel erstellen
-          var profileCopy = new Profile({
-            profilePoints: profile.profilePoints,
-          });
-          for(var i=0;i<profileCopy.profilePoints.length; i++){
-            var bottomIndex = profileCopy.getBottomIndex(i);                        
-            profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;            
-          }
-          profileCopy.mesh.geometry.verticesNeedUpdate = true;
-          profileCopy.mesh.geometry.mergeVertices();
-          profileCopy.mesh.geometry.computeVertexNormals();
-
-          // Gussform aus Quader konstruieren          
-          var csgBox = new THREE.ThreeBSP(boxGeometry);
-          var csgProfile = new THREE.ThreeBSP(profileCopy.mesh);
-          var csgMold = csgBox.subtract(csgProfile);
-          var geometry = csgMold.toGeometry();
-
-          var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
-          var mold = new THREE.Mesh(geometry, material);
-
-          // Gussform um 180° drehen
-          var moldRotation = new THREE.Matrix4().makeRotationX( Math.PI );
-          mold.updateMatrix();
-          mold.geometry.applyMatrix(mold.matrix);
-          mold.geometry.applyMatrix(moldRotation);
-          mold.matrix.identity();          
-          profile.mold = mold;
-
-          $rootScope.$broadcast('io:model:inverted', profile);
-        });        
+      save: function(m3dProfile){
+        var fileName = m3dProfile.name || 'stlModel';
+        fileName += '_generated';
+        $log.debug('Saving model to ' + fileName + '.stl ...');
+        var stlString = generateStl(m3dProfile.mesh.geometry);
+        // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
+        var blob;
+        if (typeof WebKitBlobBuilder !== 'undefined'){
+          var builder = new WebKitBlobBuilder();
+          builder.append(stlString);
+          blob = builder.getBlob();
+        }
+        // funktioniert nur in Browsern
+        else {
+          blob = new Blob([stlString], {type: 'text/plain'});
+        }
+        
+        window.saveAs(blob, fileName + '.stl');
       }
-
     };
 
     var onStlLoaded = function(geometry, file){
