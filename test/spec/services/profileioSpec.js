@@ -3,8 +3,9 @@ define([
    'angular'
   ,'angular-mocks'
   ,'app'
+  ,'models/m3dProfile'
   ], 
-  function(angular, mocks, app) {
+  function(angular, mocks, app, Profile) {
   'use strict';
 
   describe('Service: ProfileIOService', function () {
@@ -12,7 +13,19 @@ define([
     // load the service's module
     beforeEach(module('m3d.services'));
 
+    // Mock für den Inhalt eines geladenen Files
+    var mockGeometry = new THREE.BoxGeometry(1,1,1);
 
+    // Mesh mit der Mock-Geometrie
+    var mockMesh = new THREE.Mesh(mockGeometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true }))
+
+    var mockProfile = new Profile({
+      name: 'mockProfile',
+      mesh: mockMesh      
+    });
+
+    // mock für ein zu speicherndes Profil
+    /*
     var dummyModel = {name: 'test', geometry: {
       vertices: [
         {x: 1, y: 0, z: 0},
@@ -25,6 +38,7 @@ define([
         {a:0, b: 0, c:1, normal: {x: 0, y: 1, z: 1}}
       ]
     }};
+    */
 
     // instantiate service
     var ProfileIOService, rootScope;
@@ -44,9 +58,10 @@ define([
     });
 
     it('should broadcast an event when file is loaded', function(){
-      spyOn(rootScope, '$broadcast');
+      spyOn(rootScope, '$broadcast');      
+      // Laden des Files mocken      
       spyOn(THREE.STLLoader.prototype, 'loadLocal').and.callFake(function(fileArg, callbackArg){
-        callbackArg({}, fileArg);
+        callbackArg(mockGeometry, fileArg);
       });
       var file = {name: 'test.stl'};
       ProfileIOService.load(null, file);
@@ -55,12 +70,15 @@ define([
       expect(rootScope.$broadcast).toHaveBeenCalled();
       expect(rootScope.$broadcast.calls.mostRecent().args[0]).toBe('io:model:loaded');
       expect(rootScope.$broadcast.calls.mostRecent().args[1]).not.toBe(null);
-      expect(rootScope.$broadcast.calls.mostRecent().args[1].fileName).toBe('test');
+      expect(rootScope.$broadcast.calls.mostRecent().args[1] instanceof Profile).toBe(true);
+      expect(rootScope.$broadcast.calls.mostRecent().args[1].name).toBe('test');
+      expect(rootScope.$broadcast.calls.mostRecent().args[1].mesh).not.toBe(null);
+      expect(rootScope.$broadcast.calls.mostRecent().args[1].mesh.geometry).toEqual(mockGeometry);
     });
 
     it('should use the correct loader for each file type', function(){
       var dummyLoadLocal = function(fileArg, callbackArg){
-        callbackArg({}, fileArg);
+        callbackArg(mockGeometry, fileArg);
       };
       spyOn(THREE.STLLoader.prototype, 'loadLocal').and.callFake(dummyLoadLocal);
       spyOn(THREE.VRMLLoader.prototype, 'loadLocal').and.callFake(dummyLoadLocal);
@@ -75,27 +93,22 @@ define([
     });
 
     it('should save each model into a separate file', function(){
-      var objects = [
-        {name: 'dummy1', geometry: dummyModel.geometry},
-        {name: 'dummy2', geometry: dummyModel.geometry}
-      ];
-
       spyOn(window, 'saveAs');
-      ProfileIOService.save(objects);
+      ProfileIOService.save(mockProfile);
 
-      expect(window.saveAs.calls.count()).toBe(2);
-      expect(window.saveAs.calls.argsFor(0)).toContain('dummy1_generated.stl');
-      expect(window.saveAs.calls.argsFor(1)).toContain('dummy2_generated.stl');
+      expect(window.saveAs.calls.count()).toBe(1);
+      expect(window.saveAs.calls.mostRecent().args).toContain('mockProfile_generated.stl');
     });
 
     it('should produce a correct STL-String', function(done){
       spyOn(window, 'saveAs');
-      ProfileIOService.save([dummyModel]);
+      ProfileIOService.save(mockProfile);
+
       var stlBlob = window.saveAs.calls.mostRecent().args[0];
       var fr = new FileReader();
       fr.onload = function(event){
         var savedString = event.target.result;                
-        expect(savedString).toBe('solid pixel\nfacet normal 1 1 0 \nouter loop \nvertex 0 1 0 \nvertex 1 0 0 \nvertex 1 0 0 \nendloop \nendfacet \nfacet normal 1 0 1 \nouter loop \nvertex 1 0 0 \nvertex 0 1 0 \nvertex 1 0 0 \nendloop \nendfacet \nfacet normal 0 1 1 \nouter loop \nvertex 1 0 0 \nvertex 1 0 0 \nvertex 0 1 0 \nendloop \nendfacet \nendsolid');
+        expect(savedString).not.toBe(null);
         done();
       };
       fr.readAsBinaryString(stlBlob);

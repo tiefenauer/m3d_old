@@ -13,7 +13,7 @@ require.config({
     bootstrap: '../../bower_components/bootstrap/dist/js/bootstrap',
     threejs: '../../bower_components/threejs/build/three',
     bluebird: '../../bower_components/bluebird/js/browser/bluebird',
-    lodash: '../../bower_components/lodash/lodash.min',
+    lodash: '../../bower_components/lodash/lodash',
     text: '../../bower_components/text/text',
     'ladda-bootstrap': '../../bower_components/ladda-bootstrap/dist/ladda',
     spin: '../../bower_components/ladda-bootstrap/dist/spin',
@@ -88,7 +88,10 @@ require.config({
       'angular-touch',
       'angular-bootstrap'
     ],
-    'vendor/three/ThreeCSG': ['threejs', 'vendor/three/csg']
+    'vendor/three/ThreeCSG': [
+      'threejs',
+      'vendor/three/csg'
+    ]
   },
   packages: [
 

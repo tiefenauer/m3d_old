@@ -89,18 +89,16 @@ define([
       mesh.geometry.mergeVertices();
       mesh.geometry.computeVertexNormals();
       var profile = new Profile({
-        mesh: mesh
+        mesh: mesh,
+        name: fileName
       });
       $rootScope.$broadcast('io:model:loaded', profile);
     };
 
     var onVrmlLoaded = function(content, file){
       var fileName = file.name.substr(0, file.name.lastIndexOf('.'));
-      scene = data.geometry;
-      objects = data.geometry.children;
-      initScene();
-      initRenderer();
-      render();
+      //var scene = content.geometry;
+      //var objects = content.geometry.children;
     };
 
     var generateStl = function(geometry){

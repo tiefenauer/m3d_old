@@ -18,7 +18,8 @@ define([
 			var defaultArgs = {
 				'profilePoints': [],
 				'thickness': 200,
-				'mesh': null
+				'mesh': null,
+				'name': null
 			};
 			for(var index in defaultArgs){
 				if (typeof options[index] == 'undefined') options[index] = defaultArgs[index];
@@ -49,8 +50,7 @@ define([
 		  * initialize the object
 		  * @param {Object} options configuration options
 		  */ 
-		  init: function(options){		  	
-		  	this.thickness = options.thickness;		  	
+		  init: function(options){		  			  	
 			if (options.profilePoints.length > 0){				
 				this.profilePoints = _.sortByAll(options.profilePoints, ['lat', 'lng']);
 				this.segmentsX =  Math.sqrt(this.profilePoints.length) - 1;
@@ -61,8 +61,14 @@ define([
 				this.mesh = options.mesh;
 				//this.updateProfilePoints(this.mesh);
 				//this.updateMesh(this.profilePoints);
-			}
-			this.name = this.mesh.name = this.mesh.id;	
+			}			
+
+			this.thickness = options.thickness;		  	
+
+		  	if (options.name)
+		  		this.name = this.mesh.name = options.name;
+		  	else
+		  		this.name = this.mesh.name = this.mesh.id;				
 		  },
 
 		  /**
@@ -184,6 +190,10 @@ define([
 		  	return this.getMaxElv() - this.getMinElv();
 		  },
 
+		  /**
+		  * Get the model width as the unitless distance between the outermost points on the X-axis
+		  * @return {Number} the model width as the difference between the two X-coordinates
+		  */
 		  getDimensionX: function(){
 		  	var xs = _.pluck(this.mesh.geometry.vertices, 'x');
 		  	var maxX = _.max(xs);
@@ -191,6 +201,10 @@ define([
 		  	return Math.floor(Math.abs(maxX - minX));
 		  },
 
+		 /**
+		  * Get the model height as the unitless distance between the outermost points on the Y-axis
+		  * @return {Number} the model height as the difference between the two Y-coordinates
+		  */
 		  getDimensionY: function(){
 			var ys = _.pluck(this.mesh.geometry.vertices, 'y');
 		  	var maxY = _.max(ys);
@@ -198,6 +212,10 @@ define([
 		  	return Math.floor(Math.abs(maxY - minY));
 		  },
 
+		 /**
+		  * Get the model depth as the unitless distance between the outermost points on the Z-axis
+		  * @return {Number} the model width as the difference between the two Z-coordinates
+		  */
 		  getDimensionZ: function(){
 			var zs = _.pluck(this.mesh.geometry.vertices, 'z');
 		  	var maxZ = _.max(zs);
@@ -205,6 +223,11 @@ define([
 		  	return Math.floor(Math.abs(maxZ - minZ));
 		  },
 
+		 /**
+		  * Rotate the model for a given angle on the Y-Axis
+		  * @param {Number} angle the angle the model should be rotated with
+		  * @param {Number} damping the damping factor that should be used to calculate the rotation
+		  */
 		  rotate: function(angle, damping){
 		  	var rotation = (angle - this.mesh.rotation.y) * damping;
           	this.mesh.rotation.y += rotation;
@@ -213,14 +236,9 @@ define([
 		  },
 
 		  /**
-		  * 
+		  * Get the index on the bottom for a vector on top
 		  */
 		  getBottomIndex: function(i){
-		  	/*
-		  	var topPoints = this.mesh.geometry.vertices.splice(0, Math.ceil(this.mesh.geometry.vertices.length / 2));
-		  	var side = Math.sqrt(topPoints.length);
-		  	return topPoints.length + i + side - 2*(i%side) - 1;
-		  	*/		  	
 		  	var side = Math.sqrt(this.profilePoints.length);		  	
 		  	return this.profilePoints.length + i + side - 2*(i%side) - 1;
 		  }
