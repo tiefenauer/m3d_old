@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">66.94</p>
+      <p class="stat">65.09</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">123</p>
+      <p class="stat">326</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">35.79</p>
+      <p class="stat">65.58</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.13</p>
+      <p class="stat">3.41</p>
     </div>
   </div>
 </div>
@@ -104,11 +104,18 @@
 	     * @namespace
 	     */
 		var Profile = function(profilePoints, thickness){
-			this.profilePoints = profilePoints;
-			this.thickness = thickness;
-			this.segmentsX =  Math.sqrt(profilePoints.length) - 1;
-			this.segmentsY =  Math.sqrt(profilePoints.length) - 1;
-			this.updateMesh();
+			var options = {};
+			if (arguments[0]) options = arguments[0];
+			var defaultArgs = {
+				&#039;profilePoints&#039;: [],
+				&#039;thickness&#039;: 200,
+				&#039;mesh&#039;: null,
+				&#039;name&#039;: null
+			};
+			for(var index in defaultArgs){
+				if (typeof options[index] == &#039;undefined&#039;) options[index] = defaultArgs[index];
+			}
+			this.init(options);
 		};
 
 		Profile.prototype = /** @lends m3d.model.Profile.prototype */{
@@ -116,13 +123,54 @@
 		  profilePoints: [],
 		  thickness: 0,
 		  segmentsX: 0,
-		  segmentsY: 0,
+		  segmentsY: 1,
+		  segmentsZ: 0,
 		  mesh: null,
+		  mold: null,
 
-		  updateMesh: function(){
-		  	var geometry = new THREE.BoxGeometry(this.thickness, this.getHeight(), this.getWidth(), 1, this.segmentsX, this.segmentsY);
+		  /**
+		  * Get mold for profile (if not existent, it will be created)
+		  */
+		  getMold: function(){
+  		  	if (!this.mold)
+				this.mold = invert(this);
+			return this.mold;
+		  },
+
+		  /**
+		  * initialize the object
+		  * @param {Object} options configuration options
+		  */ 
+		  init: function(options){		  			  	
+			if (options.profilePoints.length &gt; 0){				
+				this.profilePoints = _.sortByAll(options.profilePoints, [&#039;lat&#039;, &#039;lng&#039;]);
+				this.segmentsX =  Math.sqrt(this.profilePoints.length) - 1;
+				this.segmentsY =  Math.sqrt(this.profilePoints.length) - 1;
+				this.updateMesh(this.profilePoints);
+			}
+			else if (options.mesh){
+				this.mesh = options.mesh;
+				//this.updateProfilePoints(this.mesh);
+				//this.updateMesh(this.profilePoints);
+			}			
+
+			this.thickness = options.thickness;		  	
+
+		  	if (options.name)
+		  		this.name = this.mesh.name = options.name;
+		  	else
+		  		this.name = this.mesh.name = this.mesh.id;				
+		  },
+
+		  /**
+		  * update mesh according to given ProfilePoints
+		  * @param {m3d.model.ProfilePoint[]} profilePoints array of ProfilePoints to create the mesh
+		  */
+		  updateMesh: function(profilePoints){
+		  	var geometry = new THREE.BoxGeometry(this.thickness, this.getDistanceZ(), this.getDistanceX(), 1, this.segmentsX, this.segmentsY);
 		  	var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
 		  	var mesh = new THREE.Mesh(geometry, material);
+		  	mesh.geometry.dynamic = true;
 
 	  	    var rotationZ = new THREE.Matrix4().makeRotationZ( - Math.PI/2 );
 		    var rotationX = new THREE.Matrix4().makeRotationX( Math.PI );
@@ -133,19 +181,35 @@
 		    mesh.matrix.identity();
 
 			var diff = 0;
-			var side = Math.sqrt(this.profilePoints.length);
 
 			//model.geometry.vertices.length
-			for(var i=0; i &lt; this.profilePoints.length; i++){
-				diff = this.profilePoints[i].elv - this.getMinElv();         
-				var bottomIndex = this.profilePoints.length + i + side - 2*(i%side) - 1;
-				mesh.geometry.vertices[i].y += diff / 10; 
-				mesh.geometry.vertices[bottomIndex].y += diff / 10;
-			}
+			_.forEach(this.profilePoints, function(point, i){
+				diff = point.elv - this.getMinElv();         
+				var bottomIndex = this.getBottomIndex(i);
+				mesh.geometry.vertices[i].y += diff; 
+				mesh.geometry.vertices[bottomIndex].y += diff;				
+			}, this);
 
 			mesh.geometry.computeFaceNormals();
 			mesh.geometry.computeVertexNormals();
 			this.mesh = mesh;
+		  },
+
+		  /**
+		  * update profile points according to given mesh
+		  * @param {THREE.Mesh} mesh mesh to be used to create ProfilePoints
+		  */
+		  updateProfilePoints: function(mesh){
+		  	var profilePoints = [];
+		  	var topPoints = mesh.geometry.vertices.splice(0, Math.ceil(mesh.geometry.vertices.length / 2));
+		  	_.forEach(topPoints, function(vertex, i){
+		  		var lat = vertex.x;
+		  		var lng = vertex.y;
+		  		var elv = vertex.z;
+		  		var profilePoint = new ProfilePoint(lat, lng, elv);
+		  		profilePoints.push(profilePoint);
+		  	});
+		  	this.profilePoints = profilePoints;
 		  },
 
 		  /**
@@ -191,25 +255,164 @@
 		  	return _.max(_.pluck(this.profilePoints, &#039;elv&#039;))
 		  },
 		  /**
-		  * Get the distance between the easternmost and the westermost point
+		  * Get the model width as the distance between the easternmost and the westermost point
 		  * @return {Number} the distance between the easternmost and the westermost point in meters
 		  */
-		  getWidth: function(){
+		  getDistanceX: function(){
 		  	var nw = {&#039;lat&#039;: this.getMaxLat(), &#039;lng&#039;: this.getMinLng()};
 		  	var ne = {&#039;lat&#039;: this.getMaxLat(), &#039;lng&#039;: this.getMaxLng()};
-		  	return Math.floor(gmUtil.degreeToMeter(nw, ne) / 100) * 10;
+		  	return Math.floor(gmUtil.degreeToMeter(nw, ne));
 		  },
 		  /**
-		  * Get the distance between te southernmost and the northernmost point
-		  * @return {Number} the distance between te southernmost and the northernmost point in meters
+		  * Get the model depth (length) as the distance between te southernmost and the northernmost point
+		  * @return {Number} the distance between the southernmost and the northernmost point in meters
 		  */
-		  getHeight: function(){
+		  getDistanceZ: function(){
 		  	var sw = {&#039;lat&#039;: this.getMinLat(), &#039;lng&#039;: this.getMinLng()};	
 		  	var nw = {&#039;lat&#039;: this.getMaxLat(), &#039;lng&#039;: this.getMinLng()};
-		  	return Math.floor(gmUtil.degreeToMeter(sw, nw) / 100) * 10;
+		  	return Math.floor(gmUtil.degreeToMeter(sw, nw));
+		  },
+
+		  /**
+		  * Get the model height as the distance between the lowest and the highest point
+		  * @return {Number} the distance between the lowest and the highest point in meters
+		  */
+		  getDistanceY: function(){
+		  	return this.getMaxElv() - this.getMinElv();
+		  },
+
+		  /**
+		  * Get the model width as the unitless distance between the outermost points on the X-axis
+		  * @return {Number} the model width as the difference between the two X-coordinates
+		  */
+		  getDimensionX: function(){
+		  	var xs = _.pluck(this.mesh.geometry.vertices, &#039;x&#039;);
+		  	var maxX = _.max(xs);
+		  	var minX = _.min(xs);
+		  	return Math.floor(Math.abs(maxX - minX));
+		  },
+
+		 /**
+		  * Get the model height as the unitless distance between the outermost points on the Y-axis
+		  * @return {Number} the model height as the difference between the two Y-coordinates
+		  */
+		  getDimensionY: function(){
+			var ys = _.pluck(this.mesh.geometry.vertices, &#039;y&#039;);
+		  	var maxY = _.max(ys);
+		  	var minY = _.min(ys);
+		  	return Math.floor(Math.abs(maxY - minY));
+		  },
+
+		 /**
+		  * Get the model depth as the unitless distance between the outermost points on the Z-axis
+		  * @return {Number} the model width as the difference between the two Z-coordinates
+		  */
+		  getDimensionZ: function(){
+			var zs = _.pluck(this.mesh.geometry.vertices, &#039;z&#039;);
+		  	var maxZ = _.max(zs);
+		  	var minZ = _.min(zs);
+		  	return Math.floor(Math.abs(maxZ - minZ));
+		  },
+
+		 /**
+		  * Rotate the model for a given angle on the Y-Axis
+		  * @param {Number} angle the angle the model should be rotated with
+		  * @param {Number} damping the damping factor that should be used to calculate the rotation
+		  */
+		  rotate: function(angle, damping){
+		  	var rotation = (angle - this.mesh.rotation.y) * damping;
+          	this.mesh.rotation.y += rotation;
+          	if (this.mold)
+          		this.mold.rotation.y += rotation;
+		  },
+
+		  /**
+		  * Get the index on the bottom for a vector on top
+		  */
+		  getBottomIndex: function(i){
+		  	var side = Math.sqrt(this.profilePoints.length);		  	
+		  	return this.profilePoints.length + i + side - 2*(i%side) - 1;
 		  }
 	};
-	
+
+	/**
+  	* create a mold by inverting the objects
+  	* @param {m3d.models.Profile[]} profiles the profiles to be inverted
+  	*/
+  	var invert = function(profile){
+  	  profile.mesh.geometry.computeVertexNormals();
+	  // Quader für Gussform vorbereiten
+	  var boxBorderThickness = profile.getDimensionY() * 1.1 - profile.getDimensionY();
+	  var boxWidth = profile.getDimensionZ() + boxBorderThickness;
+	  var boxHeight = profile.getDimensionY() * 2 + boxBorderThickness;
+	  var boxDepth =  profile.getDimensionX() + boxBorderThickness;
+	  var boxGeometry = new THREE.BoxGeometry(boxDepth, boxHeight, boxWidth);
+	  boxGeometry.dynamic = true;
+	  // y-Position der unteren Vertices anpassen
+	  boxGeometry.vertices.forEach(function(vertex){
+	    if (vertex.y &lt; 0)
+	      vertex.y = -1 * boxBorderThickness;
+	  });
+	  boxGeometry.verticesNeedUpdate = true;
+
+	  // Modell kopieren und Sockel erstellen
+	  profile.mesh.geometry.computeVertexNormals();
+	  var profileCopy = new Profile({
+	    profilePoints: profile.profilePoints,
+	    mesh: profile.mesh
+	  });	  
+	  profile.mesh.geometry.computeVertexNormals();
+	  profileCopy.mesh.geometry.computeVertexNormals();
+
+	  profileCopy.mesh.dynamic = true;
+
+	  profile.mesh.geometry.computeVertexNormals();
+	  profileCopy.mesh.geometry.computeVertexNormals();
+
+	  // Sockel erstellen
+	  if (profileCopy.profilePoints.length &gt; 0){
+		_.forEach(profileCopy.profilePoints, function(point, i){
+	  	  	var bottomIndex = profileCopy.getBottomIndex(i);                        
+		    profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;
+  	  	});		
+	  } 
+	  else{
+	  	var half = Math.ceil(profileCopy.mesh.geometry.vertices.length / 2);
+	  	var getBoti = function(n){	  		
+	  		var side = Math.sqrt(half);		  	
+		  	return half + n + side - 2*(n%side) - 1;
+	  	}
+	  	for(var i=0; i&lt;half; i++){
+	    //_.forEach(profileCopy.mesh.geometry.vertices, function(vertex, i){
+	    	var boti = getBoti(i);
+	    	profileCopy.mesh.geometry.vertices[boti].y = -1 * boxHeight;
+		//});
+		}
+	  };	  
+	  //profileCopy.mesh = profile.mesh;
+	  profileCopy.mesh.geometry.verticesNeedUpdate = true;
+	  profileCopy.mesh.geometry.mergeVertices();
+	  profileCopy.mesh.geometry.computeVertexNormals();
+
+	  // Gussform aus Quader konstruieren          
+	  var csgBox = new THREE.ThreeBSP(boxGeometry);
+	  var csgProfile = new THREE.ThreeBSP(profileCopy.mesh);
+	  var csgMold = csgBox.subtract(csgProfile);
+	  var geometry = csgMold.toGeometry();
+
+	  var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
+	  var mold = new THREE.Mesh(geometry, material);
+
+	  // Gussform um 180° drehen
+	  var moldRotation = new THREE.Matrix4().makeRotationX( Math.PI );
+	  mold.updateMatrix();
+	  mold.geometry.applyMatrix(mold.matrix);
+	  mold.geometry.applyMatrix(moldRotation);
+	  mold.matrix.identity();
+	  mold.name = profile.mesh.name + &#039;mold&#039;;
+	  return mold;
+  	};	
+
 	return Profile;
 });</textarea>
   </div>

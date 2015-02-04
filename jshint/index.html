@@ -59,39 +59,63 @@
     <td><code>        spyOn&#40;google.maps.ElevationService.prototype&#44; &#39;getElevationForLocations&#39;&#41;.and.callFake&#40;dummyGoogleMapsFunction&#41;;</code></td>
     <td>&#39;google&#39; is not defined.</td>
 </tr><tr><td colspan="5"><b>../../test/spec/services/profileioSpec.js</b></td></tr><tr class="warning">
+    <td class="text-center">W033</td>
+    <td class="text-center">20</td>
+    <td class="text-center">112</td>
+    <td><code>    var mockMesh &#61; new THREE.Mesh&#40;mockGeometry&#44; new THREE.MeshPhongMaterial&#40;&#123;color: 0x00ff00&#44; dynamic: true &#125;&#41;&#41;</code></td>
+    <td>Missing semicolon.</td>
+</tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">48</td>
+    <td class="text-center">17</td>
+    <td class="text-center">28</td>
+    <td><code>    var mockGeometry &#61; new THREE.BoxGeometry&#40;1&#44;1&#44;1&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">20</td>
+    <td class="text-center">24</td>
+    <td><code>    var mockMesh &#61; new THREE.Mesh&#40;mockGeometry&#44; new THREE.MeshPhongMaterial&#40;&#123;color: 0x00ff00&#44; dynamic: true &#125;&#41;&#41;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">20</td>
+    <td class="text-center">53</td>
+    <td><code>    var mockMesh &#61; new THREE.Mesh&#40;mockGeometry&#44; new THREE.MeshPhongMaterial&#40;&#123;color: 0x00ff00&#44; dynamic: true &#125;&#41;&#41;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">63</td>
     <td class="text-center">13</td>
     <td><code>      spyOn&#40;THREE.STLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;function&#40;fileArg&#44; callbackArg&#41;&#123;</code></td>
     <td>&#39;THREE&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">65</td>
+    <td class="text-center">83</td>
     <td class="text-center">13</td>
     <td><code>      spyOn&#40;THREE.STLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;dummyLoadLocal&#41;;</code></td>
     <td>&#39;THREE&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">66</td>
+    <td class="text-center">84</td>
     <td class="text-center">13</td>
     <td><code>      spyOn&#40;THREE.VRMLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;dummyLoadLocal&#41;;</code></td>
     <td>&#39;THREE&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">70</td>
+    <td class="text-center">88</td>
     <td class="text-center">14</td>
     <td><code>      expect&#40;THREE.STLLoader.prototype.loadLocal&#41;.toHaveBeenCalled&#40;&#41;;</code></td>
     <td>&#39;THREE&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">74</td>
+    <td class="text-center">92</td>
     <td class="text-center">14</td>
     <td><code>      expect&#40;THREE.VRMLLoader.prototype.loadLocal&#41;.toHaveBeenCalled&#40;&#41;;</code></td>
     <td>&#39;THREE&#39; is not defined.</td>
 </tr>
     </table>
     <div class="well">
-    Found <span class="label label-default">12</span> failures - <span class="label label-danger">0 errors</span> &amp; <span class="label label-warning">12 warnings</span>
+    Found <span class="label label-default">16</span> failures - <span class="label label-danger">0 errors</span> &amp; <span class="label label-warning">16 warnings</span>
 </div>
 </div>
 

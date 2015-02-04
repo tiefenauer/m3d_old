@@ -87,8 +87,6 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="m3d.controller.MenuController#draw"><a href="m3d.controller.MenuController.html#draw">draw</a></li>
-            
                 <li data-name="m3d.controller.MenuController#init"><a href="m3d.controller.MenuController.html#init">init</a></li>
             
                 <li data-name="m3d.controller.MenuController#init"><a href="m3d.controller.MenuController.html#init">init</a></li>
@@ -104,6 +102,8 @@
                 <li data-name="m3d.controller.MenuController#showSettings"><a href="m3d.controller.MenuController.html#showSettings">showSettings</a></li>
             
                 <li data-name="m3d.controller.MenuController#showStats"><a href="m3d.controller.MenuController.html#showStats">showStats</a></li>
+            
+                <li data-name="m3d.controller.MenuController#toggleInvert"><a href="m3d.controller.MenuController.html#toggleInvert">toggleInvert</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -149,7 +149,19 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="m3d.model.Profile#getHeight"><a href="m3d.model.Profile.html#getHeight">getHeight</a></li>
+                <li data-name="m3d.model.Profile#getBottomIndex"><a href="m3d.model.Profile.html#getBottomIndex">getBottomIndex</a></li>
+            
+                <li data-name="m3d.model.Profile#getDimensionX"><a href="m3d.model.Profile.html#getDimensionX">getDimensionX</a></li>
+            
+                <li data-name="m3d.model.Profile#getDimensionY"><a href="m3d.model.Profile.html#getDimensionY">getDimensionY</a></li>
+            
+                <li data-name="m3d.model.Profile#getDimensionZ"><a href="m3d.model.Profile.html#getDimensionZ">getDimensionZ</a></li>
+            
+                <li data-name="m3d.model.Profile#getDistanceX"><a href="m3d.model.Profile.html#getDistanceX">getDistanceX</a></li>
+            
+                <li data-name="m3d.model.Profile#getDistanceY"><a href="m3d.model.Profile.html#getDistanceY">getDistanceY</a></li>
+            
+                <li data-name="m3d.model.Profile#getDistanceZ"><a href="m3d.model.Profile.html#getDistanceZ">getDistanceZ</a></li>
             
                 <li data-name="m3d.model.Profile#getMaxElv"><a href="m3d.model.Profile.html#getMaxElv">getMaxElv</a></li>
             
@@ -161,7 +173,15 @@
             
                 <li data-name="m3d.model.Profile#getMinLng"><a href="m3d.model.Profile.html#getMinLng">getMinLng</a></li>
             
-                <li data-name="m3d.model.Profile#getWidth"><a href="m3d.model.Profile.html#getWidth">getWidth</a></li>
+                <li data-name="m3d.model.Profile#getMold"><a href="m3d.model.Profile.html#getMold">getMold</a></li>
+            
+                <li data-name="m3d.model.Profile#init"><a href="m3d.model.Profile.html#init">init</a></li>
+            
+                <li data-name="m3d.model.Profile#rotate"><a href="m3d.model.Profile.html#rotate">rotate</a></li>
+            
+                <li data-name="m3d.model.Profile#updateMesh"><a href="m3d.model.Profile.html#updateMesh">updateMesh</a></li>
+            
+                <li data-name="m3d.model.Profile#updateProfilePoints"><a href="m3d.model.Profile.html#updateProfilePoints">updateProfilePoints</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -208,8 +228,6 @@
             <span class="subtitle">Methods</span>
             
                 <li data-name="m3d.services.ProfileIOService#init"><a href="m3d.services.ProfileIOService.html#init">init</a></li>
-            
-                <li data-name="m3d.services.ProfileIOService#invert"><a href="m3d.services.ProfileIOService.html#invert">invert</a></li>
             
                 <li data-name="m3d.services.ProfileIOService#load"><a href="m3d.services.ProfileIOService.html#load">load</a></li>
             
@@ -325,145 +343,6 @@ Controller for menu</p></div>
         <h3 class="subsection-title">Methods</h3>
         
         <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="draw">
-            
-            draw<span class="signature">(event, array)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="profile.js.html">controllers/profile.js</a>, <a href="profile.js.html#line69">line 69</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Draw elevation points</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>the event that caused the function to be called</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>array</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">m3d.models.ProfilePoint[]</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>of processed ProfilePoints (including elevation data) for which the elevation profile should be drawn</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
             
 <dt>
     <div class="nameContainer">
@@ -682,12 +561,12 @@ Controller for menu</p></div>
     <div class="nameContainer">
         <h4 class="name" id="render">
             
-            render<span class="signature">(objects)</span>
+            render<span class="signature">(profiles)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="profile.js.html">controllers/profile.js</a>, <a href="profile.js.html#line81">line 81</a>
+            <a href="profile.js.html">controllers/profile.js</a>, <a href="profile.js.html#line88">line 88</a>
         </div>
         
     </div>
@@ -698,7 +577,7 @@ Controller for menu</p></div>
     
     
     <div class="description">
-        <p>Render objects on canvas</p>
+        <p>Render profiles on canvas</p>
     </div>
     
 
@@ -729,7 +608,7 @@ Controller for menu</p></div>
 	
         <tr>
             
-                <td class="name"><code>objects</code></td>
+                <td class="name"><code>profiles</code></td>
             
             
             <td class="type">
@@ -745,7 +624,7 @@ Controller for menu</p></div>
             
             <td class="description last">
                 
-                <p>the objects to render</p></td>
+                <p>the profiles to render</p></td>
         </tr>
 	
 	
@@ -1076,6 +955,77 @@ Controller for menu</p></div>
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="toggleInvert">
+            
+            toggleInvert<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="profile.js.html">controllers/profile.js</a>, <a href="profile.js.html#line75">line 75</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Toggle between model and inverted model (mold)</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -1093,7 +1043,7 @@ Controller for menu</p></div>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Feb 02 2015 08:05:43 GMT-0000 (UTC)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Feb 04 2015 17:15:29 GMT-0000 (UTC)
         </footer>
     </div>
 </div>

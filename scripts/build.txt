@@ -24,6 +24,8 @@ services/elevationdataservice.js
 services/STLLoader.js
 services/VRMLLoader.js
 util/FileSaver.min.js
+vendor/three/csg.js
+vendor/three/ThreeCSG.js
 services/profileio.js
 services.js
 directives/m3dmenu.js
