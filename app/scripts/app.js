@@ -7,7 +7,6 @@ define([
   ,'controllers'
   ,'models'
   ,'decorators'
-  ,'angular-google-maps'
   ]/*deps*/, 
   function (angular)/*invoke*/ {
   'use strict';

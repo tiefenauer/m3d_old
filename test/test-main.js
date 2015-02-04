@@ -41,8 +41,7 @@ requirejs.config({
     propertyParser: '../../bower_components/requirejs-plugins/src/propertyParser',
     'Markdown.Converter': '../../bower_components/requirejs-plugins/lib/Markdown.Converter',
     'angular-bootstrap': '../../bower_components/angular-bootstrap/ui-bootstrap-tpls',
-    'jquery-ui': '../../bower_components/jquery-ui/jquery-ui',
-    'angular-google-maps': '../../bower_components/angular-google-maps/dist/angular-google-maps'
+    'jquery-ui': '../../bower_components/jquery-ui/jquery-ui'
   },
 
     shim: {
