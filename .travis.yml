@@ -9,6 +9,7 @@ before_script:
 - sh -e /etc/init.d/xvfb start
 - npm install -g bower grunt-cli
 - gem update --system && gem install compass
+- bower prune
 - bower install
 script:
 - grunt

@@ -7,7 +7,8 @@ define([
      * ProfilePoint
      * Model for a single point of the digital elevationProfile
      * @class
-     * @name m3d.model.ProfilePoint
+     * @module models/m3dProfilePoint
+     * @name m3d.models.ProfilePoint
      * @namespace
      * @constructor
      */
