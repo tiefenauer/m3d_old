@@ -76,7 +76,7 @@ define([
             var xVal = xFrom + x*xStep;
             var lat = Number(parseFloat(yVal).toFixed(4));
             var lng = Number(parseFloat(xVal).toFixed(4));
-            profilePoints.push(new ProfilePoint(lat, lng, 0));
+            profilePoints.push(new ProfilePoint({lat: lat, lng: lng, elv: 0}));
           }
         }
         return profilePoints;

@@ -3,23 +3,41 @@ define([
 	],
 	function(){
 
-	    /**
-	     * ProfilePoint
-	     * Model for a single point of the digital elevationProfile
-	     * @class
-	     * @name m3d.model.ProfilePoint
-	     * @namespace
-	     */
-		var ProfilePoint = function(lat, lng, elv){
-			this.lat = lat;
-			this.lng = lng;
-			this.elv = elv;
+    /**
+     * ProfilePoint
+     * Model for a single point of the digital elevationProfile
+     * @class
+     * @name m3d.model.ProfilePoint
+     * @namespace
+     * @constructor
+     */
+		var ProfilePoint = function(){
+			var options = arguments.length > 0?arguments[0]:{};
+			var defaultArgs = {
+				'lat': 0,
+				'lng': 0,
+				'elv': 0
+			};
+			for(var index in defaultArgs){
+				if (typeof options[index] == 'undefined') options[index] = defaultArgs[index];
+			}
+			this.init(options);
 		};
 
-		ProfilePoint.prototype =  /** @lends m3d.controller.MapController.prototype */{
+		ProfilePoint.prototype =  /** @lends m3d.models.ProfilePoint.prototype */{
 			lat: 0,
 			lng: 0,
-			elv: 0
+			elv: 0,
+
+			/*
+			* initialize the ProfilePoint with an options object
+			* @param {Object} options options object
+			*/
+			init: function(options){
+				this.lat = options.lat;
+				this.lng = options.lng;
+				this.elv = options.elv;
+			}
 		};
 
 		return ProfilePoint;
