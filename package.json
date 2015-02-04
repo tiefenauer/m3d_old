@@ -14,7 +14,9 @@
     "maps3dplus",
     "maps3d+"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^3.1.0"
+  },
   "devDependencies": {
     "chromedriver": "^2.13.0",
     "grunt": "^0.4.5",

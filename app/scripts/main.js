@@ -13,7 +13,7 @@ require.config({
     bootstrap: '../../bower_components/bootstrap/dist/js/bootstrap',
     threejs: '../../bower_components/threejs/build/three',
     bluebird: '../../bower_components/bluebird/js/browser/bluebird',
-    lodash: '../../bower_components/lodash/dist/lodash.compat',
+    lodash: '../../bower_components/lodash/lodash.min',
     text: '../../bower_components/text/text',
     'ladda-bootstrap': '../../bower_components/ladda-bootstrap/dist/ladda',
     spin: '../../bower_components/ladda-bootstrap/dist/spin',
