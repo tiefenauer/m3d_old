@@ -49,6 +49,5 @@ util/DateTime.js
 util/supplant.js
 decorators/log.js
 decorators.js
-angular-google-maps.js
 app.js
 main.js

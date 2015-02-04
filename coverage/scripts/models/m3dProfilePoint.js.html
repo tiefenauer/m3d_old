@@ -195,20 +195,20 @@
     </style>
 </head>
 <body>
-<div class="header medium">
+<div class="header high">
     <h1>Code coverage report for <span class="entity">scripts/models/m3dProfilePoint.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">57.14% <small>(4 / 7)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">100% <small>(13 / 13)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Branches: <span class="metric">100% <small>(0 / 0)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">100% <small>(4 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">50% <small>(1 / 2)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">100% <small>(3 / 3)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">57.14% <small>(4 / 7)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">100% <small>(12 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -241,7 +241,26 @@
 23
 24
 25
-26</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -253,15 +272,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">14</span>
+<span class="cline-any cline-yes">14</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14</span>
+<span class="cline-any cline-yes">42</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14</span>
+<span class="cline-any cline-yes">14</span>
+<span class="cline-any cline-yes">14</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -271,23 +309,42 @@ define([
 	],
 	function(){
 &nbsp;
-	    /**
-	     * ProfilePoint
-	     * Model for a single point of the digital elevationProfile
-	     * @class
-	     * @name m3d.model.ProfilePoint
-	     * @namespace
-	     */
-		var ProfilePoint = <span class="fstat-no" title="function not covered" >function(lat, lng, elv){</span>
-<span class="cstat-no" title="statement not covered" >			this.lat = lat;</span>
-<span class="cstat-no" title="statement not covered" >			this.lng = lng;</span>
-<span class="cstat-no" title="statement not covered" >			this.elv = elv;</span>
+    /**
+     * ProfilePoint
+     * Model for a single point of the digital elevationProfile
+     * @class
+     * @module models/m3dProfilePoint
+     * @name m3d.models.ProfilePoint
+     * @namespace
+     * @constructor
+     */
+		var ProfilePoint = function(){
+			var options = arguments.length &gt; 0?arguments[0]:{};
+			var defaultArgs = {
+				'lat': 0,
+				'lng': 0,
+				'elv': 0
+			};
+			for(var index in defaultArgs){
+				if (typeof options[index] == 'undefined') options[index] = defaultArgs[index];
+			}
+			this.init(options);
 		};
 &nbsp;
-		ProfilePoint.prototype =  /** @lends m3d.controller.MapController.prototype */{
+		ProfilePoint.prototype =  /** @lends m3d.models.ProfilePoint.prototype */{
 			lat: 0,
 			lng: 0,
-			elv: 0
+			elv: 0,
+&nbsp;
+			/*
+			* initialize the ProfilePoint with an options object
+			* @param {Object} options options object
+			*/
+			init: function(options){
+				this.lat = options.lat;
+				this.lng = options.lng;
+				this.elv = options.elv;
+			}
 		};
 &nbsp;
 		return ProfilePoint;
@@ -296,7 +353,7 @@ define([
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Feb 04 2015 17:15:14 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Feb 04 2015 20:43:51 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: services/elevationdataservice.js</title>
+    <title>Class: ProfilePoint</title>
     
     
     
@@ -271,174 +271,119 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="elevationdataservice.js.html">Source: services/elevationdataservice.js</h1>
+        <h1 class="page-title" data-filename="m3d.models.ProfilePoint.html">Class: ProfilePoint</h1>
         
 
+
+
+<section>
+    
+<header>
+    <h2>
+    ProfilePoint
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="ProfilePoint">
+            
+            new m3d.models.ProfilePoint<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="m3dProfilePoint.js.html">models/m3dProfilePoint.js</a>, <a href="m3dProfilePoint.js.html#line6">line 6</a>
+        </div>
+        
+    </div>
 
     
-    <section>
-        <article>
-            <pre class="prettyprint source "><code>define([
-  'angular'
-  ,'jquery'
-  ,'lodash'
-  ,'models/m3dProfilePoint'
-  ,'models/m3dProfile'
-  ], 
-  function (angular, $, _, ProfilePoint, Profile) {
-    'use strict';
-
-    var google = window.google;
-    var service, coords;
-    var $log, $rootScope;
-    var stop, index, requestQueue, queueItem;
-
-    /**
-     * ElevationDataService
-     * Default Service to get elevation data from Google
-     * @class
-     * @name m3d.services.ElevationDataService 
-     */
-    var ElevationDataService = function($log, $rootScope){
-      $log.debug('HeightMapService created');
-      this.init($log, $rootScope);
-    };
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>ProfilePoint
+Model for a single point of the digital elevationProfile</p>
+    </div>
     
 
-    ElevationDataService.prototype = /** @lends m3d.services.ElevationDataService.prototype */ {
-      /** 
-      * Default delay between service calls in ms 
-      * @static 
-      */
-      DELAY: 1010,
-      /** 
-      * Number of coordinates to process in one go
-      * @static 
-      */
-      CHUNK_SIZE: 150,
-
-      /**
-      * initialize Service
-      */
-      init: function(log, rootScope){
-        $log = log;
-        $rootScope = rootScope;
-      },
-
-      /**
-      * Calculate a height map from a list of coordinates
-      * @param {m3d.models.ProfilePoint[]} coordinates list of coordinates to process      
-      * @fires adapter:start
-      * @fires adapter:end
-      * @fires adapter:queue:progress
-      */
-      calculateHeightMap: function(coordinates){
-        $log.debug('calculating heigth map in service ...');
-        $log.debug(coordinates.length + ' points');
-        coords = coordinates;
-
-        service = new google.maps.ElevationService();
-
-        // Koordinaten-Array aufsplitten (max 512 coordinates pro request)
-        var delay = 1010;
-
-        var chunkSize = 150;
-        requestQueue = [];
-        for(var i=0; i&lt;coordinates.length; i+=chunkSize){
-          requestQueue.push(coordinates.slice(i, i+chunkSize));
-        }
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
         
-        $rootScope.$broadcast('adapter:start', {
-           numItems: coordinates.length
-          ,numCalls: requestQueue.length
-          ,chunkSize: chunkSize
-          ,delay: delay
-        });
-        
-        stop = false;
-        index = 0;
-        processNextQueueItem();        
-      }
-    };
+    
+    
+    
 
-    // Queue-Item abarbeiten
-    var processNextQueueItem = function(){
-      if (stop || index >= requestQueue.length){
-        stop = false;
-        $rootScope.$broadcast('adapter:end', coords);
-      }
-      else{
-        queueItem = requestQueue[index];
-        var request = {locations: queueItem};
-        service.getElevationForLocations(request, onServiceResponse);           
-      }
-    };    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-      // Response handler
-    var onServiceResponse = function(result, status){
-        $rootScope.$broadcast('adapter:queue:progress', {
-           status: status
-          ,progress: index+1
-          ,total: requestQueue.length
-        });
-        switch(status){
-          case google.maps.ElevationStatus.OK:              
+    
+    
 
-            $.each(queueItem, function(i, coord){              
-              var searchResult = $.grep(result, function(entry, index){
-                var lat = Number(parseFloat(entry.location.lat())).toFixed(4);
-                var lng = Number(parseFloat(entry.location.lng())).toFixed(4);
-                return lat == coord.lat && lng == coord.lng;
-              });
-              if (searchResult && searchResult.length > 0){
-                $rootScope.$broadcast('adapter:item:progress');
-                coord.elv = searchResult[0].elevation;
-              }                
-            });
+    
 
-            stop = ++index >= requestQueue.length
-            processNextQueueItem();
-          break;
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
-          default:
-            setTimeout(processNextQueueItem, 1000);
-          break;
-        }
-        
-    };
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</article>
 
-
-    return ElevationDataService;
-});
-
-/**
-* Adapter start event.
-* This event indicates the start of processing a number of coordinates
-* @event adapter:start
-* @property {Number} numItems number of coordinates that are going to be processed
-* @property {Number} numCalls number of calls that are going to be made to get elevation data
-* @property {Number} chunkSize number of coordinates processed in one go
-* @property {Number} delay delay between service calls in ms
-*/
-
-/**
-* Adapter progress event.
-* This event indicates a progress while processing a number of coordinates
-* @event adapter:queue:progress
-* @property {Number} status Status response of last service call
-* @property {Number} progress number of calls made
-* @property {Number} total number of calls to be made
-*/
-
-/**
-* Adapter end event.
-* This event indicates the end of processing a number of coordinates
-* @event adapter:end
-* @property {Object[]} coords the processed coordinates including their elevation
-*/</code></pre>
-        </article>
-    </section>
-
+</section>  
 
 
 
@@ -447,7 +392,7 @@
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Feb 04 2015 20:44:22 GMT-0000 (UTC)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Feb 04 2015 20:44:22 GMT-0000 (UTC)
         </footer>
     </div>
 </div>
