@@ -33,6 +33,5 @@ define([
           ,'ngRoute'
           ,'ngAnimate'
           ,'ngTouch'
-          ,'uiGmapgoogle-maps'
           ]);
 });
