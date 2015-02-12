@@ -6,8 +6,9 @@ define([
 	,'controllers/profile'
 	,'controllers/info'
 	,'controllers/settings'
+	,'controllers/gemeinde'
 	], 
-	function(angular, services, MenuController, MapController, ProfileController, InfoController, SettingsController){
+	function(angular, services, MenuController, MapController, ProfileController, InfoController, SettingsController, GemeindeController){
 
 	'use strict';		
 
@@ -18,6 +19,7 @@ define([
 		.controller('ProfileCtrl', ProfileController)
 		.controller('InfoCtrl', InfoController)		
 		.controller('SettingsCtrl', SettingsController)		
+		.controller('GemeindeCtrl', GemeindeController)
 		;
 
 });

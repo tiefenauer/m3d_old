@@ -2,9 +2,17 @@
 
 define([
 	'angular'
-	//,'app'	
+	,'app'	
 	], 
 	function(angular, app) {
+
+		/*
+		return angular.module('m3d').config(['$routeProvider', function($routeProvider){
+			$routeProvider.when('gemeinden', {
+				template: '<h1>hello</h1>'
+			});
+		}]);
+		*/
 
 		/*
 		return app.config(['$routeProvider', function($routeProvider) {

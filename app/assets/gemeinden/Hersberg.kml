@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Hersberg</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Hersberg</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{2AEA48A2-DC2E-42DA-B60B-953135B8DAC8}</SimpleData>
+		<SimpleData name="DATUM_AEND">2008/11/24</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">1997</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">uebertragen</SimpleData>
+		<SimpleData name="HERKUNFT">GG25</SimpleData>
+		<SimpleData name="HERKUNFT_J">1997</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">2827</SimpleData>
+		<SimpleData name="BEZIRKSNUM">1303</SimpleData>
+		<SimpleData name="KANTONSNUM">13</SimpleData>
+		<SimpleData name="GEM_TEIL">2</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH13032827</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 7.7914382559189725,47.503151223506286,556.8624999999884 7.791394491274676,47.50311762559814,557.7162499999831 7.791094409743606,47.50332686618235,555.6862499999843 7.790161163179781,47.50416516761616,544.8037499999919 7.789621164417444,47.504691849060706,539.3112499999843 7.789580133627964,47.504770590314514,539.109999999986 7.789673123234065,47.50507121479636,539.0824999999895 7.7912757507129635,47.50418962441791,548.6687499999825 7.7921516896570235,47.50369874314771,549.3124999999854 7.7914382559189725,47.503151223506286,556.8624999999884</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

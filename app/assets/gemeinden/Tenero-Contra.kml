@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Tenero-Contra</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Tenero-Contra</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{B92097D0-8F13-494E-B201-97E976C3D5B1}</SimpleData>
+		<SimpleData name="DATUM_AEND">2008/11/24</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">1997</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">uebertragen</SimpleData>
+		<SimpleData name="HERKUNFT">GG25</SimpleData>
+		<SimpleData name="HERKUNFT_J">1997</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">5131</SimpleData>
+		<SimpleData name="BEZIRKSNUM">2104</SimpleData>
+		<SimpleData name="KANTONSNUM">21</SimpleData>
+		<SimpleData name="GEM_TEIL">2</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH21045131</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 8.837440557866728,46.18600044017592,465.04749999998603 8.83747825666479,46.18595498236457,464.7824999999866 8.837541627235517,46.18590020820537,464.60999999998603 8.837604072985764,46.18580945306134,464.2162499999831 8.837614481827119,46.185710356136845,463.84374999998545 8.837599680999583,46.185638554796554,463.4637499999808 8.837531687578636,46.18551342423989,462.9037499999831 8.837412598575117,46.18541592130897,462.2637499999837 8.837254177503373,46.18530090953709,461.23749999998836 8.835986572257546,46.185883493230534,492.7637499999837 8.835576740773329,46.186068517958944,496.6499999999796 8.83508990573117,46.18628149961335,506.23374999998487 8.835681467634076,46.1866161055802,501.5112499999814 8.837298784497992,46.18602919172662,467.72749999997905 8.837440557866728,46.18600044017592,465.04749999998603</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

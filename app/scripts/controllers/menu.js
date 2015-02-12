@@ -19,6 +19,7 @@ define([
      * @class
      * @name m3d.controller.MenuController
      * @namespace
+     * @constructor
      */
     var MenuController = function ($rootScope, $scope, $log, $modal) {
       $log.debug('MenuController created');  
@@ -30,6 +31,7 @@ define([
       $scope.showStats = this.showStats;        
       $scope.loadModel = this.loadModel;
       $scope.saveModel = this.saveModel;      
+      $scope.showTownList = this.showTownList;
     };
 
     MenuController.prototype = /** @lends m3d.controller.MenuController.prototype */{
@@ -128,6 +130,15 @@ define([
       calculateHeightMap: function(){
         $log.debug('process button clicked');
         $rootScope.$broadcast('menu:model:generate');
+      },
+
+      showTownList: function(){
+        $log.debug('showing list of municipalities');
+        $modal.open({
+          templateUrl: 'views/templates/gemeinde_popup.html'
+          ,controller: 'GemeindeCtrl'
+          ,controllerAs: 'tab'
+        });
       }
 
     };

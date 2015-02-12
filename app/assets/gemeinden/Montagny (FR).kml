@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Montagny (FR)</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Montagny (FR)</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{19880B33-94AF-47F4-B3AE-27F0F0324D13}</SimpleData>
+		<SimpleData name="DATUM_AEND">2010/12/15</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">2000</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">verbessert</SimpleData>
+		<SimpleData name="HERKUNFT">swisstopo</SimpleData>
+		<SimpleData name="HERKUNFT_J">2011</SimpleData>
+		<SimpleData name="HERKUNFT_M">1</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">2029</SimpleData>
+		<SimpleData name="BEZIRKSNUM">1001</SimpleData>
+		<SimpleData name="KANTONSNUM">10</SimpleData>
+		<SimpleData name="GEM_TEIL">2</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH10012029</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 6.970713343522768,46.82647217743924,471.9387499999866 6.970440244146293,46.82705191207789,472.10624999998254 6.970638827979588,46.82729365382383,476.88999999998487 6.971227266618326,46.82693167774607,477.62499999998545 6.971676502755989,46.826492715297746,467.9974999999831 6.971333908553716,46.8261832271378,469.24999999998545 6.970890560458755,46.825944421117626,465.92874999999185 6.970738666518239,46.82594143778112,464.5874999999796 6.970713343522768,46.82647217743924,471.9387499999866</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

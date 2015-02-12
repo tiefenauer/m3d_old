@@ -7,6 +7,7 @@ define([
   ,'controllers'
   ,'models'
   ,'decorators'
+  ,'routes'
   ]/*deps*/, 
   function (angular)/*invoke*/ {
   'use strict';
@@ -33,5 +34,10 @@ define([
           ,'ngRoute'
           ,'ngAnimate'
           ,'ngTouch'
-          ]);
+          ])
+  .config(['$routeProvider', function($routeProvider){
+      $routeProvider.when('gemeinden', {
+        template: '<h1>hello</h1>'
+      });
+    }]);
 });

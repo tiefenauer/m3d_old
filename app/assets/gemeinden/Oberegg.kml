@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Oberegg</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Oberegg</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{CF0F9771-1C72-4F3D-9476-8D928A01C031}</SimpleData>
+		<SimpleData name="DATUM_AEND">2011/01/21</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">2002</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">verbessert</SimpleData>
+		<SimpleData name="HERKUNFT">swisstopo</SimpleData>
+		<SimpleData name="HERKUNFT_J">2011</SimpleData>
+		<SimpleData name="HERKUNFT_M">1</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">3111</SimpleData>
+		<SimpleData name="KANTONSNUM">16</SimpleData>
+		<SimpleData name="GEM_TEIL">3</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH16003111</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 9.612716171250321,47.44354701875327,643.7837499999878 9.612797589709563,47.44353985133615,643.4899999999907 9.613204444580552,47.44365430528019,641.4349999999831 9.613282724948506,47.44352946149504,642.2524999999878 9.613300099327384,47.443534668601764,642.2199999999866 9.61331903048243,47.443504965681306,642.1249999999854 9.613306991910656,47.44350211025908,642.3737499999843 9.613369223998014,47.44339881634365,640.9137499999924 9.613134144291397,47.44333531290085,642.9437499999913 9.613071687660408,47.44312944240213,643.9949999999808 9.612306830154031,47.443246778146325,648.6237499999843 9.612192393979397,47.44334710542783,651.2087499999907 9.61232796190201,47.4434643597323,649.5237499999785 9.61244092959585,47.44339827701831,648.38 9.612600459340136,47.44352043433439,644.2762499999808 9.612638208536511,47.44349474176215,644.255 9.612716171250321,47.44354701875327,643.7837499999878</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

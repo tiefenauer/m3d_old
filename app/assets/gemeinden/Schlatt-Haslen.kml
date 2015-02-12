@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Schlatt-Haslen</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Schlatt-Haslen</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{454AF364-1D3A-4EC8-9033-B5FF8320DBB0}</SimpleData>
+		<SimpleData name="DATUM_AEND">2011/01/21</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">2002</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">verbessert</SimpleData>
+		<SimpleData name="HERKUNFT">swisstopo</SimpleData>
+		<SimpleData name="HERKUNFT_J">2011</SimpleData>
+		<SimpleData name="HERKUNFT_M">1</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">3104</SimpleData>
+		<SimpleData name="KANTONSNUM">16</SimpleData>
+		<SimpleData name="GEM_TEIL">2</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH16003104</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 9.362228998252622,47.38674403788017,784.2312499999825 9.362289280966099,47.3867870333413,783.6049999999814 9.362365833929456,47.38686502971148,782.5487499999872 9.362805247859322,47.386664518001595,781.7049999999872 9.363293082820256,47.38636407294512,793.6074999999837 9.362794629015344,47.38597169205793,775.683749999982 9.362217492592483,47.386197871588514,783.5387499999924 9.361829420638587,47.38634424626011,789.7724999999919 9.36208656423069,47.38668947687692,785.5937499999854 9.362228998252622,47.38674403788017,784.2312499999825</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

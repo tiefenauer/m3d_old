@@ -41,6 +41,9 @@ define([
         $scope.$on('menu:model:generate', function(event){
           ElevationDataService.calculateHeightMap($scope.getProfilePoints());
         });
+        $scope.$on('gemeinde:loaded', function(event, data){
+          $log.debug('integrating in map');
+        });
         initMap();
       },
 

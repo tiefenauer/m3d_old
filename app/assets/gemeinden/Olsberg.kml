@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Olsberg</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Olsberg</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{7FAC8A17-64F7-4920-B7EC-29A4B4F3630E}</SimpleData>
+		<SimpleData name="DATUM_AEND">2008/11/24</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">1997</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">uebertragen</SimpleData>
+		<SimpleData name="HERKUNFT">GG25</SimpleData>
+		<SimpleData name="HERKUNFT_J">1997</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">4257</SimpleData>
+		<SimpleData name="BEZIRKSNUM">1909</SimpleData>
+		<SimpleData name="KANTONSNUM">19</SimpleData>
+		<SimpleData name="GEM_TEIL">3</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH19094257</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 7.799602366574227,47.498024033750454,482.6112499999872 7.799344082003119,47.49764089647883,468.23749999998836 7.79921685218955,47.49746198783547,460.92249999998603 7.798871633020513,47.4977464201147,450.40999999998894 7.798602222442798,47.49797512695714,441.6199999999808 7.7983713170337845,47.49845078544028,426.56999999999243 7.798133718239237,47.498730034368066,419.3224999999802 7.798524342718983,47.498839548329826,417.2799999999843 7.799080928536099,47.49819455438913,465.35874999998487 7.799602366574227,47.498024033750454,482.6112499999872</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Ferrera</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Ferrera</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{8FDE148C-E021-40C7-8081-DC796351A1D4}</SimpleData>
+		<SimpleData name="DATUM_AEND">2014/01/06</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">2007</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">verbessert</SimpleData>
+		<SimpleData name="HERKUNFT">swisstopo</SimpleData>
+		<SimpleData name="HERKUNFT_J">2014</SimpleData>
+		<SimpleData name="HERKUNFT_M">1</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">3713</SimpleData>
+		<SimpleData name="BEZIRKSNUM">1823</SimpleData>
+		<SimpleData name="KANTONSNUM">18</SimpleData>
+		<SimpleData name="GEM_TEIL">2</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH18233713</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 9.461075525118344,46.48469625797461,2192.3437499999854 9.460988959468223,46.48384251420465,2191.3175 9.4618572240028,46.48261918637994,2172.236249999987 9.461492528045435,46.48190733208243,2177.41 9.461334825667794,46.48108631057079,2180.932499999981 9.46224617191771,46.480320340736085,2191.76 9.449739783002,46.4798319000789,1941.9012499999808 9.449639968543792,46.482148676293626,1946.182499999981 9.449291802647096,46.482808953179465,1952.816249999989 9.449133574131967,46.48422881038548,1951.762499999983 9.461075525118344,46.48469625797461,2192.3437499999854</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

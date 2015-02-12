@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Planken</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Planken</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{5A9C7331-AAD1-40CC-989A-4CEEE8B9FE6E}</SimpleData>
+		<SimpleData name="DATUM_AEND">2012/12/21</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">1997</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">real</SimpleData>
+		<SimpleData name="HERKUNFT">swisstopo</SimpleData>
+		<SimpleData name="HERKUNFT_J">2012</SimpleData>
+		<SimpleData name="HERKUNFT_M">3</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">7006</SimpleData>
+		<SimpleData name="GEM_TEIL">4</SimpleData>
+		<SimpleData name="ICC">LI</SimpleData>
+		<SimpleData name="SHN">LI7006</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 9.555597730077722,47.18548136354748,925.7512499999866 9.555620267744471,47.18565040106593,926.9599999999919 9.555721658604726,47.18599049883928,930.6224999999831 9.556180973696181,47.18650173687912,942.539999999979 9.55644799535478,47.18682069542457,954.5912499999831 9.556678716221995,47.18703638282602,967.7924999999814 9.558460394592188,47.1863994409377,1057.0612499999843 9.55826235684132,47.185160859254694,1047.1237499999843 9.557507526529543,47.18523677594751,1014.0512499999895 9.557011820332391,47.18532600187607,995.4474999999802 9.556466760110238,47.18545897031496,973.6387499999837 9.55569647892825,47.18553488962027,927.4162499999802 9.555597730077722,47.18548136354748,925.7512499999866</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

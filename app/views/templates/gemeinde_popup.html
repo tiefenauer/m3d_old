@@ -1,0 +1,43 @@
+<div id="myModal">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>        	
+        <h3 class="modal-title">Gemeinden</h3>
+    </div>
+    <div class="modal-body">
+      <input type="search" ng-model="tab.q" ng-focus="tab.list = tab.gemeinden" ng-blur="tab.updateList()" placeholde="Suchen"/>
+      <ul class="nav nav-pills">        
+        <li role="presentation" ng-class="{active: tab.isSet('A')}" ><a href="#" ng-click="tab.setTab('A')">A</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('B')}" ><a href="#" ng-click="tab.setTab('B')">B</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('C')}" ><a href="#" ng-click="tab.setTab('C')">C</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('D')}" ><a href="#" ng-click="tab.setTab('D')">D</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('E')}" ><a href="#" ng-click="tab.setTab('E')">E</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('F')}" ><a href="#" ng-click="tab.setTab('F')">F</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('G')}" ><a href="#" ng-click="tab.setTab('G')">G</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('H')}" ><a href="#" ng-click="tab.setTab('H')">H</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('I')}" ><a href="#" ng-click="tab.setTab('I')">I</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('J')}" ><a href="#" ng-click="tab.setTab('J')">J</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('K')}" ><a href="#" ng-click="tab.setTab('K')">K</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('L')}" ><a href="#" ng-click="tab.setTab('L')">L</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('M')}" ><a href="#" ng-click="tab.setTab('M')">M</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('N')}" ><a href="#" ng-click="tab.setTab('N')">N</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('O')}" ><a href="#" ng-click="tab.setTab('O')">O</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('P')}" ><a href="#" ng-click="tab.setTab('P')">P</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('Q')}" ><a href="#" ng-click="tab.setTab('Q')">Q</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('R')}" ><a href="#" ng-click="tab.setTab('R')">R</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('S')}" ><a href="#" ng-click="tab.setTab('S')">S</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('T')}" ><a href="#" ng-click="tab.setTab('T')">T</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('U')}" ><a href="#" ng-click="tab.setTab('U')">U</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('V')}" ><a href="#" ng-click="tab.setTab('V')">V</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('W')}" ><a href="#" ng-click="tab.setTab('W')">W</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('X')}" ><a href="#" ng-click="tab.setTab('X')">X</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('Y')}" ><a href="#" ng-click="tab.setTab('Y')">Y</a></li>
+        <li role="presentation" ng-class="{active: tab.isSet('Z')}" ><a href="#" ng-click="tab.setTab('Z')">Z</a></li>
+      </ul>        
+      <div class="list-group">
+        <a href="#" class="list-group-item" ng-repeat="gemeinde in tab.list | filter:tab.q" ng-click="load(gemeinde)">{{gemeinde}}</a>
+      </div>
+    </div>
+    <div class="modal-footer">
+		<a class="btn btn-success" ng-click="ok()">OK</a>
+    </div>
+</div>
