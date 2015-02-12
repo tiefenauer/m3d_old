@@ -1,0 +1,1975 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for ./app/scripts/vendor/three/ThreeCSG.js</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../prettify.css">
+
+    <style>
+        body, html {
+            margin:0; padding: 0;
+        }
+        body {
+            font-family: Helvetica Neue, Helvetica,Arial;
+            font-size: 10pt;
+        }
+        div.header, div.footer {
+            background: #eee;
+            padding: 1em;
+        }
+        div.header {
+            z-index: 100;
+            position: fixed;
+            top: 0;
+            border-bottom: 1px solid #666;
+            width: 100%;
+        }
+        div.footer {
+            border-top: 1px solid #666;
+        }
+        div.body {
+            margin-top: 10em;
+        }
+        div.meta {
+            font-size: 90%;
+            text-align: center;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+        }
+        h1 {
+            font-size: 12pt;
+        }
+        h2 {
+            font-size: 10pt;
+        }
+        pre {
+            font-family: Consolas, Menlo, Monaco, monospace;
+            margin: 0;
+            padding: 0;
+            line-height: 14px;
+            font-size: 14px;
+            -moz-tab-size: 2;
+            -o-tab-size:  2;
+            tab-size: 2;
+        }
+
+        div.path { font-size: 110%; }
+        div.path a:link, div.path a:visited { color: #000; }
+        table.coverage { border-collapse: collapse; margin:0; padding: 0 }
+
+        table.coverage td {
+            margin: 0;
+            padding: 0;
+            color: #111;
+            vertical-align: top;
+        }
+        table.coverage td.line-count {
+            width: 50px;
+            text-align: right;
+            padding-right: 5px;
+        }
+        table.coverage td.line-coverage {
+            color: #777 !important;
+            text-align: right;
+            border-left: 1px solid #666;
+            border-right: 1px solid #666;
+        }
+
+        table.coverage td.text {
+        }
+
+        table.coverage td span.cline-any {
+            display: inline-block;
+            padding: 0 5px;
+            width: 40px;
+        }
+        table.coverage td span.cline-neutral {
+            background: #eee;
+        }
+        table.coverage td span.cline-yes {
+            background: #b5d592;
+            color: #999;
+        }
+        table.coverage td span.cline-no {
+            background: #fc8c84;
+        }
+
+        .cstat-yes { color: #111; }
+        .cstat-no { background: #fc8c84; color: #111; }
+        .fstat-no { background: #ffc520; color: #111 !important; }
+        .cbranch-no { background:  yellow !important; color: #111; }
+
+        .cstat-skip { background: #ddd; color: #111; }
+        .fstat-skip { background: #ddd; color: #111 !important; }
+        .cbranch-skip { background: #ddd !important; color: #111; }
+
+        .missing-if-branch {
+            display: inline-block;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: black;
+            color: yellow;
+        }
+
+        .skip-if-branch {
+            display: none;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: #ccc;
+            color: white;
+        }
+
+        .missing-if-branch .typ, .skip-if-branch .typ {
+            color: inherit !important;
+        }
+
+        .entity, .metric { font-weight: bold; }
+        .metric { display: inline-block; border: 1px solid #333; padding: 0.3em; background: white; }
+        .metric small { font-size: 80%; font-weight: normal; color: #666; }
+
+        div.coverage-summary table { border-collapse: collapse; margin: 3em; font-size: 110%; }
+        div.coverage-summary td, div.coverage-summary table  th { margin: 0; padding: 0.25em 1em; border-top: 1px solid #666; border-bottom: 1px solid #666; }
+        div.coverage-summary th { text-align: left; border: 1px solid #666; background: #eee; font-weight: normal; }
+        div.coverage-summary th.file { border-right: none !important; }
+        div.coverage-summary th.pic { border-left: none !important; text-align: right; }
+        div.coverage-summary th.pct { border-right: none !important; }
+        div.coverage-summary th.abs { border-left: none !important; text-align: right; }
+        div.coverage-summary td.pct { text-align: right; border-left: 1px solid #666; }
+        div.coverage-summary td.abs { text-align: right; font-size: 90%; color: #444; border-right: 1px solid #666; }
+        div.coverage-summary td.file { text-align: right; border-left: 1px solid #666; white-space: nowrap;  }
+        div.coverage-summary td.pic { min-width: 120px !important;  }
+        div.coverage-summary a:link { text-decoration: none; color: #000; }
+        div.coverage-summary a:visited { text-decoration: none; color: #333; }
+        div.coverage-summary a:hover { text-decoration: underline; }
+        div.coverage-summary tfoot td { border-top: 1px solid #666; }
+
+        div.coverage-summary .yui3-datatable-sort-indicator, div.coverage-summary .dummy-sort-indicator {
+            height: 10px;
+            width: 7px;
+            display: inline-block;
+            margin-left: 0.5em;
+        }
+        div.coverage-summary .yui3-datatable-sort-indicator {
+            background: url("https://yui-s.yahooapis.com/3.6.0/build/datatable-sort/assets/skins/sam/sort-arrow-sprite.png") no-repeat scroll 0 0 transparent;
+        }
+        div.coverage-summary .yui3-datatable-sorted .yui3-datatable-sort-indicator {
+            background-position: 0 -20px;
+        }
+        div.coverage-summary .yui3-datatable-sorted-desc .yui3-datatable-sort-indicator {
+            background-position: 0 -10px;
+        }
+
+        .high { background: #b5d592 !important; }
+        .medium { background: #ffe87c !important; }
+        .low { background: #fc8c84 !important; }
+
+        span.cover-fill, span.cover-empty {
+            display:inline-block;
+            border:1px solid #444;
+            background: white;
+            height: 12px;
+        }
+        span.cover-fill {
+            background: #ccc;
+            border-right: 1px solid #444;
+        }
+        span.cover-empty {
+            background: white;
+            border-left: none;
+        }
+        span.cover-full {
+            border-right: none !important;
+        }
+        pre.prettyprint {
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .com { color: #999 !important; }
+        .ignore-none { color: #999; font-weight: normal; }
+
+    </style>
+</head>
+<body>
+<div class="header high">
+    <h1>Code coverage report for <span class="entity">./app/scripts/vendor/three/ThreeCSG.js</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">83.82% <small>(290 / 346)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">76.67% <small>(92 / 120)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">88.24% <small>(30 / 34)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">83.28% <small>(274 / 329)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">./app/scripts/vendor/three\</a> &#187; ThreeCSG.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">56</span>
+<span class="cline-any cline-yes">56</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">56</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">55</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">61</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">23</span>
+<span class="cline-any cline-yes">23</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">59</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25</span>
+<span class="cline-any cline-yes">25</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">193</span>
+<span class="cline-any cline-yes">117</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">193</span>
+<span class="cline-any cline-yes">193</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">117</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">73</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">73</span>
+<span class="cline-any cline-yes">220</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">73</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">73</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">145</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">145</span>
+<span class="cline-any cline-yes">145</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">145</span>
+<span class="cline-any cline-yes">480</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">145</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">145</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">2559</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2559</span>
+<span class="cline-any cline-yes">569</span>
+<span class="cline-any cline-yes">1990</span>
+<span class="cline-any cline-yes">1584</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">406</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">716</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">716</span>
+<span class="cline-any cline-yes">2311</span>
+<span class="cline-any cline-yes">2311</span>
+<span class="cline-any cline-yes">2311</span>
+<span class="cline-any cline-yes">1464</span>
+<span class="cline-any cline-yes">847</span>
+<span class="cline-any cline-yes">441</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">716</span>
+<span class="cline-any cline-yes">450</span>
+<span class="cline-any cline-yes">266</span>
+<span class="cline-any cline-yes">160</span>
+<span class="cline-any cline-yes">106</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">716</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">716</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">648</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">450</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">198</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">160</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">124</span>
+<span class="cline-any cline-yes">124</span>
+<span class="cline-any cline-yes">124</span>
+<span class="cline-any cline-yes">124</span>
+<span class="cline-any cline-yes">124</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">124</span>
+<span class="cline-any cline-yes">124</span>
+<span class="cline-any cline-yes">124</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38</span>
+<span class="cline-any cline-yes">38</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1387</span>
+<span class="cline-any cline-yes">1387</span>
+<span class="cline-any cline-yes">1387</span>
+<span class="cline-any cline-yes">1387</span>
+<span class="cline-any cline-yes">1387</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1255</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">690</span>
+<span class="cline-any cline-yes">690</span>
+<span class="cline-any cline-yes">690</span>
+<span class="cline-any cline-yes">690</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">221</span>
+<span class="cline-any cline-yes">221</span>
+<span class="cline-any cline-yes">221</span>
+<span class="cline-any cline-yes">221</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">269</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">3048</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">76</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">132</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">132</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">132</span>
+<span class="cline-any cline-yes">132</span>
+<span class="cline-any cline-yes">132</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">132</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">138</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">10</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-yes">208</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">17</span>
+<span class="cline-any cline-yes">17</span>
+<span class="cline-any cline-yes">17</span>
+<span class="cline-any cline-yes">17</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-yes">116</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">108</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">108</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">108</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">108</span>
+<span class="cline-any cline-yes">370</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">108</span>
+<span class="cline-any cline-yes">108</span>
+<span class="cline-any cline-yes">78</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">108</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">18</span>
+<span class="cline-any cline-yes">18</span>
+<span class="cline-any cline-yes">18</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+THREE.ThreeBSP = (function() {
+	
+	var ThreeBSP,
+		EPSILON = 1e-5,
+		COPLANAR = 0,
+		FRONT = 1,
+		BACK = 2,
+		SPANNING = 3;
+	
+	ThreeBSP = function( geometry ) {
+		// Convert THREE.Geometry to ThreeBSP
+		var i, _length_i,
+			face, vertex, faceVertexUvs, uvs,
+			polygon,
+			polygons = [],
+			tree;
+	
+		if ( geometry instanceof THREE.Geometry ) {
+			this.matrix = new THREE.Matrix4;
+		} else if ( geometry instanceof THREE.Mesh ) {
+			// #todo: add hierarchy support
+			geometry.updateMatrix();
+			this.matrix = geometry.matrix.clone();
+			geometry = geometry.geometry;
+		} else <span class="missing-if-branch" title="else path not taken" >E</span>if ( geometry instanceof ThreeBSP.Node ) {
+			this.tree = geometry;
+			this.matrix = new THREE.Matrix4;
+			return this;
+		} else {
+<span class="cstat-no" title="statement not covered" >			throw 'ThreeBSP: Given geometry is unsupported';</span>
+		}
+	
+		for ( i = 0, _length_i = geometry.faces.length; i &lt; _length_i; i++ ) {
+			face = geometry.faces[i];
+			faceVertexUvs = geometry.faceVertexUvs[0][i];
+			polygon = new ThreeBSP.Polygon;
+			
+			<span class="missing-if-branch" title="else path not taken" >E</span>if ( face instanceof THREE.Face3 ) {
+				vertex = geometry.vertices[ face.a ];
+                                uvs = faceVertexUvs ? new THREE.Vector2( faceVertexUvs[0].x, faceVertexUvs[0].y ) : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+                                vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[0], uvs );
+				vertex.applyMatrix4(this.matrix);
+				polygon.vertices.push( vertex );
+				
+				vertex = geometry.vertices[ face.b ];
+                                uvs = faceVertexUvs ? new THREE.Vector2( faceVertexUvs[1].x, faceVertexUvs[1].y ) : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+                                vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[2], uvs );
+				vertex.applyMatrix4(this.matrix);
+				polygon.vertices.push( vertex );
+				
+				vertex = geometry.vertices[ face.c ];
+                                uvs = faceVertexUvs ? new THREE.Vector2( faceVertexUvs[2].x, faceVertexUvs[2].y ) : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+                                vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[2], uvs );
+				vertex.applyMatrix4(this.matrix);
+				polygon.vertices.push( vertex );
+			} else <span class="cstat-no" title="statement not covered" >if ( typeof THREE.Face4 ) {</span>
+<span class="cstat-no" title="statement not covered" >				vertex = geometry.vertices[ face.a ];</span>
+<span class="cstat-no" title="statement not covered" >                                uvs = faceVertexUvs ? new THREE.Vector2( faceVertexUvs[0].x, faceVertexUvs[0].y ) : null;</span>
+<span class="cstat-no" title="statement not covered" >                                vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[0], uvs );</span>
+<span class="cstat-no" title="statement not covered" >				vertex.applyMatrix4(this.matrix);</span>
+<span class="cstat-no" title="statement not covered" >				polygon.vertices.push( vertex );</span>
+				
+<span class="cstat-no" title="statement not covered" >				vertex = geometry.vertices[ face.b ];</span>
+<span class="cstat-no" title="statement not covered" >                                uvs = faceVertexUvs ? new THREE.Vector2( faceVertexUvs[1].x, faceVertexUvs[1].y ) : null;</span>
+<span class="cstat-no" title="statement not covered" >                                vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[1], uvs );</span>
+<span class="cstat-no" title="statement not covered" >				vertex.applyMatrix4(this.matrix);</span>
+<span class="cstat-no" title="statement not covered" >				polygon.vertices.push( vertex );</span>
+				
+<span class="cstat-no" title="statement not covered" >				vertex = geometry.vertices[ face.c ];</span>
+<span class="cstat-no" title="statement not covered" >                                uvs = faceVertexUvs ? new THREE.Vector2( faceVertexUvs[2].x, faceVertexUvs[2].y ) : null;</span>
+<span class="cstat-no" title="statement not covered" >                                vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[2], uvs );</span>
+<span class="cstat-no" title="statement not covered" >				vertex.applyMatrix4(this.matrix);</span>
+<span class="cstat-no" title="statement not covered" >				polygon.vertices.push( vertex );</span>
+				
+<span class="cstat-no" title="statement not covered" >				vertex = geometry.vertices[ face.d ];</span>
+<span class="cstat-no" title="statement not covered" >                                uvs = faceVertexUvs ? new THREE.Vector2( faceVertexUvs[3].x, faceVertexUvs[3].y ) : null;</span>
+<span class="cstat-no" title="statement not covered" >                                vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[3], uvs );</span>
+<span class="cstat-no" title="statement not covered" >				vertex.applyMatrix4(this.matrix);</span>
+<span class="cstat-no" title="statement not covered" >				polygon.vertices.push( vertex );</span>
+			} else {
+<span class="cstat-no" title="statement not covered" >				throw 'Invalid face type at index ' + i;</span>
+			}
+			
+			polygon.calculateProperties();
+			polygons.push( polygon );
+		};
+	
+		this.tree = new ThreeBSP.Node( polygons );
+	};
+	ThreeBSP.prototype.subtract = function( other_tree ) {
+		var a = this.tree.clone(),
+			b = other_tree.tree.clone();
+		
+		a.invert();
+		a.clipTo( b );
+		b.clipTo( a );
+		b.invert();
+		b.clipTo( a );
+		b.invert();
+		a.build( b.allPolygons() );
+		a.invert();
+		a = new ThreeBSP( a );
+		a.matrix = this.matrix;
+		return a;
+	};
+	ThreeBSP.prototype.union = <span class="fstat-no" title="function not covered" >function( other_tree ) {</span>
+<span class="cstat-no" title="statement not covered" >		var a = this.tree.clone(),</span>
+			b = other_tree.tree.clone();
+		
+<span class="cstat-no" title="statement not covered" >		a.clipTo( b );</span>
+<span class="cstat-no" title="statement not covered" >		b.clipTo( a );</span>
+<span class="cstat-no" title="statement not covered" >		b.invert();</span>
+<span class="cstat-no" title="statement not covered" >		b.clipTo( a );</span>
+<span class="cstat-no" title="statement not covered" >		b.invert();</span>
+<span class="cstat-no" title="statement not covered" >		a.build( b.allPolygons() );</span>
+<span class="cstat-no" title="statement not covered" >		a = new ThreeBSP( a );</span>
+<span class="cstat-no" title="statement not covered" >		a.matrix = this.matrix;</span>
+<span class="cstat-no" title="statement not covered" >		return a;</span>
+	};
+	ThreeBSP.prototype.intersect = <span class="fstat-no" title="function not covered" >function( other_tree ) {</span>
+<span class="cstat-no" title="statement not covered" >		var a = this.tree.clone(),</span>
+			b = other_tree.tree.clone();
+		
+<span class="cstat-no" title="statement not covered" >		a.invert();</span>
+<span class="cstat-no" title="statement not covered" >		b.clipTo( a );</span>
+<span class="cstat-no" title="statement not covered" >		b.invert();</span>
+<span class="cstat-no" title="statement not covered" >		a.clipTo( b );</span>
+<span class="cstat-no" title="statement not covered" >		b.clipTo( a );</span>
+<span class="cstat-no" title="statement not covered" >		a.build( b.allPolygons() );</span>
+<span class="cstat-no" title="statement not covered" >		a.invert();</span>
+<span class="cstat-no" title="statement not covered" >		a = new ThreeBSP( a );</span>
+<span class="cstat-no" title="statement not covered" >		a.matrix = this.matrix;</span>
+<span class="cstat-no" title="statement not covered" >		return a;</span>
+	};
+	ThreeBSP.prototype.toGeometry = function() {
+		var i, j,
+			matrix = new THREE.Matrix4().getInverse( this.matrix ),
+			geometry = new THREE.Geometry(),
+			polygons = this.tree.allPolygons(),
+			polygon_count = polygons.length,
+			polygon, polygon_vertice_count,
+			vertice_dict = {},
+			vertex_idx_a, vertex_idx_b, vertex_idx_c,
+			vertex, face,
+			verticeUvs;
+	
+		for ( i = 0; i &lt; polygon_count; i++ ) {
+			polygon = polygons[i];
+			polygon_vertice_count = polygon.vertices.length;
+			
+			for ( j = 2; j &lt; polygon_vertice_count; j++ ) {
+				verticeUvs = [];
+				
+				vertex = polygon.vertices[0];
+				verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
+				vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
+				vertex.applyMatrix4(matrix);
+				
+				if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
+					vertex_idx_a = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
+				} else {
+					geometry.vertices.push( vertex );
+					vertex_idx_a = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
+				}
+				
+				vertex = polygon.vertices[j-1];
+				verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
+				vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
+				vertex.applyMatrix4(matrix);
+				if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
+					vertex_idx_b = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
+				} else {
+					geometry.vertices.push( vertex );
+					vertex_idx_b = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
+				}
+				
+				vertex = polygon.vertices[j];
+				verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
+				vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
+				vertex.applyMatrix4(matrix);
+				if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
+					vertex_idx_c = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
+				} else {
+					geometry.vertices.push( vertex );
+					vertex_idx_c = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
+				}
+				
+				face = new THREE.Face3(
+					vertex_idx_a,
+					vertex_idx_b,
+					vertex_idx_c,
+					new THREE.Vector3( polygon.normal.x, polygon.normal.y, polygon.normal.z )
+				);
+				
+				geometry.faces.push( face );
+				geometry.faceVertexUvs[0].push( verticeUvs );
+			}
+			
+		}
+		return geometry;
+	};
+	ThreeBSP.prototype.toMesh = <span class="fstat-no" title="function not covered" >function( material ) {</span>
+<span class="cstat-no" title="statement not covered" >		var geometry = this.toGeometry(),</span>
+			mesh = new THREE.Mesh( geometry, material );
+		
+<span class="cstat-no" title="statement not covered" >		mesh.position.setFromMatrixPosition( this.matrix );</span>
+<span class="cstat-no" title="statement not covered" >		mesh.rotation.setFromRotationMatrix( this.matrix );</span>
+		
+<span class="cstat-no" title="statement not covered" >		return mesh;</span>
+	};
+	
+	
+	ThreeBSP.Polygon = function( vertices, normal, w ) {
+		if ( !( vertices instanceof Array ) ) {
+			vertices = [];
+		}
+		
+		this.vertices = vertices;
+		if ( vertices.length &gt; 0 ) {
+			this.calculateProperties();
+		} else {
+			this.normal = this.w = undefined;
+		}
+	};
+	ThreeBSP.Polygon.prototype.calculateProperties = function() {
+		var a = this.vertices[0],
+			b = this.vertices[1],
+			c = this.vertices[2];
+			
+		this.normal = b.clone().subtract( a ).cross(
+			c.clone().subtract( a )
+		).normalize();
+		
+		this.w = this.normal.clone().dot( a );
+		
+		return this;
+	};
+	ThreeBSP.Polygon.prototype.clone = function() {
+		var i, vertice_count,
+			polygon = new ThreeBSP.Polygon;
+		
+		for ( i = 0, vertice_count = this.vertices.length; i &lt; vertice_count; i++ ) {
+			polygon.vertices.push( this.vertices[i].clone() );
+		};
+		polygon.calculateProperties();
+		
+		return polygon;
+	};
+	
+	ThreeBSP.Polygon.prototype.flip = function() {
+		var i, vertices = [];
+		
+		this.normal.multiplyScalar( -1 );
+		this.w *= -1;
+		
+		for ( i = this.vertices.length - 1; i &gt;= 0; i-- ) {
+			vertices.push( this.vertices[i] );
+		};
+		this.vertices = vertices;
+		
+		return this;
+	};
+	ThreeBSP.Polygon.prototype.classifyVertex = function( vertex ) {  
+		var side_value = this.normal.dot( vertex ) - this.w;
+		
+		if ( side_value &lt; -EPSILON ) {
+			return BACK;
+		} else if ( side_value &gt; EPSILON ) {
+			return FRONT;
+		} else {
+			return COPLANAR;
+		}
+	};
+	ThreeBSP.Polygon.prototype.classifySide = function( polygon ) {
+		var i, vertex, classification,
+			num_positive = 0,
+			num_negative = 0,
+			vertice_count = polygon.vertices.length;
+		
+		for ( i = 0; i &lt; vertice_count; i++ ) {
+			vertex = polygon.vertices[i];
+			classification = this.classifyVertex( vertex );
+			if ( classification === FRONT ) {
+				num_positive++;
+			} else if ( classification === BACK ) {
+				num_negative++;
+			}
+		}
+		
+		if ( num_positive &gt; 0 &amp;&amp; num_negative === 0 ) {
+			return FRONT;
+		} else if ( num_positive === 0 &amp;&amp; num_negative &gt; 0 ) {
+			return BACK;
+		} else if ( num_positive === 0 &amp;&amp; num_negative === 0 ) {
+			return COPLANAR;
+		} else {
+			return SPANNING;
+		}
+	};
+	ThreeBSP.Polygon.prototype.splitPolygon = function( polygon, coplanar_front, coplanar_back, front, back ) {
+		var classification = this.classifySide( polygon );
+		
+		if ( classification === COPLANAR ) {
+			
+			( this.normal.dot( polygon.normal ) &gt; 0 ? coplanar_front : <span class="branch-1 cbranch-no" title="branch not covered" >coplanar_back </span>).push( polygon );
+			
+		} else if ( classification === FRONT ) {
+			
+			front.push( polygon );
+			
+		} else if ( classification === BACK ) {
+			
+			back.push( polygon );
+			
+		} else {
+			
+			var vertice_count,
+				i, j, ti, tj, vi, vj,
+				t, v,
+				f = [],
+				b = [];
+			
+			for ( i = 0, vertice_count = polygon.vertices.length; i &lt; vertice_count; i++ ) {
+				
+				j = (i + 1) % vertice_count;
+				vi = polygon.vertices[i];
+				vj = polygon.vertices[j];
+				ti = this.classifyVertex( vi );
+				tj = this.classifyVertex( vj );
+				
+				if ( ti != BACK ) f.push( vi );
+				if ( ti != FRONT ) b.push( vi );
+				if ( (ti | tj) === SPANNING ) {
+					t = ( this.w - this.normal.dot( vi ) ) / this.normal.dot( vj.clone().subtract( vi ) );
+					v = vi.interpolate( vj, t );
+					f.push( v );
+					b.push( v );
+				}
+			}
+			
+			
+			<span class="missing-if-branch" title="else path not taken" >E</span>if ( f.length &gt;= 3 ) front.push( new ThreeBSP.Polygon( f ).calculateProperties() );
+			<span class="missing-if-branch" title="else path not taken" >E</span>if ( b.length &gt;= 3 ) back.push( new ThreeBSP.Polygon( b ).calculateProperties() );
+		}
+	};
+	
+	ThreeBSP.Vertex = function( x, y, z, normal, uv ) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.normal = normal || <span class="branch-1 cbranch-no" title="branch not covered" >new THREE.Vector3;</span>
+		this.uv = uv || <span class="branch-1 cbranch-no" title="branch not covered" >new THREE.Vector2;</span>
+	};
+	ThreeBSP.Vertex.prototype.clone = function() {
+		return new ThreeBSP.Vertex( this.x, this.y, this.z, this.normal.clone(), this.uv.clone() );
+	};
+	ThreeBSP.Vertex.prototype.add = function( vertex ) {
+		this.x += vertex.x;
+		this.y += vertex.y;
+		this.z += vertex.z;
+		return this;
+	};
+	ThreeBSP.Vertex.prototype.subtract = function( vertex ) {
+		this.x -= vertex.x;
+		this.y -= vertex.y;
+		this.z -= vertex.z;
+		return this;
+	};
+	ThreeBSP.Vertex.prototype.multiplyScalar = function( scalar ) {
+		this.x *= scalar;
+		this.y *= scalar;
+		this.z *= scalar;
+		return this;
+	};
+	ThreeBSP.Vertex.prototype.cross = function( vertex ) {
+		var x = this.x,
+			y = this.y,
+			z = this.z;
+&nbsp;
+		this.x = y * vertex.z - z * vertex.y;
+		this.y = z * vertex.x - x * vertex.z;
+		this.z = x * vertex.y - y * vertex.x;
+		
+		return this;
+	};
+	ThreeBSP.Vertex.prototype.normalize = function() {
+		var length = Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z );
+		
+		this.x /= length;
+		this.y /= length;
+		this.z /= length;
+		
+		return this;
+	};
+	ThreeBSP.Vertex.prototype.dot = function( vertex ) {
+		return this.x * vertex.x + this.y * vertex.y + this.z * vertex.z;
+	};
+	ThreeBSP.Vertex.prototype.lerp = function( a, t ) {
+		this.add(
+			a.clone().subtract( this ).multiplyScalar( t )
+		);
+		
+		this.normal.add(
+			a.normal.clone().sub( this.normal ).multiplyScalar( t )
+		);
+		
+		this.uv.add(
+			a.uv.clone().sub( this.uv ).multiplyScalar( t )
+		);
+		
+		return this;
+	};
+	ThreeBSP.Vertex.prototype.interpolate = function( other, t ) {
+		return this.clone().lerp( other, t );
+	};
+	ThreeBSP.Vertex.prototype.applyMatrix4 = function ( m ) {
+&nbsp;
+		// input: THREE.Matrix4 affine matrix
+&nbsp;
+		var x = this.x, y = this.y, z = this.z;
+&nbsp;
+		var e = m.elements;
+&nbsp;
+		this.x = e[0] * x + e[4] * y + e[8]  * z + e[12];
+		this.y = e[1] * x + e[5] * y + e[9]  * z + e[13];
+		this.z = e[2] * x + e[6] * y + e[10] * z + e[14];
+&nbsp;
+		return this;
+&nbsp;
+	}
+	
+	
+	ThreeBSP.Node = function( polygons ) {
+		var i, polygon_count,
+			front = [],
+			back = [];
+&nbsp;
+		this.polygons = [];
+		this.front = this.back = undefined;
+		
+		if ( !(polygons instanceof Array) || polygons.length === 0 ) return;
+&nbsp;
+		this.divider = polygons[0].clone();
+		
+		for ( i = 0, polygon_count = polygons.length; i &lt; polygon_count; i++ ) {
+			this.divider.splitPolygon( polygons[i], this.polygons, this.polygons, front, back );
+		}   
+		
+		<span class="missing-if-branch" title="if path not taken" >I</span>if ( front.length &gt; 0 ) {
+<span class="cstat-no" title="statement not covered" >			this.front = new ThreeBSP.Node( front );</span>
+		}
+		
+		if ( back.length &gt; 0 ) {
+			this.back = new ThreeBSP.Node( back );
+		}
+	};
+	ThreeBSP.Node.isConvex = <span class="fstat-no" title="function not covered" >function( polygons ) {</span>
+<span class="cstat-no" title="statement not covered" >		var i, j;</span>
+<span class="cstat-no" title="statement not covered" >		for ( i = 0; i &lt; polygons.length; i++ ) {</span>
+<span class="cstat-no" title="statement not covered" >			for ( j = 0; j &lt; polygons.length; j++ ) {</span>
+<span class="cstat-no" title="statement not covered" >				if ( i !== j &amp;&amp; polygons[i].classifySide( polygons[j] ) !== BACK ) {</span>
+<span class="cstat-no" title="statement not covered" >					return false;</span>
+				}
+			}
+		}
+<span class="cstat-no" title="statement not covered" >		return true;</span>
+	};
+	ThreeBSP.Node.prototype.build = function( polygons ) {
+		var i, polygon_count,
+			front = [],
+			back = [];
+		
+		if ( !this.divider ) {
+			this.divider = polygons[0].clone();
+		}
+&nbsp;
+		for ( i = 0, polygon_count = polygons.length; i &lt; polygon_count; i++ ) {
+			this.divider.splitPolygon( polygons[i], this.polygons, this.polygons, front, back );
+		}   
+		
+		if ( front.length &gt; 0 ) {
+			if ( !this.front ) this.front = new ThreeBSP.Node();
+			this.front.build( front );
+		}
+		
+		if ( back.length &gt; 0 ) {
+			<span class="missing-if-branch" title="else path not taken" >E</span>if ( !this.back ) this.back = new ThreeBSP.Node();
+			this.back.build( back );
+		}
+	};
+	ThreeBSP.Node.prototype.allPolygons = function() {
+		var polygons = this.polygons.slice();
+		if ( this.front ) polygons = polygons.concat( this.front.allPolygons() );
+		if ( this.back ) polygons = polygons.concat( this.back.allPolygons() );
+		return polygons;
+	};
+	ThreeBSP.Node.prototype.clone = function() {
+		var node = new ThreeBSP.Node();
+		
+		node.divider = this.divider.clone();
+		node.polygons = this.polygons.map( function( polygon ) { return polygon.clone(); } );
+		node.front = this.front &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >this.front.clone();</span>
+		node.back = this.back &amp;&amp; this.back.clone();
+		
+		return node;
+	};
+	ThreeBSP.Node.prototype.invert = function() {
+		var i, polygon_count, temp;
+		
+		for ( i = 0, polygon_count = this.polygons.length; i &lt; polygon_count; i++ ) {
+			this.polygons[i].flip();
+		}
+		
+		this.divider.flip();
+		if ( this.front ) this.front.invert();
+		if ( this.back ) this.back.invert();
+		
+		temp = this.front;
+		this.front = this.back;
+		this.back = temp;
+		
+		return this;
+	};
+	ThreeBSP.Node.prototype.clipPolygons = function( polygons ) {
+		var i, polygon_count,
+			front, back;
+&nbsp;
+		<span class="missing-if-branch" title="if path not taken" >I</span>if ( !this.divider ) <span class="cstat-no" title="statement not covered" >return polygons.slice();</span>
+		
+		front = [], back = [];
+		
+		for ( i = 0, polygon_count = polygons.length; i &lt; polygon_count; i++ ) {
+			this.divider.splitPolygon( polygons[i], front, back, front, back );
+		}
+&nbsp;
+		if ( this.front ) front = this.front.clipPolygons( front );
+		if ( this.back ) back = this.back.clipPolygons( back );
+		else back = [];
+&nbsp;
+		return front.concat( back );
+	};
+	
+	ThreeBSP.Node.prototype.clipTo = function( node ) {
+		this.polygons = node.clipPolygons( this.polygons );
+		if ( this.front ) this.front.clipTo( node );
+		if ( this.back ) this.back.clipTo( node );
+	};
+	
+	
+	return ThreeBSP;
+})();</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Feb 12 2015 20:21:11 GMT+0100 (Mitteleuropäische Zeit)</div>
+</div>
+
+<script src="../prettify.js"></script>
+
+<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
+<script>
+
+    YUI().use('datatable', function (Y) {
+
+        var formatters = {
+          pct: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              try {
+                  return o.value.toFixed(2) + '%';
+              } catch (ex) { return o.value + '%'; }
+          },
+          html: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.record.get(o.column.key + '_html');
+          }
+        },
+          defaultFormatter = function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.value;
+          };
+
+        function getColumns(theadNode) {
+            var colNodes = theadNode.all('tr th'),
+                cols = [],
+                col;
+            colNodes.each(function (colNode) {
+                col = {
+                    key: colNode.getAttribute('data-col'),
+                    label: colNode.get('innerHTML') || ' ',
+                    sortable: !colNode.getAttribute('data-nosort'),
+                    className: colNode.getAttribute('class'),
+                    type: colNode.getAttribute('data-type'),
+                    allowHTML: colNode.getAttribute('data-html') === 'true' || colNode.getAttribute('data-fmt') === 'html'
+                };
+                col.formatter = formatters[colNode.getAttribute('data-fmt')] || defaultFormatter;
+                cols.push(col);
+            });
+            return cols;
+        }
+
+        function getRowData(trNode, cols) {
+            var tdNodes = trNode.all('td'),
+                    i,
+                    row = { classes: {} },
+                    node,
+                    name;
+            for (i = 0; i < cols.length; i += 1) {
+                name = cols[i].key;
+                node = tdNodes.item(i);
+                row[name] = node.getAttribute('data-value') || node.get('innerHTML');
+                row[name + '_html'] = node.get('innerHTML');
+                row.classes[name] = node.getAttribute('class');
+                //Y.log('Name: ' + name + '; Value: ' + row[name]);
+                if (cols[i].type === 'number') { row[name] = row[name] * 1; }
+            }
+            //Y.log(row);
+            return row;
+        }
+
+        function getData(tbodyNode, cols) {
+            var data = [];
+            tbodyNode.all('tr').each(function (trNode) {
+                data.push(getRowData(trNode, cols));
+            });
+            return data;
+        }
+
+        function replaceTable(node) {
+            if (!node) { return; }
+            var cols = getColumns(node.one('thead')),
+                data = getData(node.one('tbody'), cols),
+                table,
+                parent = node.get('parentNode');
+
+            table = new Y.DataTable({
+                columns: cols,
+                data: data,
+                sortBy: 'file'
+            });
+            parent.set('innerHTML', '');
+            table.render(parent);
+        }
+
+        Y.on('domready', function () {
+            replaceTable(Y.one('div.coverage-summary table'));
+            if (typeof prettyPrint === 'function') {
+                prettyPrint();
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Monthey</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Monthey</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{82C0BE53-BA51-4E48-A91D-D50436384F42}</SimpleData>
+		<SimpleData name="DATUM_AEND">2008/11/24</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">1997</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">uebertragen</SimpleData>
+		<SimpleData name="HERKUNFT">GG25</SimpleData>
+		<SimpleData name="HERKUNFT_J">1997</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">6153</SimpleData>
+		<SimpleData name="BEZIRKSNUM">2308</SimpleData>
+		<SimpleData name="KANTONSNUM">23</SimpleData>
+		<SimpleData name="GEM_TEIL">4</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH23086153</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 6.9135654652489045,46.29858185864731,382.9974999999831 6.9166643339913865,46.29984707764998,382.5249999999796 6.916840052236682,46.299794221511306,382.5837499999907 6.9194965576516365,46.29615831173436,383.64749999999185 6.919479919109493,46.296029995960765,383.46874999998545 6.915753875238933,46.293990372300584,383.9624999999796 6.911931763707506,46.291889684662735,385.4274999999907 6.9118374383534045,46.29193654673463,385.8487499999901 6.911693431702402,46.29237381138012,385.8687499999796 6.911412994503566,46.293276130895016,385.57874999998603 6.911150303240041,46.29419125186734,384.6224999999831 6.910935841276079,46.29488721910675,384.43374999998196 6.9106963145307585,46.29559569843648,384.35249999997905 6.91022254582845,46.297082991139405,384.1537499999831 6.9102812763725,46.29724382627282,384.2162499999831 6.9135654652489045,46.29858185864731,382.9974999999831</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>

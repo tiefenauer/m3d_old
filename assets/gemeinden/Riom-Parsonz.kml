@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml><Document><name>Riom-Parsonz</name><description>Beschreibung</description><Placemark xmlns="http://www.opengis.net/kml/2.2">
+	<name>Riom-Parsonz</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#swissBOUNDARIES3D_1_1_TLM_HOHEITSGEBIET">
+		<SimpleData name="UUID">{23F5791E-8136-4F32-98C2-9F0E6C5B4C32}</SimpleData>
+		<SimpleData name="DATUM_AEND">2014/01/06</SimpleData>
+		<SimpleData name="DATUM_ERST">2008/11/24</SimpleData>
+		<SimpleData name="ERSTELL_J">2000</SimpleData>
+		<SimpleData name="REVISION_J">2014</SimpleData>
+		<SimpleData name="REVISION_M">1</SimpleData>
+		<SimpleData name="GRUND_AEND">verbessert</SimpleData>
+		<SimpleData name="HERKUNFT">swisstopo</SimpleData>
+		<SimpleData name="HERKUNFT_J">2014</SimpleData>
+		<SimpleData name="HERKUNFT_M">1</SimpleData>
+		<SimpleData name="OBJEKTART">Gemeindegebiet</SimpleData>
+		<SimpleData name="BFS_NUMMER">3536</SimpleData>
+		<SimpleData name="BEZIRKSNUM">1821</SimpleData>
+		<SimpleData name="KANTONSNUM">18</SimpleData>
+		<SimpleData name="GEM_TEIL">2</SimpleData>
+		<SimpleData name="ICC">CH</SimpleData>
+		<SimpleData name="SHN">CH18213536</SimpleData>
+		<SimpleData name="REVISION_Q">1212_RevGoal</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates> 9.585010902288055,46.62883319726401,1197.227499999979 9.585511111202646,46.62867533888092,1198.878749999989 9.5859051325927,46.6285063422602,1201.3662499999919 9.585892060724003,46.6282605850667,1211.0387499999924 9.585847966455248,46.628109834622165,1203.5225 9.585177675621518,46.6280420671348,1191.4012499999808 9.584703723889032,46.62802511012735,1187.691249999989 9.584674733435712,46.628675052013804,1195.477499999979 9.584765070994104,46.62876902936816,1195.965 9.585010902288055,46.62883319726401,1197.227499999979</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark></Document></kml>
