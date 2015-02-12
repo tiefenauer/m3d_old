@@ -50,7 +50,13 @@ define([
         $modalInstance = modalInstance;
         $rootScope = rootScope;
 
-        $scope.load = this.load;
+        $scope.load = function(gemeinde){          
+          $rootScope.$broadcast('gemeinde:load', gemeinde);
+          $modalInstance.close();
+        };
+        $scope.ok = $scope.cancel = function(){
+          $modalInstance.close();
+        };
         var ctrl = this;
         $.ajax({
           url: 'assets/gemeinden/gemeinden.json',
@@ -71,17 +77,6 @@ define([
         else {
           this.list = this.gemeinden;
         }
-      },
-
-      load: function(gemeinde){
-        $log.debug("loading " + gemeinde);
-        $.ajax({
-          url: 'assets/gemeinden/' + gemeinde + '.kml',
-          success: function(data){
-            $log.debug('done: ' + data);
-            $rootScope.$broadcast('gemeinde:loaded', data);
-          }
-        });
       }
 
     };

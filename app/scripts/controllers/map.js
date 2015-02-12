@@ -3,11 +3,13 @@ define([
    'angular'
   ,'jquery'
   ,'models/m3dProfilePoint'
+  ,'vendor/geoxml3'
+  ,'vendor/ProjectedOverlay'
   ], 
   function (angular, $, ProfilePoint) {
 
     var $log, $scope;
-    var map, rect;
+    var map, rect, kmlLayer;
     var markers = [];
     var gridSize;
     var verticalSegments = 25;
@@ -41,8 +43,24 @@ define([
         $scope.$on('menu:model:generate', function(event){
           ElevationDataService.calculateHeightMap($scope.getProfilePoints());
         });
-        $scope.$on('gemeinde:loaded', function(event, data){
+        $scope.$on('gemeinde:load', function(event, data){
           $log.debug('integrating in map');
+          var localUrl = 'assets/gemeinden/' + data + '.kml';
+          //localUrl = 'assets/gemeinden/a.xml';
+          var url = 'http://tiefenauer.github.io/m3d/' + localUrl;          
+          var parser = new geoXML3.parser({
+            map: map,
+            afterParse: function(docs){
+              var doc = docs[0];
+              var coordinates = doc.placemarks[0].Polygon[0].outerBoundaryIs[0].coordinates;
+              $log.debug('Polyline coordinates: ' + coordinates);
+            }
+          });
+          parser.parse(localUrl);
+          /*
+          kmlLayer = new google.maps.KmlLayer({ url: url });
+          kmlLayer.setMap(map);
+          */
         });
         initMap();
       },
