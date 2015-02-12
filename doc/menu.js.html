@@ -70,47 +70,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="m3d.controller.MenuController">
-            <span class="title">
-                <a href="m3d.controller.MenuController.html">m3d.controller.MenuController</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.controller.MenuController#init"><a href="m3d.controller.MenuController.html#init">init</a></li>
-            
-                <li data-name="m3d.controller.MenuController#init"><a href="m3d.controller.MenuController.html#init">init</a></li>
-            
-                <li data-name="m3d.controller.MenuController#loadModel"><a href="m3d.controller.MenuController.html#loadModel">loadModel</a></li>
-            
-                <li data-name="m3d.controller.MenuController#render"><a href="m3d.controller.MenuController.html#render">render</a></li>
-            
-                <li data-name="m3d.controller.MenuController#saveModel"><a href="m3d.controller.MenuController.html#saveModel">saveModel</a></li>
-            
-                <li data-name="m3d.controller.MenuController#showInfo"><a href="m3d.controller.MenuController.html#showInfo">showInfo</a></li>
-            
-                <li data-name="m3d.controller.MenuController#showSettings"><a href="m3d.controller.MenuController.html#showSettings">showSettings</a></li>
-            
-                <li data-name="m3d.controller.MenuController#showStats"><a href="m3d.controller.MenuController.html#showStats">showStats</a></li>
-            
-                <li data-name="m3d.controller.MenuController#toggleInvert"><a href="m3d.controller.MenuController.html#toggleInvert">toggleInvert</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="m3d.controller.ProfileController">
             <span class="title">
                 <a href="m3d.controller.ProfileController.html">m3d.controller.ProfileController</a>
@@ -154,6 +113,68 @@
                 <li data-name="m3d.services.ProfileIOService#load"><a href="m3d.services.ProfileIOService.html#load">load</a></li>
             
                 <li data-name="m3d.services.ProfileIOService#save"><a href="m3d.services.ProfileIOService.html#save">save</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.controller.GemeindeController">
+            <span class="title">
+                <a href="m3d.controller.GemeindeController.html">m3d.controller.GemeindeController</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="m3d.controller.GemeindeController#init"><a href="m3d.controller.GemeindeController.html#init">init</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.controller.MenuController">
+            <span class="title">
+                <a href="m3d.controller.MenuController.html">m3d.controller.MenuController</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="m3d.controller.MenuController#init"><a href="m3d.controller.MenuController.html#init">init</a></li>
+            
+                <li data-name="m3d.controller.MenuController#init"><a href="m3d.controller.MenuController.html#init">init</a></li>
+            
+                <li data-name="m3d.controller.MenuController#loadModel"><a href="m3d.controller.MenuController.html#loadModel">loadModel</a></li>
+            
+                <li data-name="m3d.controller.MenuController#render"><a href="m3d.controller.MenuController.html#render">render</a></li>
+            
+                <li data-name="m3d.controller.MenuController#saveModel"><a href="m3d.controller.MenuController.html#saveModel">saveModel</a></li>
+            
+                <li data-name="m3d.controller.MenuController#showInfo"><a href="m3d.controller.MenuController.html#showInfo">showInfo</a></li>
+            
+                <li data-name="m3d.controller.MenuController#showSettings"><a href="m3d.controller.MenuController.html#showSettings">showSettings</a></li>
+            
+                <li data-name="m3d.controller.MenuController#showStats"><a href="m3d.controller.MenuController.html#showStats">showStats</a></li>
+            
+                <li data-name="m3d.controller.MenuController#toggleInvert"><a href="m3d.controller.MenuController.html#toggleInvert">toggleInvert</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -299,6 +320,7 @@
      * @class
      * @name m3d.controller.MenuController
      * @namespace
+     * @constructor
      */
     var MenuController = function ($rootScope, $scope, $log, $modal) {
       $log.debug('MenuController created');  
@@ -310,6 +332,7 @@
       $scope.showStats = this.showStats;        
       $scope.loadModel = this.loadModel;
       $scope.saveModel = this.saveModel;      
+      $scope.showTownList = this.showTownList;
     };
 
     MenuController.prototype = /** @lends m3d.controller.MenuController.prototype */{
@@ -408,6 +431,15 @@
       calculateHeightMap: function(){
         $log.debug('process button clicked');
         $rootScope.$broadcast('menu:model:generate');
+      },
+
+      showTownList: function(){
+        $log.debug('showing list of municipalities');
+        $modal.open({
+          templateUrl: 'views/templates/gemeinde_popup.html'
+          ,controller: 'GemeindeCtrl'
+          ,controllerAs: 'tab'
+        });
       }
 
     };
@@ -438,7 +470,7 @@
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Feb 06 2015 16:19:25 GMT-0000 (UTC)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Feb 12 2015 19:29:59 GMT-0000 (UTC)
         </footer>
     </div>
 </div>

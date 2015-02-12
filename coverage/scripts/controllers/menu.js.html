@@ -199,16 +199,16 @@
     <h1>Code coverage report for <span class="entity">scripts/controllers/menu.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">17.74% <small>(11 / 62)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">16.92% <small>(11 / 65)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Branches: <span class="metric">0% <small>(0 / 2)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">6.25% <small>(1 / 16)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">5.88% <small>(1 / 17)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">17.74% <small>(11 / 62)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">16.92% <small>(11 / 65)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -364,7 +364,18 @@
 146
 147
 148
-149</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -386,19 +397,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -494,6 +507,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -533,6 +555,7 @@
      * @class
      * @name m3d.controller.MenuController
      * @namespace
+     * @constructor
      */
     var MenuController = <span class="fstat-no" title="function not covered" >function ($rootScope, $scope, $log, $modal) {</span>
 <span class="cstat-no" title="statement not covered" >      $log.debug('MenuController created');  </span>
@@ -544,6 +567,7 @@
 <span class="cstat-no" title="statement not covered" >      $scope.showStats = this.showStats;        </span>
 <span class="cstat-no" title="statement not covered" >      $scope.loadModel = this.loadModel;</span>
 <span class="cstat-no" title="statement not covered" >      $scope.saveModel = this.saveModel;      </span>
+<span class="cstat-no" title="statement not covered" >      $scope.showTownList = this.showTownList;</span>
     };
 &nbsp;
     MenuController.prototype = /** @lends m3d.controller.MenuController.prototype */{
@@ -642,6 +666,15 @@
       calculateHeightMap: <span class="fstat-no" title="function not covered" >function(){</span>
 <span class="cstat-no" title="statement not covered" >        $log.debug('process button clicked');</span>
 <span class="cstat-no" title="statement not covered" >        $rootScope.$broadcast('menu:model:generate');</span>
+      },
+&nbsp;
+      showTownList: <span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >        $log.debug('showing list of municipalities');</span>
+<span class="cstat-no" title="statement not covered" >        $modal.open({</span>
+          templateUrl: 'views/templates/gemeinde_popup.html'
+          ,controller: 'GemeindeCtrl'
+          ,controllerAs: 'tab'
+        });
       }
 &nbsp;
     };
@@ -665,7 +698,7 @@
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Feb 06 2015 16:19:08 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Feb 12 2015 19:29:44 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

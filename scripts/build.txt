@@ -43,11 +43,13 @@ controllers/profile.js
 controllers/info.js
 jquery-ui.js
 controllers/settings.js
+controllers/gemeinde.js
 controllers.js
 models.js
 util/DateTime.js
 util/supplant.js
 decorators/log.js
 decorators.js
+routes.js
 app.js
 main.js
