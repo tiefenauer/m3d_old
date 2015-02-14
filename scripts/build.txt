@@ -27,6 +27,7 @@ util/FileSaver.min.js
 vendor/three/csg.js
 vendor/three/ThreeCSG.js
 services/profileio.js
+services/profileOutline.js
 services.js
 directives/m3dmenu.js
 directives/m3dmap.js

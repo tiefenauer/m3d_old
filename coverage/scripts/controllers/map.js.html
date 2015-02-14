@@ -199,7 +199,7 @@
     <h1>Code coverage report for <span class="entity">scripts/controllers/map.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">17.86% <small>(15 / 84)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">17.44% <small>(15 / 86)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Branches: <span class="metric">0% <small>(0 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -208,7 +208,7 @@
         Functions: <span class="metric">7.14% <small>(1 / 14)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">17.86% <small>(15 / 84)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">17.44% <small>(15 / 86)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -412,8 +412,25 @@
 194
 195
 196
-197
-198</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+197</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -424,22 +441,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -456,12 +457,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -469,14 +468,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -614,11 +612,13 @@
 define([
    'angular'
   ,'jquery'
-  ,'models/m3dProfilePoint'
+  ,'lodash'
+  ,'models/m3dProfile'
+  ,'models/m3dProfilePoint'  
   ,'vendor/geoxml3'
   ,'vendor/ProjectedOverlay'
   ], 
-  function (angular, $, ProfilePoint) {
+  function (angular, $, _, Profile, ProfilePoint) {
 &nbsp;
     var $log, $scope;
     var map, rect, kmlLayer;
@@ -636,9 +636,9 @@ define([
      * @name m3d.controller.MapController
      * @namespace
      */
-    var MapController = <span class="fstat-no" title="function not covered" >function ($scope, $log, ElevationDataService) {</span>
+    var MapController = <span class="fstat-no" title="function not covered" >function ($scope, $log, ElevationDataService, ProfileOutlineService) {</span>
 <span class="cstat-no" title="statement not covered" >        $log.debug('MapController created');</span>
-<span class="cstat-no" title="statement not covered" >        this.init($scope, $log, ElevationDataService);</span>
+<span class="cstat-no" title="statement not covered" >        this.init($scope, $log, ElevationDataService, ProfileOutlineService);</span>
     };
 &nbsp;
     MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
@@ -646,35 +646,32 @@ define([
       /**
       * initialize controller
       */
-      init: <span class="fstat-no" title="function not covered" >function(scope, log, ElevationDataService){</span>
+      init: <span class="fstat-no" title="function not covered" >function(scope, log, ElevationDataService, ProfileOutlineService){</span>
 <span class="cstat-no" title="statement not covered" >        $scope = scope;</span>
 <span class="cstat-no" title="statement not covered" >        $log = log;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        $scope.getProfilePoints = this.getProfilePoints;</span>
 <span class="cstat-no" title="statement not covered" >        $scope.$on('menu:places_changed', onPlacesChanged);</span>
 <span class="cstat-no" title="statement not covered" >        $scope.$on('menu:model:generate', <span class="fstat-no" title="function not covered" >function(event){</span></span>
-<span class="cstat-no" title="statement not covered" >          ElevationDataService.calculateHeightMap($scope.getProfilePoints());</span>
+<span class="cstat-no" title="statement not covered" >          ElevationDataService.calculateHeightMap(this.getProfilePoints());</span>
         });
-<span class="cstat-no" title="statement not covered" >        $scope.$on('gemeinde:load', <span class="fstat-no" title="function not covered" >function(event, data){</span></span>
+<span class="cstat-no" title="statement not covered" >        $scope.$on('gemeinde:load', <span class="fstat-no" title="function not covered" >function(event, name){</span></span>
 <span class="cstat-no" title="statement not covered" >          $log.debug('integrating in map');</span>
-<span class="cstat-no" title="statement not covered" >          var localUrl = 'assets/gemeinden/' + data + '.kml';</span>
-          //localUrl = 'assets/gemeinden/a.xml';
+<span class="cstat-no" title="statement not covered" >          var localUrl = 'assets/gemeinden/' + name + '.kml';</span>
 <span class="cstat-no" title="statement not covered" >          var url = 'http://tiefenauer.github.io/m3d/' + localUrl;          </span>
 <span class="cstat-no" title="statement not covered" >          var parser = new geoXML3.parser({</span>
             map: map,
             afterParse: <span class="fstat-no" title="function not covered" >function(docs){</span>
 <span class="cstat-no" title="statement not covered" >              var doc = docs[0];</span>
 <span class="cstat-no" title="statement not covered" >              var coordinates = doc.placemarks[0].Polygon[0].outerBoundaryIs[0].coordinates;</span>
-<span class="cstat-no" title="statement not covered" >              $log.debug('Polyline coordinates: ' + coordinates);</span>
+<span class="cstat-no" title="statement not covered" >              var outline = ProfileOutlineService.createOutline(coordinates);</span>
+<span class="cstat-no" title="statement not covered" >              var outlineProfile = new Profile({ mesh: outline, name: name });</span>
+<span class="cstat-no" title="statement not covered" >              $scope.$broadcast('outline:created', outlineProfile);</span>
             }
           });
 <span class="cstat-no" title="statement not covered" >          parser.parse(localUrl);</span>
-          /*
-          kmlLayer = new google.maps.KmlLayer({ url: url });
-          kmlLayer.setMap(map);
-          */
         });
 <span class="cstat-no" title="statement not covered" >        initMap();</span>
+<span class="cstat-no" title="statement not covered" >        $scope.$broadcast('gemeinde:load', 'Aarau');</span>
       },
 &nbsp;
       /**
@@ -804,7 +801,7 @@ define([
 <span class="cstat-no" title="statement not covered" >      map.fitBounds(bounds);</span>
     };
 &nbsp;
-    return ['$scope', '$log', 'ElevationDataService', MapController];
+    return ['$scope', '$log', 'ElevationDataService', 'ProfileOutlineService', MapController];
 &nbsp;
 });
 &nbsp;</pre></td></tr>
@@ -812,7 +809,7 @@ define([
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Feb 14 2015 11:18:23 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Feb 14 2015 13:36:12 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

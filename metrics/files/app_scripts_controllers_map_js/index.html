@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">63.73</p>
+      <p class="stat">63.37</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">197</p>
+      <p class="stat">196</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">27.54</p>
+      <p class="stat">26.81</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">2.21</p>
+      <p class="stat">2.31</p>
     </div>
   </div>
 </div>
@@ -93,11 +93,13 @@
 define([
    &#039;angular&#039;
   ,&#039;jquery&#039;
-  ,&#039;models/m3dProfilePoint&#039;
+  ,&#039;lodash&#039;
+  ,&#039;models/m3dProfile&#039;
+  ,&#039;models/m3dProfilePoint&#039;  
   ,&#039;vendor/geoxml3&#039;
   ,&#039;vendor/ProjectedOverlay&#039;
   ], 
-  function (angular, $, ProfilePoint) {
+  function (angular, $, _, Profile, ProfilePoint) {
 
     var $log, $scope;
     var map, rect, kmlLayer;
@@ -115,9 +117,9 @@ define([
      * @name m3d.controller.MapController
      * @namespace
      */
-    var MapController = function ($scope, $log, ElevationDataService) {
+    var MapController = function ($scope, $log, ElevationDataService, ProfileOutlineService) {
         $log.debug(&#039;MapController created&#039;);
-        this.init($scope, $log, ElevationDataService);
+        this.init($scope, $log, ElevationDataService, ProfileOutlineService);
     };
 
     MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
@@ -125,35 +127,32 @@ define([
       /**
       * initialize controller
       */
-      init: function(scope, log, ElevationDataService){
+      init: function(scope, log, ElevationDataService, ProfileOutlineService){
         $scope = scope;
         $log = log;
 
-        $scope.getProfilePoints = this.getProfilePoints;
         $scope.$on(&#039;menu:places_changed&#039;, onPlacesChanged);
         $scope.$on(&#039;menu:model:generate&#039;, function(event){
-          ElevationDataService.calculateHeightMap($scope.getProfilePoints());
+          ElevationDataService.calculateHeightMap(this.getProfilePoints());
         });
-        $scope.$on(&#039;gemeinde:load&#039;, function(event, data){
+        $scope.$on(&#039;gemeinde:load&#039;, function(event, name){
           $log.debug(&#039;integrating in map&#039;);
-          var localUrl = &#039;assets/gemeinden/&#039; + data + &#039;.kml&#039;;
-          //localUrl = &#039;assets/gemeinden/a.xml&#039;;
+          var localUrl = &#039;assets/gemeinden/&#039; + name + &#039;.kml&#039;;
           var url = &#039;http://tiefenauer.github.io/m3d/&#039; + localUrl;          
           var parser = new geoXML3.parser({
             map: map,
             afterParse: function(docs){
               var doc = docs[0];
               var coordinates = doc.placemarks[0].Polygon[0].outerBoundaryIs[0].coordinates;
-              $log.debug(&#039;Polyline coordinates: &#039; + coordinates);
+              var outline = ProfileOutlineService.createOutline(coordinates);
+              var outlineProfile = new Profile({ mesh: outline, name: name });
+              $scope.$broadcast(&#039;outline:created&#039;, outlineProfile);
             }
           });
           parser.parse(localUrl);
-          /*
-          kmlLayer = new google.maps.KmlLayer({ url: url });
-          kmlLayer.setMap(map);
-          */
         });
         initMap();
+        $scope.$broadcast(&#039;gemeinde:load&#039;, &#039;Aarau&#039;);
       },
 
       /**
@@ -283,7 +282,7 @@ define([
       map.fitBounds(bounds);
     };
 
-    return [&#039;$scope&#039;, &#039;$log&#039;, &#039;ElevationDataService&#039;, MapController];
+    return [&#039;$scope&#039;, &#039;$log&#039;, &#039;ElevationDataService&#039;, &#039;ProfileOutlineService&#039;, MapController];
 
 });</textarea>
   </div>
