@@ -36,6 +36,8 @@ directives.js
 spin.js
 ladda-bootstrap.js
 controllers/menu.js
+vendor/geoxml3.js
+vendor/ProjectedOverlay.js
 controllers/map.js
 util/RotationHelper.js
 vendor/three/controls/OrbitControls.js

@@ -16,70 +16,148 @@
             <th>Evidence</th>
             <th>Reason</th>
         </tr>
-        <tr><td colspan="5"><b>..\..\app\scripts\controllers\gemeinde.js</b></td></tr><tr class="warning">
-    <td class="text-center">W116</td>
-    <td class="text-center">66</td>
-    <td class="text-center">29</td>
-    <td><code>        if &#40;this.q.length &#61;&#61; 0&#41;&#123;</code></td>
-    <td>Expected &#39;&#61;&#61;&#61;&#39; and instead saw &#39;&#61;&#61;&#39;.</td>
+        <tr><td colspan="5"><b>../../test/spec/models/m3dProfilePointSpec.js</b></td></tr><tr class="danger">
+    <td class="text-center">E007</td>
+    <td class="text-center">8</td>
+    <td class="text-center">5</td>
+    <td><code>    describe&#40;&#39;Model: ProfilePoint&#39;&#44; function&#40;&#41;&#123;</code></td>
+    <td>Missing &quot;use strict&quot; statement.</td>
 </tr><tr class="warning">
-    <td class="text-center">W109</td>
-    <td class="text-center">77</td>
-    <td class="text-center">30</td>
-    <td><code>        &#36;log.debug&#40;&quot;loading &quot; &#43; gemeinde&#41;;</code></td>
-    <td>Strings must use singlequote.</td>
+    <td class="text-center">W004</td>
+    <td class="text-center">28</td>
+    <td class="text-center">19</td>
+    <td><code>        var point &#61; new ProfilePoint&#40;&#123; lat: 1&#44; lng: 2 &#125;&#41;;</code></td>
+    <td>&#39;point&#39; is already defined.</td>
 </tr><tr class="warning">
+    <td class="text-center">W004</td>
+    <td class="text-center">34</td>
+    <td class="text-center">19</td>
+    <td><code>        var point &#61; new ProfilePoint&#40;&#123; lat: 1&#44; elv:3 &#125;&#41;;</code></td>
+    <td>&#39;point&#39; is already defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W004</td>
+    <td class="text-center">40</td>
+    <td class="text-center">19</td>
+    <td><code>        var point &#61; new ProfilePoint&#40;&#123; lng: 2&#44; elv:3 &#125;&#41;;</code></td>
+    <td>&#39;point&#39; is already defined.</td>
+</tr><tr><td colspan="5"><b>../../test/spec/models/m3dProfileSpec.js</b></td></tr><tr class="danger">
+    <td class="text-center">E007</td>
+    <td class="text-center">17</td>
+    <td class="text-center">5</td>
+    <td><code>    var orderedPoints &#61; &#91;</code></td>
+    <td>Missing &quot;use strict&quot; statement.</td>
+</tr><tr class="warning">
+    <td class="text-center">W004</td>
+    <td class="text-center">126</td>
+    <td class="text-center">18</td>
+    <td><code>        for&#40;var i&#61;0; i&lt;Math.ceil&#40;profile.mesh.geometry.vertices.length / 2&#41;; i&#43;&#43;&#41;&#123;</code></td>
+    <td>&#39;i&#39; is already defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W004</td>
+    <td class="text-center">128</td>
+    <td class="text-center">28</td>
+    <td><code>          var bottomVertex &#61; profile.getBottomVertex&#40;topVertex&#41;;</code></td>
+    <td>&#39;bottomVertex&#39; is already defined.</td>
+</tr><tr><td colspan="5"><b>../../test/spec/services/elevationdataserviceSpec.js</b></td></tr><tr class="warning">
     <td class="text-center">W033</td>
-    <td class="text-center">97</td>
-    <td class="text-center">50</td>
-    <td><code>            &#36;log.debug&#40;&#39;directory read finished&#39;&#41;</code></td>
+    <td class="text-center">33</td>
+    <td class="text-center">47</td>
+    <td><code>              lat: function&#40;&#41;&#123;return coord.lat&#125;&#44;</code></td>
     <td>Missing semicolon.</td>
 </tr><tr class="warning">
-    <td class="text-center">W032</td>
-    <td class="text-center">133</td>
-    <td class="text-center">8</td>
-    <td><code>      &#125;;</code></td>
-    <td>Unnecessary semicolon.</td>
+    <td class="text-center">W033</td>
+    <td class="text-center">34</td>
+    <td class="text-center">47</td>
+    <td><code>              lng: function&#40;&#41;&#123;return coord.lng&#125;</code></td>
+    <td>Missing semicolon.</td>
+</tr><tr class="warning">
+    <td class="text-center">W033</td>
+    <td class="text-center">83</td>
+    <td class="text-center">90</td>
+    <td><code>        rootScope.&#36;on&#40;&#39;adapter:item:progress&#39;&#44; function&#40;event&#44; args&#41;&#123; itemProgressCount&#43;&#43; &#125;&#41;;</code></td>
+    <td>Missing semicolon.</td>
+</tr><tr class="warning">
+    <td class="text-center">W033</td>
+    <td class="text-center">84</td>
+    <td class="text-center">92</td>
+    <td><code>        rootScope.&#36;on&#40;&#39;adapter:queue:progress&#39;&#44; function&#40;event&#44; args&#41;&#123; queueProgressCount&#43;&#43; &#125;&#41;;</code></td>
+    <td>Missing semicolon.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">67</td>
-    <td class="text-center">23</td>
-    <td><code>          this.list &#61; _.filter&#40;this.gemeinden&#44; function&#40;name&#41;&#123;</code></td>
-    <td>&#39;_&#39; is not defined.</td>
+    <td class="text-center">30</td>
+    <td class="text-center">9</td>
+    <td><code>        &#36;.each&#40;dummyCoordinates&#44; function&#40;i&#44; coord&#41;&#123;</code></td>
+    <td>&#39;&#36;&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">115</td>
+    <td class="text-center">78</td>
+    <td class="text-center">30</td>
+    <td><code>            callback&#40;result&#44; google.maps.ElevationStatus.OK&#41;;</code></td>
+    <td>&#39;google&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">94</td>
+    <td class="text-center">15</td>
+    <td><code>        spyOn&#40;google.maps.ElevationService.prototype&#44; &#39;getElevationForLocations&#39;&#41;.and.callFake&#40;dummyGoogleMapsFunction&#41;;</code></td>
+    <td>&#39;google&#39; is not defined.</td>
+</tr><tr><td colspan="5"><b>../../test/spec/services/profileioSpec.js</b></td></tr><tr class="warning">
+    <td class="text-center">W033</td>
+    <td class="text-center">20</td>
+    <td class="text-center">112</td>
+    <td><code>    var mockMesh &#61; new THREE.Mesh&#40;mockGeometry&#44; new THREE.MeshPhongMaterial&#40;&#123;color: 0x00ff00&#44; dynamic: true &#125;&#41;&#41;</code></td>
+    <td>Missing semicolon.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">17</td>
+    <td class="text-center">28</td>
+    <td><code>    var mockGeometry &#61; new THREE.BoxGeometry&#40;1&#44;1&#44;1&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">20</td>
+    <td class="text-center">24</td>
+    <td><code>    var mockMesh &#61; new THREE.Mesh&#40;mockGeometry&#44; new THREE.MeshPhongMaterial&#40;&#123;color: 0x00ff00&#44; dynamic: true &#125;&#41;&#41;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">20</td>
+    <td class="text-center">53</td>
+    <td><code>    var mockMesh &#61; new THREE.Mesh&#40;mockGeometry&#44; new THREE.MeshPhongMaterial&#40;&#123;color: 0x00ff00&#44; dynamic: true &#125;&#41;&#41;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">63</td>
+    <td class="text-center">13</td>
+    <td><code>      spyOn&#40;THREE.STLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;function&#40;fileArg&#44; callbackArg&#41;&#123;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">83</td>
+    <td class="text-center">13</td>
+    <td><code>      spyOn&#40;THREE.STLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;dummyLoadLocal&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">84</td>
+    <td class="text-center">13</td>
+    <td><code>      spyOn&#40;THREE.VRMLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;dummyLoadLocal&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">88</td>
     <td class="text-center">14</td>
-    <td><code>        case FileError.QUOTA_EXCEEDED_ERR:</code></td>
-    <td>&#39;FileError&#39; is not defined.</td>
+    <td><code>      expect&#40;THREE.STLLoader.prototype.loadLocal&#41;.toHaveBeenCalled&#40;&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">118</td>
+    <td class="text-center">92</td>
     <td class="text-center">14</td>
-    <td><code>        case FileError.NOT_FOUND_ERR:</code></td>
-    <td>&#39;FileError&#39; is not defined.</td>
-</tr><tr class="warning">
-    <td class="text-center">W117</td>
-    <td class="text-center">121</td>
-    <td class="text-center">14</td>
-    <td><code>        case FileError.SECURITY_ERR:</code></td>
-    <td>&#39;FileError&#39; is not defined.</td>
-</tr><tr class="warning">
-    <td class="text-center">W117</td>
-    <td class="text-center">124</td>
-    <td class="text-center">14</td>
-    <td><code>        case FileError.INVALID_MODIFICATION_ERR:</code></td>
-    <td>&#39;FileError&#39; is not defined.</td>
-</tr><tr class="warning">
-    <td class="text-center">W117</td>
-    <td class="text-center">127</td>
-    <td class="text-center">14</td>
-    <td><code>        case FileError.INVALID_STATE_ERR:</code></td>
-    <td>&#39;FileError&#39; is not defined.</td>
+    <td><code>      expect&#40;THREE.VRMLLoader.prototype.loadLocal&#41;.toHaveBeenCalled&#40;&#41;;</code></td>
+    <td>&#39;THREE&#39; is not defined.</td>
 </tr>
     </table>
     <div class="well">
-    Found <span class="label label-default">10</span> failures - <span class="label label-danger">0 errors</span> &amp; <span class="label label-warning">10 warnings</span>
+    Found <span class="label label-default">23</span> failures - <span class="label label-danger">2 errors</span> &amp; <span class="label label-warning">21 warnings</span>
 </div>
 </div>
 

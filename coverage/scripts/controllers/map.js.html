@@ -199,16 +199,16 @@
     <h1>Code coverage report for <span class="entity">scripts/controllers/map.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">19.48% <small>(15 / 77)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">17.86% <small>(15 / 84)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Branches: <span class="metric">0% <small>(0 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">7.69% <small>(1 / 13)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">7.14% <small>(1 / 14)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">19.48% <small>(15 / 77)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">17.86% <small>(15 / 84)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -395,8 +395,28 @@
 177
 178
 179
-180</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -440,6 +460,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -579,11 +615,13 @@ define([
    'angular'
   ,'jquery'
   ,'models/m3dProfilePoint'
+  ,'vendor/geoxml3'
+  ,'vendor/ProjectedOverlay'
   ], 
   function (angular, $, ProfilePoint) {
 &nbsp;
     var $log, $scope;
-    var map, rect;
+    var map, rect, kmlLayer;
     var markers = [];
     var gridSize;
     var verticalSegments = 25;
@@ -617,8 +655,24 @@ define([
 <span class="cstat-no" title="statement not covered" >        $scope.$on('menu:model:generate', <span class="fstat-no" title="function not covered" >function(event){</span></span>
 <span class="cstat-no" title="statement not covered" >          ElevationDataService.calculateHeightMap($scope.getProfilePoints());</span>
         });
-<span class="cstat-no" title="statement not covered" >        $scope.$on('gemeinde:loaded', <span class="fstat-no" title="function not covered" >function(event, data){</span></span>
+<span class="cstat-no" title="statement not covered" >        $scope.$on('gemeinde:load', <span class="fstat-no" title="function not covered" >function(event, data){</span></span>
 <span class="cstat-no" title="statement not covered" >          $log.debug('integrating in map');</span>
+<span class="cstat-no" title="statement not covered" >          var localUrl = 'assets/gemeinden/' + data + '.kml';</span>
+          //localUrl = 'assets/gemeinden/a.xml';
+<span class="cstat-no" title="statement not covered" >          var url = 'http://tiefenauer.github.io/m3d/' + localUrl;          </span>
+<span class="cstat-no" title="statement not covered" >          var parser = new geoXML3.parser({</span>
+            map: map,
+            afterParse: <span class="fstat-no" title="function not covered" >function(docs){</span>
+<span class="cstat-no" title="statement not covered" >              var doc = docs[0];</span>
+<span class="cstat-no" title="statement not covered" >              var coordinates = doc.placemarks[0].Polygon[0].outerBoundaryIs[0].coordinates;</span>
+<span class="cstat-no" title="statement not covered" >              $log.debug('Polyline coordinates: ' + coordinates);</span>
+            }
+          });
+<span class="cstat-no" title="statement not covered" >          parser.parse(localUrl);</span>
+          /*
+          kmlLayer = new google.maps.KmlLayer({ url: url });
+          kmlLayer.setMap(map);
+          */
         });
 <span class="cstat-no" title="statement not covered" >        initMap();</span>
       },
@@ -758,7 +812,7 @@ define([
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Feb 12 2015 19:29:44 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Feb 14 2015 11:18:23 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

@@ -1,0 +1,3964 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for scripts/vendor/geoxml3.js</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../../prettify.css">
+
+    <style>
+        body, html {
+            margin:0; padding: 0;
+        }
+        body {
+            font-family: Helvetica Neue, Helvetica,Arial;
+            font-size: 10pt;
+        }
+        div.header, div.footer {
+            background: #eee;
+            padding: 1em;
+        }
+        div.header {
+            z-index: 100;
+            position: fixed;
+            top: 0;
+            border-bottom: 1px solid #666;
+            width: 100%;
+        }
+        div.footer {
+            border-top: 1px solid #666;
+        }
+        div.body {
+            margin-top: 10em;
+        }
+        div.meta {
+            font-size: 90%;
+            text-align: center;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+        }
+        h1 {
+            font-size: 12pt;
+        }
+        h2 {
+            font-size: 10pt;
+        }
+        pre {
+            font-family: Consolas, Menlo, Monaco, monospace;
+            margin: 0;
+            padding: 0;
+            line-height: 14px;
+            font-size: 14px;
+            -moz-tab-size: 2;
+            -o-tab-size:  2;
+            tab-size: 2;
+        }
+
+        div.path { font-size: 110%; }
+        div.path a:link, div.path a:visited { color: #000; }
+        table.coverage { border-collapse: collapse; margin:0; padding: 0 }
+
+        table.coverage td {
+            margin: 0;
+            padding: 0;
+            color: #111;
+            vertical-align: top;
+        }
+        table.coverage td.line-count {
+            width: 50px;
+            text-align: right;
+            padding-right: 5px;
+        }
+        table.coverage td.line-coverage {
+            color: #777 !important;
+            text-align: right;
+            border-left: 1px solid #666;
+            border-right: 1px solid #666;
+        }
+
+        table.coverage td.text {
+        }
+
+        table.coverage td span.cline-any {
+            display: inline-block;
+            padding: 0 5px;
+            width: 40px;
+        }
+        table.coverage td span.cline-neutral {
+            background: #eee;
+        }
+        table.coverage td span.cline-yes {
+            background: #b5d592;
+            color: #999;
+        }
+        table.coverage td span.cline-no {
+            background: #fc8c84;
+        }
+
+        .cstat-yes { color: #111; }
+        .cstat-no { background: #fc8c84; color: #111; }
+        .fstat-no { background: #ffc520; color: #111 !important; }
+        .cbranch-no { background:  yellow !important; color: #111; }
+
+        .cstat-skip { background: #ddd; color: #111; }
+        .fstat-skip { background: #ddd; color: #111 !important; }
+        .cbranch-skip { background: #ddd !important; color: #111; }
+
+        .missing-if-branch {
+            display: inline-block;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: black;
+            color: yellow;
+        }
+
+        .skip-if-branch {
+            display: none;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: #ccc;
+            color: white;
+        }
+
+        .missing-if-branch .typ, .skip-if-branch .typ {
+            color: inherit !important;
+        }
+
+        .entity, .metric { font-weight: bold; }
+        .metric { display: inline-block; border: 1px solid #333; padding: 0.3em; background: white; }
+        .metric small { font-size: 80%; font-weight: normal; color: #666; }
+
+        div.coverage-summary table { border-collapse: collapse; margin: 3em; font-size: 110%; }
+        div.coverage-summary td, div.coverage-summary table  th { margin: 0; padding: 0.25em 1em; border-top: 1px solid #666; border-bottom: 1px solid #666; }
+        div.coverage-summary th { text-align: left; border: 1px solid #666; background: #eee; font-weight: normal; }
+        div.coverage-summary th.file { border-right: none !important; }
+        div.coverage-summary th.pic { border-left: none !important; text-align: right; }
+        div.coverage-summary th.pct { border-right: none !important; }
+        div.coverage-summary th.abs { border-left: none !important; text-align: right; }
+        div.coverage-summary td.pct { text-align: right; border-left: 1px solid #666; }
+        div.coverage-summary td.abs { text-align: right; font-size: 90%; color: #444; border-right: 1px solid #666; }
+        div.coverage-summary td.file { text-align: right; border-left: 1px solid #666; white-space: nowrap;  }
+        div.coverage-summary td.pic { min-width: 120px !important;  }
+        div.coverage-summary a:link { text-decoration: none; color: #000; }
+        div.coverage-summary a:visited { text-decoration: none; color: #333; }
+        div.coverage-summary a:hover { text-decoration: underline; }
+        div.coverage-summary tfoot td { border-top: 1px solid #666; }
+
+        div.coverage-summary .yui3-datatable-sort-indicator, div.coverage-summary .dummy-sort-indicator {
+            height: 10px;
+            width: 7px;
+            display: inline-block;
+            margin-left: 0.5em;
+        }
+        div.coverage-summary .yui3-datatable-sort-indicator {
+            background: url("https://yui-s.yahooapis.com/3.6.0/build/datatable-sort/assets/skins/sam/sort-arrow-sprite.png") no-repeat scroll 0 0 transparent;
+        }
+        div.coverage-summary .yui3-datatable-sorted .yui3-datatable-sort-indicator {
+            background-position: 0 -20px;
+        }
+        div.coverage-summary .yui3-datatable-sorted-desc .yui3-datatable-sort-indicator {
+            background-position: 0 -10px;
+        }
+
+        .high { background: #b5d592 !important; }
+        .medium { background: #ffe87c !important; }
+        .low { background: #fc8c84 !important; }
+
+        span.cover-fill, span.cover-empty {
+            display:inline-block;
+            border:1px solid #444;
+            background: white;
+            height: 12px;
+        }
+        span.cover-fill {
+            background: #ccc;
+            border-right: 1px solid #444;
+        }
+        span.cover-empty {
+            background: white;
+            border-left: none;
+        }
+        span.cover-full {
+            border-right: none !important;
+        }
+        pre.prettyprint {
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .com { color: #999 !important; }
+        .ignore-none { color: #999; font-weight: normal; }
+
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">scripts/vendor/geoxml3.js</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">3.78% <small>(25 / 662)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">1.28% <small>(6 / 468)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">0% <small>(0 / 47)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">3.97% <small>(25 / 629)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../index.html">All files</a> &#187; <a href="index.html">scripts/vendor/</a> &#187; geoxml3.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+921
+922
+923
+924
+925
+926
+927
+928
+929
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944
+945
+946
+947
+948
+949
+950
+951
+952
+953
+954
+955
+956
+957
+958
+959
+960
+961
+962
+963
+964
+965
+966
+967
+968
+969
+970
+971
+972
+973
+974
+975
+976
+977
+978
+979
+980
+981
+982
+983
+984
+985
+986
+987
+988
+989
+990
+991
+992
+993
+994
+995
+996
+997
+998
+999
+1000
+1001
+1002
+1003
+1004
+1005
+1006
+1007
+1008
+1009
+1010
+1011
+1012
+1013
+1014
+1015
+1016
+1017
+1018
+1019
+1020
+1021
+1022
+1023
+1024
+1025
+1026
+1027
+1028
+1029
+1030
+1031
+1032
+1033
+1034
+1035
+1036
+1037
+1038
+1039
+1040
+1041
+1042
+1043
+1044
+1045
+1046
+1047
+1048
+1049
+1050
+1051
+1052
+1053
+1054
+1055
+1056
+1057
+1058
+1059
+1060
+1061
+1062
+1063
+1064
+1065
+1066
+1067
+1068
+1069
+1070
+1071
+1072
+1073
+1074
+1075
+1076
+1077
+1078
+1079
+1080
+1081
+1082
+1083
+1084
+1085
+1086
+1087
+1088
+1089
+1090
+1091
+1092
+1093
+1094
+1095
+1096
+1097
+1098
+1099
+1100
+1101
+1102
+1103
+1104
+1105
+1106
+1107
+1108
+1109
+1110
+1111
+1112
+1113
+1114
+1115
+1116
+1117
+1118
+1119
+1120
+1121
+1122
+1123
+1124
+1125
+1126
+1127
+1128
+1129
+1130
+1131
+1132
+1133
+1134
+1135
+1136
+1137
+1138
+1139
+1140
+1141
+1142
+1143
+1144
+1145
+1146
+1147
+1148
+1149
+1150
+1151
+1152
+1153
+1154
+1155
+1156
+1157
+1158
+1159
+1160
+1161
+1162
+1163
+1164
+1165
+1166
+1167
+1168
+1169
+1170
+1171
+1172
+1173
+1174
+1175
+1176
+1177
+1178
+1179
+1180
+1181
+1182
+1183
+1184
+1185
+1186
+1187
+1188
+1189
+1190
+1191
+1192
+1193
+1194
+1195
+1196
+1197
+1198
+1199
+1200
+1201
+1202
+1203
+1204
+1205
+1206
+1207
+1208
+1209
+1210
+1211
+1212
+1213
+1214
+1215</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/*
+    geoxml3.js
+&nbsp;
+    Renders KML on the Google Maps JavaScript API Version 3 
+    http://code.google.com/p/geoxml3/
+&nbsp;
+   Copyright 2010 Sterling Udell, Larry Ross
+&nbsp;
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+&nbsp;
+       http://www.apache.org/licenses/LICENSE-2.0
+&nbsp;
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+&nbsp;
+*/
+/**
+ * A MultiGeometry object that will allow multiple polylines in a MultiGeometry
+ * containing LineStrings to be treated as a single object
+ *
+ * @param {MutiGeometryOptions} anonymous object.  Available properties:
+ * map: The map on which to attach the MultiGeometry
+ * paths: the individual polylines
+ * polylineOptions: options to use when constructing all the polylines
+ *
+ * @constructor
+ */
+// only if Google Maps API included
+<span class="missing-if-branch" title="else path not taken" >E</span>if (!!window.google &amp;&amp; !! google.maps) { 
+<span class="fstat-no" title="function not covered" >function MultiGeometry(multiGeometryOptions) {</span>
+<span class="fstat-no" title="function not covered" >   function createPolyline(polylineOptions, mg) {</span>
+<span class="cstat-no" title="statement not covered" >     var polyline = new google.maps.Polyline(polylineOptions);</span>
+<span class="cstat-no" title="statement not covered" >     google.maps.event.addListener(polyline,'click', <span class="fstat-no" title="function not covered" >function(evt) {</span> <span class="cstat-no" title="statement not covered" >google.maps.event.trigger(mg,'click',evt);}</span>);</span>
+<span class="cstat-no" title="statement not covered" >     google.maps.event.addListener(polyline,'dblclick', <span class="fstat-no" title="function not covered" >function(evt) {</span> <span class="cstat-no" title="statement not covered" >google.maps.event.trigger(mg, 'dblclick', evt);}</span>);</span>
+<span class="cstat-no" title="statement not covered" >     google.maps.event.addListener(polyline,'mousedown', <span class="fstat-no" title="function not covered" >function(evt) {</span> <span class="cstat-no" title="statement not covered" >google.maps.event.trigger(mg, 'mousedown', evt);}</span>);</span>
+<span class="cstat-no" title="statement not covered" >     google.maps.event.addListener(polyline,'mousemove', <span class="fstat-no" title="function not covered" >function(evt) {</span> <span class="cstat-no" title="statement not covered" >google.maps.event.trigger(mg, 'mousemove', evt);}</span>);</span>
+<span class="cstat-no" title="statement not covered" >     google.maps.event.addListener(polyline,'mouseout', <span class="fstat-no" title="function not covered" >function(evt) {</span> <span class="cstat-no" title="statement not covered" >google.maps.event.trigger(mg, 'mouseout', evt);}</span>);</span>
+<span class="cstat-no" title="statement not covered" >     google.maps.event.addListener(polyline,'mouseover', <span class="fstat-no" title="function not covered" >function(evt) {</span> <span class="cstat-no" title="statement not covered" >google.maps.event.trigger(mg, 'mouseover', evt);}</span>);</span>
+<span class="cstat-no" title="statement not covered" >     google.maps.event.addListener(polyline,'mouseup', <span class="fstat-no" title="function not covered" >function(evt) {</span> <span class="cstat-no" title="statement not covered" >google.maps.event.trigger(mg, 'mouseup', evt);}</span>);</span>
+<span class="cstat-no" title="statement not covered" >     google.maps.event.addListener(polyline,'rightclick', <span class="fstat-no" title="function not covered" >function(evt) {</span> <span class="cstat-no" title="statement not covered" >google.maps.event.trigger(mg, 'rightclick', evt);}</span>);</span>
+<span class="cstat-no" title="statement not covered" >     return polyline;</span>
+   }
+<span class="cstat-no" title="statement not covered" >   this.setValues(multiGeometryOptions);</span>
+<span class="cstat-no" title="statement not covered" >   this.polylines = [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >   for (i=0; i&lt;this.paths.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >     var polylineOptions = multiGeometryOptions;</span>
+<span class="cstat-no" title="statement not covered" >     polylineOptions.path = this.paths[i];</span>
+<span class="cstat-no" title="statement not covered" >     var polyline = createPolyline(polylineOptions,this);</span>
+     // Bind the polyline properties to the MultiGeometry properties
+<span class="cstat-no" title="statement not covered" >     this.polylines.push(polyline);</span>
+   }
+}
+MultiGeometry.prototype = new google.maps.MVCObject();
+MultiGeometry.prototype.changed = <span class="fstat-no" title="function not covered" >function(key) {</span>
+    // alert(key+" changed");
+<span class="cstat-no" title="statement not covered" >    if (this.polylines) {</span>
+<span class="cstat-no" title="statement not covered" >  for (var i=0; i&lt;this.polylines.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >      this.polylines[i].set(key,this.get(key));</span>
+  }
+    }
+};
+MultiGeometry.prototype.setMap = <span class="fstat-no" title="function not covered" >function(map) {</span> <span class="cstat-no" title="statement not covered" >this.set('map',map); </span>};
+MultiGeometry.prototype.getMap = <span class="fstat-no" title="function not covered" >function() {</span> <span class="cstat-no" title="statement not covered" >return this.get('map'); </span>};
+}
+&nbsp;
+// Extend the global String object with a method to remove leading and trailing whitespace
+<span class="missing-if-branch" title="if path not taken" >I</span>if (!String.prototype.trim) {
+<span class="cstat-no" title="statement not covered" >  String.prototype.trim = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >    return this.replace(/^\s+|\s+$/g, '');</span>
+  };
+}
+&nbsp;
+// Declare namespace
+geoXML3 = window.geoXML3 || {instances: []};
+&nbsp;
+// Constructor for the root KML parser object
+geoXML3.parser = <span class="fstat-no" title="function not covered" >function (options) {</span>
+  // Inherit from Google MVC Object to include event handling   
+<span class="cstat-no" title="statement not covered" >  google.maps.MVCObject.call(this);   </span>
+&nbsp;
+  // Private variables
+<span class="cstat-no" title="statement not covered" >  var parserOptions = geoXML3.combineOptions(options, {</span>
+    singleInfoWindow: false,
+    processStyles: true,
+    zoom: true
+  });
+<span class="cstat-no" title="statement not covered" >  var docs = []; </span>// Individual KML documents
+<span class="cstat-no" title="statement not covered" >  var lastPlacemark;</span>
+<span class="cstat-no" title="statement not covered" >  var parserName;</span>
+<span class="cstat-no" title="statement not covered" >  if (typeof parserOptions.suppressInfoWindows == "undefined") <span class="cstat-no" title="statement not covered" >parserOptions.suppressInfoWindows = false;</span></span>
+<span class="cstat-no" title="statement not covered" >  if (!parserOptions.infoWindow &amp;&amp; parserOptions.singleInfoWindow &amp;&amp; !!window.google &amp;&amp; !!google.maps)</span>
+<span class="cstat-no" title="statement not covered" >    parserOptions.infoWindow = new google.maps.InfoWindow();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  geoXML3.xhrTimeout = 60000;</span>
+<span class="cstat-no" title="statement not covered" >  if (!!parserOptions.xhrTimeout) <span class="cstat-no" title="statement not covered" >geoXML3.xhrTimeout = parserOptions.xhrTimeout; </span></span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var parseKmlString = <span class="fstat-no" title="function not covered" >function (kmlString, docSet) {</span></span>
+    // Internal values for the set of documents as a whole
+<span class="cstat-no" title="statement not covered" >    var internals = {</span>
+      parser: this,
+      docSet: docSet || [],
+      remaining: 1,
+      parseOnly: !(parserOptions.afterParse || parserOptions.processStyles)
+    };
+<span class="cstat-no" title="statement not covered" >    thisDoc = new Object();</span>
+<span class="cstat-no" title="statement not covered" >    thisDoc.internals = internals;</span>
+<span class="cstat-no" title="statement not covered" >    internals.docSet.push(thisDoc);</span>
+<span class="cstat-no" title="statement not covered" >    render(geoXML3.xmlParse(kmlString),thisDoc);</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var parse = <span class="fstat-no" title="function not covered" >function (urls, docSet) {</span></span>
+    // Process one or more KML documents
+<span class="cstat-no" title="statement not covered" >    if (!parserName) {</span>
+<span class="cstat-no" title="statement not covered" >      parserName = 'geoXML3.instances[' + (geoXML3.instances.push(this) - 1) + ']';</span>
+    }
+    
+<span class="cstat-no" title="statement not covered" >    if (typeof urls === 'string') {</span>
+      // Single KML document
+<span class="cstat-no" title="statement not covered" >      urls = [urls];</span>
+    }
+&nbsp;
+    // Internal values for the set of documents as a whole
+<span class="cstat-no" title="statement not covered" >    var internals = {</span>
+      parser: this,
+      docSet: docSet || [],
+      remaining: urls.length,
+      parseOnly: !(parserOptions.afterParse || parserOptions.processStyles)
+    };
+<span class="cstat-no" title="statement not covered" >    var thisDoc, j;</span>
+<span class="cstat-no" title="statement not covered" >    for (var i = 0; i &lt; urls.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >      var baseUrl = urls[i].split('?')[0];</span>
+<span class="cstat-no" title="statement not covered" >      for (j = 0; j &lt; docs.length; j++) {</span>
+<span class="cstat-no" title="statement not covered" >        if (baseUrl === docs[j].baseUrl) {</span>
+          // Reloading an existing document
+<span class="cstat-no" title="statement not covered" >          thisDoc = docs[j];</span>
+<span class="cstat-no" title="statement not covered" >          thisDoc.reload    = true;</span>
+<span class="cstat-no" title="statement not covered" >          break;</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      if (j &gt;= docs.length) {</span>
+<span class="cstat-no" title="statement not covered" >        thisDoc = new Object();</span>
+<span class="cstat-no" title="statement not covered" >        thisDoc.baseUrl = baseUrl;</span>
+<span class="cstat-no" title="statement not covered" >        internals.docSet.push(thisDoc);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      thisDoc.url       = urls[i];</span>
+<span class="cstat-no" title="statement not covered" >      thisDoc.internals = internals;</span>
+<span class="cstat-no" title="statement not covered" >      var url = thisDoc.url;</span>
+<span class="cstat-no" title="statement not covered" >      if (parserOptions.proxy) <span class="cstat-no" title="statement not covered" >url = parserOptions.proxy+thisDoc.url; </span></span>
+<span class="cstat-no" title="statement not covered" >      fetchDoc(url, thisDoc);</span>
+    }
+  };
+&nbsp;
+<span class="fstat-no" title="function not covered" >  function fetchDoc(url, doc) {</span>
+<span class="cstat-no" title="statement not covered" >      geoXML3.fetchXML(url, <span class="fstat-no" title="function not covered" >function (responseXML) {</span> <span class="cstat-no" title="statement not covered" >render(responseXML, doc);}</span>)</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var hideDocument = <span class="fstat-no" title="function not covered" >function (doc) {</span></span>
+<span class="cstat-no" title="statement not covered" >    if (!doc) <span class="cstat-no" title="statement not covered" >doc = docs[0];</span></span>
+    // Hide the map objects associated with a document 
+<span class="cstat-no" title="statement not covered" >    var i;</span>
+<span class="cstat-no" title="statement not covered" >    if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >      if (!!doc.markers) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; doc.markers.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >          if(!!doc.markers[i].infoWindow) <span class="cstat-no" title="statement not covered" >doc.markers[i].infoWindow.close();</span></span>
+<span class="cstat-no" title="statement not covered" >          doc.markers[i].setVisible(false);</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      if (!!doc.ggroundoverlays) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; doc.ggroundoverlays.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >          doc.ggroundoverlays[i].setOpacity(0);</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      if (!!doc.gpolylines) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i=0;i&lt;doc.gpolylines.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >          if(!!doc.gpolylines[i].infoWindow) <span class="cstat-no" title="statement not covered" >doc.gpolylines[i].infoWindow.close();</span></span>
+<span class="cstat-no" title="statement not covered" >          doc.gpolylines[i].setMap(null);</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      if (!!doc.gpolygons) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i=0;i&lt;doc.gpolygons.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >          if(!!doc.gpolygons[i].infoWindow) <span class="cstat-no" title="statement not covered" >doc.gpolygons[i].infoWindow.close();</span></span>
+<span class="cstat-no" title="statement not covered" >         doc.gpolygons[i].setMap(null);</span>
+        }
+      }
+    }
+  };
+  
+<span class="cstat-no" title="statement not covered" >  var showDocument = <span class="fstat-no" title="function not covered" >function (doc) {</span></span>
+<span class="cstat-no" title="statement not covered" >    if (!doc) <span class="cstat-no" title="statement not covered" >doc = docs[0];</span></span>
+    // Show the map objects associated with a document 
+<span class="cstat-no" title="statement not covered" >    var i;</span>
+<span class="cstat-no" title="statement not covered" >    if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >      if (!!doc.markers) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; doc.markers.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >          doc.markers[i].setVisible(true);</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      if (!!doc.ggroundoverlays) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; doc.ggroundoverlays.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >          doc.ggroundoverlays[i].setOpacity(doc.ggroundoverlays[i].percentOpacity_);</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      if (!!doc.gpolylines) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i=0;i&lt;doc.gpolylines.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >          doc.gpolylines[i].setMap(parserOptions.map);</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      if (!!doc.gpolygons) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i=0;i&lt;doc.gpolygons.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >          doc.gpolygons[i].setMap(parserOptions.map);</span>
+        }
+      }
+    }
+  };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >var defaultStyle = {</span>
+  color: "ff000000", // black
+  colorMode: "normal",
+  width: 1,
+  fill: true,
+  outline: true,
+  fillcolor: "3fff0000" // blue
+};
+&nbsp;
+<span class="fstat-no" title="function not covered" >function processStyle(thisNode, styles, styleID) {</span>
+<span class="cstat-no" title="statement not covered" >      var nodeValue  = geoXML3.nodeValue;</span>
+<span class="cstat-no" title="statement not covered" >      styles[styleID] = styles[styleID] || clone(defaultStyle);</span>
+<span class="cstat-no" title="statement not covered" >      var styleNodes = thisNode.getElementsByTagName('IconStyle');</span>
+<span class="cstat-no" title="statement not covered" >      if (!!styleNodes &amp;&amp; !!styleNodes.length &amp;&amp; (styleNodes.length &gt; 0)) {</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].scale = parseFloat(nodeValue(styleNodes[0].getElementsByTagName('scale')[0]));</span>
+      }
+<span class="cstat-no" title="statement not covered" >      if (isNaN(styles[styleID].scale)) <span class="cstat-no" title="statement not covered" >styles[styleID].scale = 1.0;</span></span>
+<span class="cstat-no" title="statement not covered" >      styleNodes = thisNode.getElementsByTagName('Icon');</span>
+<span class="cstat-no" title="statement not covered" >      if (!!styleNodes &amp;&amp; !!styleNodes.length &amp;&amp; (styleNodes.length &gt; 0)) {</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].href = nodeValue(styleNodes[0].getElementsByTagName('href')[0]);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      styleNodes = thisNode.getElementsByTagName('LineStyle');</span>
+<span class="cstat-no" title="statement not covered" >      if (!!styleNodes &amp;&amp; !!styleNodes.length &amp;&amp; (styleNodes.length &gt; 0)) {</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].color = nodeValue(styleNodes[0].getElementsByTagName('color')[0],defaultStyle.color);</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].colorMode = nodeValue(styleNodes[0].getElementsByTagName('colorMode')[0], defaultStyle.colorMode);</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].width = nodeValue(styleNodes[0].getElementsByTagName('width')[0],defaultStyle.width);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      styleNodes = thisNode.getElementsByTagName('PolyStyle');</span>
+<span class="cstat-no" title="statement not covered" >      if (!!styleNodes &amp;&amp; !!styleNodes.length &amp;&amp; (styleNodes.length &gt; 0)) {</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].outline   = getBooleanValue(styleNodes[0].getElementsByTagName('outline')[0],defaultStyle.outline);</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].fill      = getBooleanValue(styleNodes[0].getElementsByTagName('fill')[0],defaultStyle.fill);</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].colorMode = nodeValue(styleNodes[0].getElementsByTagName('colorMode')[0], defaultStyle.colorMode);</span>
+<span class="cstat-no" title="statement not covered" >        styles[styleID].fillcolor = nodeValue(styleNodes[0].getElementsByTagName('color')[0],defaultStyle.fillcolor);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      return styles[styleID];</span>
+}
+&nbsp;
+// from http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-clone-a-javascript-object
+// http://keithdevens.com/weblog/archive/2007/Jun/07/javascript.clone
+<span class="fstat-no" title="function not covered" >  function clone(obj){</span>
+<span class="cstat-no" title="statement not covered" >      if(obj == null || typeof(obj) != 'object') <span class="cstat-no" title="statement not covered" >return obj;</span></span>
+<span class="cstat-no" title="statement not covered" >      var temp = new obj.constructor(); </span>
+<span class="cstat-no" title="statement not covered" >      for(var key in obj) <span class="cstat-no" title="statement not covered" >temp[key] = clone(obj[key]);</span></span>
+<span class="cstat-no" title="statement not covered" >      return temp;</span>
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >function processStyleMap(thisNode, styles, styleID) {</span>
+<span class="cstat-no" title="statement not covered" >  var nodeValue  = geoXML3.nodeValue;</span>
+<span class="cstat-no" title="statement not covered" >  var pairs = thisNode.getElementsByTagName('Pair');</span>
+<span class="cstat-no" title="statement not covered" >  var map = new Object();</span>
+  // add each key to the map
+<span class="cstat-no" title="statement not covered" >  for (var pr=0;pr&lt;pairs.length;pr++) {</span>
+<span class="cstat-no" title="statement not covered" >    var pairkey = nodeValue(pairs[pr].getElementsByTagName('key')[0]);</span>
+<span class="cstat-no" title="statement not covered" >    var pairstyle = nodeValue(pairs[pr].getElementsByTagName('Style')[0]);</span>
+<span class="cstat-no" title="statement not covered" >    var pairstyleurl = nodeValue(pairs[pr].getElementsByTagName('styleUrl')[0]);</span>
+<span class="cstat-no" title="statement not covered" >    if (!!pairstyle) {</span>
+<span class="cstat-no" title="statement not covered" >      processStyle(pairstyle, map[pairkey], styleID);</span>
+    } else <span class="cstat-no" title="statement not covered" >if (!!pairstyleurl &amp;&amp; !!styles[pairstyleurl]) {</span>
+<span class="cstat-no" title="statement not covered" >      map[pairkey] = clone(styles[pairstyleurl]);</span>
+    }
+  }
+<span class="cstat-no" title="statement not covered" >  if (!!map["normal"]) {</span>
+<span class="cstat-no" title="statement not covered" >    styles[styleID] = clone(map["normal"]);</span>
+  } else {
+<span class="cstat-no" title="statement not covered" >    styles[styleID] =  clone(defaultStyle);</span>
+  }      
+<span class="cstat-no" title="statement not covered" >  if (!!map["highlight"] &amp;&amp; !!parserOptions.processStyles) {</span>
+<span class="cstat-no" title="statement not covered" >    processStyleID(map["highlight"]);</span>
+  }
+<span class="cstat-no" title="statement not covered" >  styles[styleID].map = clone(map);</span>
+}
+&nbsp;
+<span class="fstat-no" title="function not covered" >function getBooleanValue(node) {</span>
+<span class="cstat-no" title="statement not covered" >  var nodeContents = geoXML3.nodeValue(node);</span>
+<span class="cstat-no" title="statement not covered" >  if (!nodeContents) <span class="cstat-no" title="statement not covered" >return true;</span></span>
+<span class="cstat-no" title="statement not covered" >  if (nodeContents) <span class="cstat-no" title="statement not covered" >nodeContents = parseInt(nodeContents);</span></span>
+<span class="cstat-no" title="statement not covered" >  if (isNaN(nodeContents)) <span class="cstat-no" title="statement not covered" >return true;</span></span>
+<span class="cstat-no" title="statement not covered" >  if (nodeContents == 0) <span class="cstat-no" title="statement not covered" >return false;</span></span>
+  else <span class="cstat-no" title="statement not covered" >return true;</span>
+}   
+&nbsp;
+<span class="fstat-no" title="function not covered" >function processPlacemarkCoords(node, tag) {</span>
+<span class="cstat-no" title="statement not covered" >   var parent = node.getElementsByTagName(tag);</span>
+<span class="cstat-no" title="statement not covered" >var coordListA = [];</span>
+<span class="cstat-no" title="statement not covered" >  for (var i=0; i&lt;parent.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >  var coordNodes = parent[i].getElementsByTagName('coordinates')</span>
+<span class="cstat-no" title="statement not covered" >  if (!coordNodes) {</span>
+<span class="cstat-no" title="statement not covered" >    if (coordListA.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >      break;</span>
+    } else {
+<span class="cstat-no" title="statement not covered" >      return [{coordinates: []}];</span>
+    }
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  for (var j=0; j&lt;coordNodes.length;j++) { </span>
+<span class="cstat-no" title="statement not covered" >    var coords = geoXML3.nodeValue(coordNodes[j]).trim();</span>
+<span class="cstat-no" title="statement not covered" >    coords = coords.replace(/,\s+/g, ',');</span>
+<span class="cstat-no" title="statement not covered" >    var path = coords.split(/\s+/g);</span>
+<span class="cstat-no" title="statement not covered" >    var pathLength = path.length;</span>
+<span class="cstat-no" title="statement not covered" >    var coordList = [];</span>
+<span class="cstat-no" title="statement not covered" >    for (var k = 0; k &lt; pathLength; k++) {</span>
+<span class="cstat-no" title="statement not covered" >      coords = path[k].split(',');</span>
+<span class="cstat-no" title="statement not covered" >      if (!isNaN(coords[0]) &amp;&amp; !isNaN(coords[1])) {</span>
+<span class="cstat-no" title="statement not covered" >        coordList.push({</span>
+          lat: parseFloat(coords[1]), 
+          lng: parseFloat(coords[0]), 
+          alt: parseFloat(coords[2])
+        });
+      }
+    }
+<span class="cstat-no" title="statement not covered" >    coordListA.push({coordinates: coordList});</span>
+  }
+}
+<span class="cstat-no" title="statement not covered" >  return coordListA;</span>
+}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var render = <span class="fstat-no" title="function not covered" >function (responseXML, doc) {</span></span>
+    // Callback for retrieving a KML document: parse the KML and display it on the map
+<span class="cstat-no" title="statement not covered" >    if (!responseXML || responseXML == "failed parse") {</span>
+      // Error retrieving the data
+<span class="cstat-no" title="statement not covered" >      geoXML3.log('Unable to retrieve ' + doc.url);</span>
+<span class="cstat-no" title="statement not covered" >      if (parserOptions.failedParse) {</span>
+<span class="cstat-no" title="statement not covered" >        parserOptions.failedParse(doc);</span>
+      }
+    } else <span class="cstat-no" title="statement not covered" >if (!doc) {</span>
+<span class="cstat-no" title="statement not covered" >      throw 'geoXML3 internal error: render called with null document';</span>
+    } else { //no errors
+<span class="cstat-no" title="statement not covered" >      var i;</span>
+<span class="cstat-no" title="statement not covered" >      var styles = {};</span>
+<span class="cstat-no" title="statement not covered" >      doc.placemarks     = [];</span>
+<span class="cstat-no" title="statement not covered" >      doc.groundoverlays = [];</span>
+<span class="cstat-no" title="statement not covered" >      doc.ggroundoverlays = [];</span>
+<span class="cstat-no" title="statement not covered" >      doc.networkLinks   = [];</span>
+<span class="cstat-no" title="statement not covered" >      doc.gpolygons      = [];</span>
+<span class="cstat-no" title="statement not covered" >      doc.gpolylines     = [];</span>
+<span class="cstat-no" title="statement not covered" >      doc.markers        = [];</span>
+&nbsp;
+    // Declare some helper functions in local scope for better performance
+<span class="cstat-no" title="statement not covered" >    var nodeValue  = geoXML3.nodeValue;</span>
+&nbsp;
+    // Parse styles
+<span class="cstat-no" title="statement not covered" >    var styleID, styleNodes;</span>
+<span class="cstat-no" title="statement not covered" >    nodes = responseXML.getElementsByTagName('Style');</span>
+<span class="cstat-no" title="statement not covered" >    nodeCount = nodes.length;</span>
+<span class="cstat-no" title="statement not covered" >    for (i = 0; i &lt; nodeCount; i++) {</span>
+<span class="cstat-no" title="statement not covered" >      thisNode = nodes[i];</span>
+<span class="cstat-no" title="statement not covered" >      var thisNodeId = thisNode.getAttribute('id');</span>
+<span class="cstat-no" title="statement not covered" >      if (!!thisNodeId) {</span>
+<span class="cstat-no" title="statement not covered" >        styleID    = '#' + thisNodeId;</span>
+<span class="cstat-no" title="statement not covered" >        processStyle(thisNode, styles, styleID);</span>
+      }
+    }
+    // rudamentary support for StyleMap
+    // use "normal" mapping only
+<span class="cstat-no" title="statement not covered" >    nodes = responseXML.getElementsByTagName('StyleMap');</span>
+<span class="cstat-no" title="statement not covered" >    for (i = 0; i &lt; nodes.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >      thisNode = nodes[i];</span>
+<span class="cstat-no" title="statement not covered" >      var thisNodeId = thisNode.getAttribute('id');</span>
+<span class="cstat-no" title="statement not covered" >      if (!!thisNodeId) {</span>
+<span class="cstat-no" title="statement not covered" >        styleID    = '#' + thisNodeId;</span>
+<span class="cstat-no" title="statement not covered" >  processStyleMap(thisNode, styles, styleID);</span>
+      }
+    }
+<span class="cstat-no" title="statement not covered" >    doc.styles = styles;</span>
+<span class="cstat-no" title="statement not covered" >      if (!!parserOptions.processStyles || !parserOptions.createMarker) {</span>
+        // Convert parsed styles into GMaps equivalents
+<span class="cstat-no" title="statement not covered" >        processStyles(doc);</span>
+      }
+&nbsp;
+      // Parse placemarks
+<span class="cstat-no" title="statement not covered" >      if (!!doc.reload &amp;&amp; !!doc.markers) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; doc.markers.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >          doc.markers[i].active = false;</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      var placemark, node, coords, path, marker, poly;</span>
+<span class="cstat-no" title="statement not covered" >      var placemark, coords, path, pathLength, marker, polygonNodes, coordList;</span>
+<span class="cstat-no" title="statement not covered" >      var placemarkNodes = responseXML.getElementsByTagName('Placemark');</span>
+<span class="cstat-no" title="statement not covered" >      for (pm = 0; pm &lt; placemarkNodes.length; pm++) {</span>
+        // Init the placemark object
+<span class="cstat-no" title="statement not covered" >        node = placemarkNodes[pm];</span>
+<span class="cstat-no" title="statement not covered" >        placemark = {</span>
+          name:  geoXML3.nodeValue(node.getElementsByTagName('name')[0]),
+          description: geoXML3.nodeValue(node.getElementsByTagName('description')[0]),
+          styleUrl: geoXML3.nodeValue(node.getElementsByTagName('styleUrl')[0]),
+          id: node.getAttribute('id')
+        };
+<span class="cstat-no" title="statement not covered" >        placemark.style = doc.styles[placemark.styleUrl] || clone(defaultStyle);</span>
+        // inline style overrides shared style
+<span class="cstat-no" title="statement not covered" >        var inlineStyles = node.getElementsByTagName('Style');</span>
+<span class="cstat-no" title="statement not covered" >        if (inlineStyles &amp;&amp; (inlineStyles.length &gt; 0)) {</span>
+<span class="cstat-no" title="statement not covered" >          var style = processStyle(node,doc.styles,"inline");</span>
+<span class="cstat-no" title="statement not covered" >    processStyleID(style);</span>
+<span class="cstat-no" title="statement not covered" >    if (style) <span class="cstat-no" title="statement not covered" >placemark.style = style;</span></span>
+        }
+<span class="cstat-no" title="statement not covered" >        if (/^https?:\/\//.test(placemark.description)) {</span>
+<span class="cstat-no" title="statement not covered" >          placemark.description = ['&lt;a href="', placemark.description, '"&gt;', placemark.description, '&lt;/a&gt;'].join('');</span>
+        }
+&nbsp;
+        // process MultiGeometry
+<span class="cstat-no" title="statement not covered" >        var GeometryNodes = node.getElementsByTagName('coordinates');</span>
+<span class="cstat-no" title="statement not covered" >        var Geometry = null;</span>
+<span class="cstat-no" title="statement not covered" >  if (!!GeometryNodes &amp;&amp; (GeometryNodes.length &gt; 0)) {</span>
+<span class="cstat-no" title="statement not covered" >          for (var gn=0;gn&lt;GeometryNodes.length;gn++) {</span>
+<span class="cstat-no" title="statement not covered" >             if (!GeometryNodes[gn].parentNode ||</span>
+                 !GeometryNodes[gn].parentNode.nodeName) {
+&nbsp;
+             } else { // parentNode.nodeName exists
+<span class="cstat-no" title="statement not covered" >               var GeometryPN = GeometryNodes[gn].parentNode;</span>
+<span class="cstat-no" title="statement not covered" >               Geometry = GeometryPN.nodeName;</span>
+       
+        // Extract the coordinates
+        // What sort of placemark?
+<span class="cstat-no" title="statement not covered" >        switch(Geometry) {</span>
+          case "Point":
+<span class="cstat-no" title="statement not covered" >            placemark.Point = processPlacemarkCoords(node, "Point")[0]; </span>
+<span class="cstat-no" title="statement not covered" >            if (!!window.google &amp;&amp; !!google.maps)</span>
+<span class="cstat-no" title="statement not covered" >              placemark.latlng = new google.maps.LatLng(placemark.Point.coordinates[0].lat, placemark.Point.coordinates[0].lng);</span>
+<span class="cstat-no" title="statement not covered" >            pathLength = 1;</span>
+<span class="cstat-no" title="statement not covered" >            break;</span>
+          case "LinearRing":
+            // Polygon/line
+<span class="cstat-no" title="statement not covered" >            polygonNodes = node.getElementsByTagName('Polygon');</span>
+            // Polygon
+<span class="cstat-no" title="statement not covered" >            if (!placemark.Polygon)</span>
+<span class="cstat-no" title="statement not covered" >              placemark.Polygon = [{</span>
+                outerBoundaryIs: {coordinates: []},
+                innerBoundaryIs: [{coordinates: []}]
+              }];
+<span class="cstat-no" title="statement not covered" >            for (var pg=0;pg&lt;polygonNodes.length;pg++) {</span>
+<span class="cstat-no" title="statement not covered" >               placemark.Polygon[pg] = {</span>
+                 outerBoundaryIs: {coordinates: []},
+                 innerBoundaryIs: [{coordinates: []}]
+               }
+<span class="cstat-no" title="statement not covered" >               placemark.Polygon[pg].outerBoundaryIs = processPlacemarkCoords(polygonNodes[pg], "outerBoundaryIs");</span>
+<span class="cstat-no" title="statement not covered" >               placemark.Polygon[pg].innerBoundaryIs = processPlacemarkCoords(polygonNodes[pg], "innerBoundaryIs");</span>
+            }
+<span class="cstat-no" title="statement not covered" >            coordList = placemark.Polygon[0].outerBoundaryIs;</span>
+<span class="cstat-no" title="statement not covered" >            break;</span>
+&nbsp;
+          case "LineString":
+<span class="cstat-no" title="statement not covered" >            pathLength = 0;</span>
+<span class="cstat-no" title="statement not covered" >            placemark.LineString = processPlacemarkCoords(node,"LineString");</span>
+<span class="cstat-no" title="statement not covered" >            break;</span>
+&nbsp;
+          default:
+<span class="cstat-no" title="statement not covered" >            break;</span>
+      }
+      } // parentNode.nodeName exists
+      } // GeometryNodes loop
+      } // if GeometryNodes 
+      // call the custom placemark parse function if it is defined
+<span class="cstat-no" title="statement not covered" >      if (!!parserOptions.pmParseFn) <span class="cstat-no" title="statement not covered" >parserOptions.pmParseFn(node, placemark);</span></span>
+<span class="cstat-no" title="statement not covered" >      doc.placemarks.push(placemark);</span>
+<span class="cstat-no" title="statement not covered" >      if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >       if (placemark.Point) {</span>
+<span class="cstat-no" title="statement not covered" >          if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >            doc.bounds = doc.bounds || new google.maps.LatLngBounds();</span>
+<span class="cstat-no" title="statement not covered" >            doc.bounds.extend(placemark.latlng);</span>
+          }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >          if (!!parserOptions.createMarker) {</span>
+            // User-defined marker handler
+<span class="cstat-no" title="statement not covered" >            parserOptions.createMarker(placemark, doc);</span>
+          } else { // !user defined createMarker
+            // Check to see if this marker was created on a previous load of this document
+<span class="cstat-no" title="statement not covered" >            var found = false;</span>
+<span class="cstat-no" title="statement not covered" >            if (!!doc) {</span>
+<span class="cstat-no" title="statement not covered" >              doc.markers = doc.markers || [];</span>
+<span class="cstat-no" title="statement not covered" >              if (doc.reload) {</span>
+<span class="cstat-no" title="statement not covered" >                for (var j = 0; j &lt; doc.markers.length; j++) {</span>
+<span class="cstat-no" title="statement not covered" >                    if ((doc.markers[j].id == placemark.id) ||</span>
+      // if no id, check position
+                        (!doc.markers[j].id &amp;&amp; 
+                         (doc.markers[j].getPosition().equals(placemark.latlng)))) {
+<span class="cstat-no" title="statement not covered" >                    found = doc.markers[j].active = true;</span>
+<span class="cstat-no" title="statement not covered" >                    break;</span>
+                  }
+                }
+              } 
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (!found) {</span>
+              // Call the built-in marker creator
+<span class="cstat-no" title="statement not covered" >              marker = createMarker(placemark, doc);</span>
+<span class="cstat-no" title="statement not covered" >              if (marker) { </span>
+<span class="cstat-no" title="statement not covered" >                marker.active = true;</span>
+<span class="cstat-no" title="statement not covered" >                marker.id = placemark.id;</span>
+              }
+            }
+          }
+         }
+<span class="cstat-no" title="statement not covered" >         if (placemark.Polygon) { // poly test 2</span>
+<span class="cstat-no" title="statement not covered" >          if (!!doc) {</span>
+<span class="cstat-no" title="statement not covered" >           doc.gpolygons = doc.gpolygons || [];</span>
+          }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >          if (!!parserOptions.createPolygon) {</span>
+           // User-defined polygon handler
+<span class="cstat-no" title="statement not covered" >            poly = parserOptions.createPolygon(placemark, doc);</span>
+          } else {  // ! user defined createPolygon
+           // Check to see if this marker was created on a previous load of this document
+<span class="cstat-no" title="statement not covered" >           poly = createPolygon(placemark,doc);</span>
+<span class="cstat-no" title="statement not covered" >           poly.active = true;</span>
+          }
+<span class="cstat-no" title="statement not covered" >          if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >           doc.bounds = doc.bounds || new google.maps.LatLngBounds();</span>
+<span class="cstat-no" title="statement not covered" >           doc.bounds.union(poly.bounds);</span>
+          }
+         } 
+<span class="cstat-no" title="statement not covered" >         if (placemark.LineString) { // polyline</span>
+<span class="cstat-no" title="statement not covered" >          if (!!doc) {</span>
+<span class="cstat-no" title="statement not covered" >           doc.gpolylines = doc.gpolylines || [];</span>
+          }
+<span class="cstat-no" title="statement not covered" >          if (!!parserOptions.createPolyline) {</span>
+           // User-defined polyline handler
+<span class="cstat-no" title="statement not covered" >           poly = parserOptions.createPolyline(placemark, doc);</span>
+          } else { // ! user defined createPolyline
+           // Check to see if this marker was created on a previous load of this document
+<span class="cstat-no" title="statement not covered" >           poly = createPolyline(placemark,doc);</span>
+<span class="cstat-no" title="statement not covered" >           poly.active = true;</span>
+          }
+<span class="cstat-no" title="statement not covered" >          if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >           doc.bounds = doc.bounds || new google.maps.LatLngBounds();</span>
+<span class="cstat-no" title="statement not covered" >           doc.bounds.union(poly.bounds);</span>
+          }
+         }
+       }
+      } // placemark loop
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (!!doc.reload &amp;&amp; !!doc.markers) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i = doc.markers.length - 1; i &gt;= 0 ; i--) {</span>
+<span class="cstat-no" title="statement not covered" >          if (!doc.markers[i].active) {</span>
+<span class="cstat-no" title="statement not covered" >            if (!!doc.markers[i].infoWindow) {</span>
+<span class="cstat-no" title="statement not covered" >              doc.markers[i].infoWindow.close();</span>
+            }
+<span class="cstat-no" title="statement not covered" >            doc.markers[i].setMap(null);</span>
+<span class="cstat-no" title="statement not covered" >            doc.markers.splice(i, 1);</span>
+          }
+        }
+      }
+&nbsp;
+      // Parse ground overlays
+<span class="cstat-no" title="statement not covered" >      if (!!doc.reload &amp;&amp; !!doc.groundoverlays) {</span>
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; doc.groundoverlays.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >          doc.groundoverlays[i].active = false;</span>
+        }
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (!!doc) {</span>
+<span class="cstat-no" title="statement not covered" >        doc.groundoverlays = doc.groundoverlays || [];</span>
+      }
+      // doc.groundoverlays =[];
+<span class="cstat-no" title="statement not covered" >      var groundOverlay, color, transparency, overlay;</span>
+<span class="cstat-no" title="statement not covered" >      var groundNodes = responseXML.getElementsByTagName('GroundOverlay');</span>
+<span class="cstat-no" title="statement not covered" >      for (i = 0; i &lt; groundNodes.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >        node = groundNodes[i];</span>
+        
+        // Init the ground overlay object
+<span class="cstat-no" title="statement not covered" >        groundOverlay = {</span>
+          name:        geoXML3.nodeValue(node.getElementsByTagName('name')[0]),
+          description: geoXML3.nodeValue(node.getElementsByTagName('description')[0]),
+          icon: {href: geoXML3.nodeValue(node.getElementsByTagName('href')[0])},
+          latLonBox: {
+            north: parseFloat(geoXML3.nodeValue(node.getElementsByTagName('north')[0])),
+            east:  parseFloat(geoXML3.nodeValue(node.getElementsByTagName('east')[0])),
+            south: parseFloat(geoXML3.nodeValue(node.getElementsByTagName('south')[0])),
+            west:  parseFloat(geoXML3.nodeValue(node.getElementsByTagName('west')[0]))
+          }
+        };
+<span class="cstat-no" title="statement not covered" >        if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >          doc.bounds = doc.bounds || new google.maps.LatLngBounds();</span>
+<span class="cstat-no" title="statement not covered" >          doc.bounds.union(new google.maps.LatLngBounds(</span>
+            new google.maps.LatLng(groundOverlay.latLonBox.south, groundOverlay.latLonBox.west),
+            new google.maps.LatLng(groundOverlay.latLonBox.north, groundOverlay.latLonBox.east)
+          ));
+        }
+&nbsp;
+        // Opacity is encoded in the color node
+<span class="cstat-no" title="statement not covered" >        var colorNode = node.getElementsByTagName('color');</span>
+<span class="cstat-no" title="statement not covered" >        if ( colorNode &amp;&amp; colorNode.length &amp;&amp; (colorNode.length &gt; 0)) {</span>
+<span class="cstat-no" title="statement not covered" >         groundOverlay.opacity = geoXML3.getOpacity(nodeValue(colorNode[0]));</span>
+        } else {
+<span class="cstat-no" title="statement not covered" >         groundOverlay.opacity = 0.45;</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        doc.groundoverlays.push(groundOverlay);</span>
+<span class="cstat-no" title="statement not covered" >        if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >         if (!!parserOptions.createOverlay) {</span>
+          // User-defined overlay handler
+<span class="cstat-no" title="statement not covered" >          parserOptions.createOverlay(groundOverlay, doc);</span>
+         } else { // ! user defined createOverlay
+          // Check to see if this overlay was created on a previous load of this document
+<span class="cstat-no" title="statement not covered" >          var found = false;</span>
+<span class="cstat-no" title="statement not covered" >          if (!!doc) {</span>
+<span class="cstat-no" title="statement not covered" >            doc.groundoverlays = doc.groundoverlays || [];</span>
+<span class="cstat-no" title="statement not covered" >            if (!!window.google &amp;&amp; !!google.maps &amp;&amp; doc.reload) {</span>
+<span class="cstat-no" title="statement not covered" >                overlayBounds = new google.maps.LatLngBounds(</span>
+                  new google.maps.LatLng(groundOverlay.latLonBox.south, groundOverlay.latLonBox.west),
+                  new google.maps.LatLng(groundOverlay.latLonBox.north, groundOverlay.latLonBox.east));
+<span class="cstat-no" title="statement not covered" >              var overlays = doc.groundoverlays;</span>
+<span class="cstat-no" title="statement not covered" >              for (i = overlays.length; i--;) {</span>
+<span class="cstat-no" title="statement not covered" >                if ((overlays[i].bounds().equals(overlayBounds)) &amp;&amp;</span>
+                    (overlays.url_ === groundOverlay.icon.href)) {
+<span class="cstat-no" title="statement not covered" >                  found = overlays[i].active = true;</span>
+<span class="cstat-no" title="statement not covered" >                  break;</span>
+                }
+              }
+            } 
+          }
+  
+<span class="cstat-no" title="statement not covered" >          if (!found) {</span>
+            // Call the built-in overlay creator
+<span class="cstat-no" title="statement not covered" >            overlay = createOverlay(groundOverlay, doc);</span>
+<span class="cstat-no" title="statement not covered" >            overlay.active = true;</span>
+          }
+   }
+<span class="cstat-no" title="statement not covered" >         if (!!doc.reload &amp;&amp; !!doc.groundoverlays &amp;&amp; !!doc.groundoverlays.length) {</span>
+<span class="cstat-no" title="statement not covered" >          var overlays = doc.groundoverlays;</span>
+<span class="cstat-no" title="statement not covered" >          for (i = overlays.length; i--;) {</span>
+<span class="cstat-no" title="statement not covered" >           if (!overlays[i].active) {</span>
+<span class="cstat-no" title="statement not covered" >            overlays[i].remove();</span>
+<span class="cstat-no" title="statement not covered" >            overlays.splice(i, 1);</span>
+           }
+          }
+<span class="cstat-no" title="statement not covered" >          doc.groundoverlays = overlays;</span>
+   }
+  }
+      }
+      // Parse network links
+<span class="cstat-no" title="statement not covered" >      var networkLink;</span>
+<span class="cstat-no" title="statement not covered" >      var docPath = document.location.pathname.split('/');</span>
+<span class="cstat-no" title="statement not covered" >      docPath = docPath.splice(0, docPath.length - 1).join('/');</span>
+<span class="cstat-no" title="statement not covered" >      var linkNodes = responseXML.getElementsByTagName('NetworkLink');</span>
+<span class="cstat-no" title="statement not covered" >      for (i = 0; i &lt; linkNodes.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >        node = linkNodes[i];</span>
+        
+        // Init the network link object
+<span class="cstat-no" title="statement not covered" >        networkLink = {</span>
+          name: geoXML3.nodeValue(node.getElementsByTagName('name')[0]),
+          link: {
+            href:        geoXML3.nodeValue(node.getElementsByTagName('href')[0]),
+            refreshMode:     geoXML3.nodeValue(node.getElementsByTagName('refreshMode')[0])
+          }
+        };
+        
+        // Establish the specific refresh mode 
+<span class="cstat-no" title="statement not covered" >        if (networkLink.link.refreshMode === '') {</span>
+<span class="cstat-no" title="statement not covered" >          networkLink.link.refreshMode = 'onChange';</span>
+        }
+<span class="cstat-no" title="statement not covered" >        if (networkLink.link.refreshMode === 'onInterval') {</span>
+<span class="cstat-no" title="statement not covered" >          networkLink.link.refreshInterval = parseFloat(geoXML3.nodeValue(node.getElementsByTagName('refreshInterval')[0]));</span>
+<span class="cstat-no" title="statement not covered" >          if (isNaN(networkLink.link.refreshInterval)) {</span>
+<span class="cstat-no" title="statement not covered" >            networkLink.link.refreshInterval = 0;</span>
+          }
+        } else <span class="cstat-no" title="statement not covered" >if (networkLink.link.refreshMode === 'onChange') {</span>
+<span class="cstat-no" title="statement not covered" >          networkLink.link.viewRefreshMode = geoXML3.nodeValue(node.getElementsByTagName('viewRefreshMode')[0]);</span>
+<span class="cstat-no" title="statement not covered" >          if (networkLink.link.viewRefreshMode === '') {</span>
+<span class="cstat-no" title="statement not covered" >            networkLink.link.viewRefreshMode = 'never';</span>
+          }
+<span class="cstat-no" title="statement not covered" >          if (networkLink.link.viewRefreshMode === 'onStop') {</span>
+<span class="cstat-no" title="statement not covered" >            networkLink.link.viewRefreshTime = geoXML3.nodeValue(node.getElementsByTagName('refreshMode')[0]);</span>
+<span class="cstat-no" title="statement not covered" >            networkLink.link.viewFormat =      geoXML3.nodeValue(node.getElementsByTagName('refreshMode')[0]);</span>
+<span class="cstat-no" title="statement not covered" >            if (networkLink.link.viewFormat === '') {</span>
+<span class="cstat-no" title="statement not covered" >              networkLink.link.viewFormat = 'BBOX=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]';</span>
+            }
+          }
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (!/^[\/|http]/.test(networkLink.link.href)) {</span>
+          // Fully-qualify the HREF
+<span class="cstat-no" title="statement not covered" >          networkLink.link.href = docPath + '/' + networkLink.link.href;</span>
+        }
+&nbsp;
+        // Apply the link
+<span class="cstat-no" title="statement not covered" >        if ((networkLink.link.refreshMode === 'onInterval') &amp;&amp; </span>
+            (networkLink.link.refreshInterval &gt; 0)) {
+          // Reload at regular intervals
+<span class="cstat-no" title="statement not covered" >          setInterval(parserName + '.parse("' + networkLink.link.href + '")', </span>
+                      1000 * networkLink.link.refreshInterval); 
+        } else <span class="cstat-no" title="statement not covered" >if (networkLink.link.refreshMode === 'onChange') {</span>
+<span class="cstat-no" title="statement not covered" >          if (networkLink.link.viewRefreshMode === 'never') {</span>
+            // Load the link just once
+<span class="cstat-no" title="statement not covered" >            doc.internals.parser.parse(networkLink.link.href, doc.internals.docSet);</span>
+          } else <span class="cstat-no" title="statement not covered" >if (networkLink.link.viewRefreshMode === 'onStop') {</span>
+            // Reload when the map view changes
+            
+          }
+        }
+      }
+}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (!!doc.bounds &amp;&amp; !!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >        doc.internals.bounds = doc.internals.bounds || new google.maps.LatLngBounds();</span>
+<span class="cstat-no" title="statement not covered" >        doc.internals.bounds.union(doc.bounds); </span>
+      }
+<span class="cstat-no" title="statement not covered" >      if (!!doc.markers || !!doc.groundoverlays || !!doc.gpolylines || !!doc.gpolygons) {</span>
+<span class="cstat-no" title="statement not covered" >        doc.internals.parseOnly = false;</span>
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      doc.internals.remaining -= 1;</span>
+<span class="cstat-no" title="statement not covered" >      if (doc.internals.remaining === 0) {</span>
+        // We're done processing this set of KML documents
+        // Options that get invoked after parsing completes
+<span class="cstat-no" title="statement not covered" >    if (parserOptions.zoom &amp;&amp; !!doc.internals.bounds &amp;&amp;</span>
+        !doc.internals.bounds.isEmpty() &amp;&amp; !!parserOptions.map) {
+<span class="cstat-no" title="statement not covered" >          parserOptions.map.fitBounds(doc.internals.bounds); </span>
+        }
+<span class="cstat-no" title="statement not covered" >        if (parserOptions.afterParse) {</span>
+<span class="cstat-no" title="statement not covered" >          parserOptions.afterParse(doc.internals.docSet);</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (!doc.internals.parseOnly) {</span>
+          // geoXML3 is not being used only as a real-time parser, so keep the processed documents around
+<span class="cstat-no" title="statement not covered" >            for (var i=0;i&lt;doc.internals.docSet.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >              docs.push(doc.internals.docSet[i]);</span>
+            }
+        }
+<span class="cstat-no" title="statement not covered" >        google.maps.event.trigger(doc.internals.parser, 'parsed');   </span>
+      }
+  };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var kmlColor = <span class="fstat-no" title="function not covered" >function (kmlIn, colorMode) {</span></span>
+<span class="cstat-no" title="statement not covered" >    var kmlColor = {};</span>
+<span class="cstat-no" title="statement not covered" >    kmlIn = kmlIn || 'ffffffff'; </span> // white (KML 2.2 default)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    var aa = kmlIn.substr(0,2);</span>
+<span class="cstat-no" title="statement not covered" >    var bb = kmlIn.substr(2,2);</span>
+<span class="cstat-no" title="statement not covered" >    var gg = kmlIn.substr(4,2);</span>
+<span class="cstat-no" title="statement not covered" >    var rr = kmlIn.substr(6,2);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    kmlColor.opacity = parseInt(aa, 16) / 256;</span>
+<span class="cstat-no" title="statement not covered" >    kmlColor.color   = (colorMode === 'random') ? randomColor(rr, gg, bb) : '#' + rr + gg + bb;</span>
+<span class="cstat-no" title="statement not covered" >    return kmlColor;</span>
+  };
+&nbsp;
+  // Implemented per KML 2.2 &lt;ColorStyle&gt; specs
+<span class="cstat-no" title="statement not covered" >  var randomColor = <span class="fstat-no" title="function not covered" >function(rr, gg, bb) {</span></span>
+<span class="cstat-no" title="statement not covered" >    var col = { rr: rr, gg: gg, bb: bb };</span>
+<span class="cstat-no" title="statement not covered" >    for (var k in col) {</span>
+<span class="cstat-no" title="statement not covered" >      var v = col[k];</span>
+<span class="cstat-no" title="statement not covered" >      if (v == null) <span class="cstat-no" title="statement not covered" >v = 'ff';</span></span>
+&nbsp;
+      // RGB values are limiters for random numbers (ie: 7f would be a random value between 0 and 7f)
+<span class="cstat-no" title="statement not covered" >      v = Math.round(Math.random() * parseInt(rr, 16)).toString(16);</span>
+<span class="cstat-no" title="statement not covered" >      if (v.length === 1) <span class="cstat-no" title="statement not covered" >v = '0' + v;</span></span>
+<span class="cstat-no" title="statement not covered" >      col[k] = v;</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return '#' + col.rr + col.gg + col.bb;</span>
+  };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var processStyleID = <span class="fstat-no" title="function not covered" >function (style) {</span></span>
+<span class="cstat-no" title="statement not covered" >    if (!!window.google &amp;&amp; !!google.maps) {</span>
+<span class="cstat-no" title="statement not covered" >      var zeroPoint = new google.maps.Point(0,0);</span>
+<span class="cstat-no" title="statement not covered" >      if (!!style.href) {</span>
+<span class="cstat-no" title="statement not covered" >        var markerRegEx = /\/(red|blue|green|yellow|lightblue|purple|pink|orange|pause|go|stop)(-dot)?\.png/;</span>
+<span class="cstat-no" title="statement not covered" >        if (markerRegEx.test(style.href)) {</span>
+         //bottom middle
+<span class="cstat-no" title="statement not covered" >    var anchorPoint = new google.maps.Point(16*style.scale, 32*style.scale);</span>
+  } else {
+<span class="cstat-no" title="statement not covered" >    var anchorPoint = new google.maps.Point(16*style.scale, 16*style.scale);</span>
+  }
+        // Init the style object with a standard KML icon
+<span class="cstat-no" title="statement not covered" >        style.icon =  new google.maps.MarkerImage(</span>
+          style.href,
+          new google.maps.Size(32*style.scale, 32*style.scale),
+          zeroPoint,
+          // bottom middle 
+          anchorPoint,
+          new google.maps.Size(32*style.scale, 32*style.scale)
+&nbsp;
+        );
+&nbsp;
+        // Look for a predictable shadow
+<span class="cstat-no" title="statement not covered" >        var stdRegEx = /\/(red|blue|green|yellow|lightblue|purple|pink|orange)(-dot)?\.png/;</span>
+<span class="cstat-no" title="statement not covered" >        var shadowSize = new google.maps.Size(59, 32);</span>
+<span class="cstat-no" title="statement not covered" >  var shadowPoint = new google.maps.Point(16,32);</span>
+<span class="cstat-no" title="statement not covered" >        if (stdRegEx.test(style.href)) {</span>
+          // A standard GMap-style marker icon
+<span class="cstat-no" title="statement not covered" >          style.shadow = new google.maps.MarkerImage(</span>
+              'http://maps.google.com/mapfiles/ms/micons/msmarker.shadow.png',
+              shadowSize,
+              zeroPoint,
+              shadowPoint,
+              shadowSize);
+        } else <span class="cstat-no" title="statement not covered" >if (style.href.indexOf('-pushpin.png') &gt; -1) {</span>
+          // Pushpin marker icon
+<span class="cstat-no" title="statement not covered" >          style.shadow = new google.maps.MarkerImage(</span>
+            'http://maps.google.com/mapfiles/ms/micons/pushpin_shadow.png',
+            shadowSize,
+            zeroPoint,
+            shadowPoint,
+            shadowSize);
+        } else {
+          // Other MyMaps KML standard icon
+<span class="cstat-no" title="statement not covered" >          style.shadow = new google.maps.MarkerImage(</span>
+            style.href.replace('.png', '.shadow.png'),               
+            shadowSize,                
+            zeroPoint,          
+            shadowPoint,
+            shadowSize);
+        }
+      }
+    }
+  }
+    
+<span class="cstat-no" title="statement not covered" >  var processStyles = <span class="fstat-no" title="function not covered" >function (doc) {</span></span>
+<span class="cstat-no" title="statement not covered" >    for (var styleID in doc.styles) {</span>
+<span class="cstat-no" title="statement not covered" >      processStyleID(doc.styles[styleID]);</span>
+    }
+  };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var createMarker = <span class="fstat-no" title="function not covered" >function (placemark, doc) {</span></span>
+    // create a Marker to the map from a placemark KML object
+&nbsp;
+    // Load basic marker properties
+<span class="cstat-no" title="statement not covered" >    var markerOptions = geoXML3.combineOptions(parserOptions.markerOptions, {</span>
+      map:      parserOptions.map,
+      position: new google.maps.LatLng(placemark.Point.coordinates[0].lat, placemark.Point.coordinates[0].lng),
+      title:    placemark.name,
+      zIndex:   Math.round(placemark.Point.coordinates[0].lat * -100000)&lt;&lt;5,
+      icon:     placemark.style.icon,
+      shadow:   placemark.style.shadow 
+    });
+  
+    // Create the marker on the map
+<span class="cstat-no" title="statement not covered" >    var marker = new google.maps.Marker(markerOptions);</span>
+<span class="cstat-no" title="statement not covered" >    if (!!doc) {</span>
+<span class="cstat-no" title="statement not covered" >      doc.markers.push(marker);</span>
+    }
+&nbsp;
+    // Set up and create the infowindow if it is not suppressed
+<span class="cstat-no" title="statement not covered" >    if (!parserOptions.suppressInfoWindows) {</span>
+<span class="cstat-no" title="statement not covered" >      var infoWindowOptions = geoXML3.combineOptions(parserOptions.infoWindowOptions, {</span>
+        content: '&lt;div class="geoxml3_infowindow"&gt;&lt;h3&gt;' + placemark.name + 
+                 '&lt;/h3&gt;&lt;div&gt;' + placemark.description + '&lt;/div&gt;&lt;/div&gt;',
+        pixelOffset: new google.maps.Size(0, 2)
+      });
+<span class="cstat-no" title="statement not covered" >      if (parserOptions.infoWindow) {</span>
+<span class="cstat-no" title="statement not covered" >        marker.infoWindow = parserOptions.infoWindow;</span>
+      } else {
+<span class="cstat-no" title="statement not covered" >        marker.infoWindow = new google.maps.InfoWindow(infoWindowOptions);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      marker.infoWindowOptions = infoWindowOptions;</span>
+      
+      // Infowindow-opening event handler
+<span class="cstat-no" title="statement not covered" >      google.maps.event.addListener(marker, 'click', <span class="fstat-no" title="function not covered" >function() {</span></span>
+<span class="cstat-no" title="statement not covered" >        this.infoWindow.close();</span>
+<span class="cstat-no" title="statement not covered" >        marker.infoWindow.setOptions(this.infoWindowOptions);</span>
+<span class="cstat-no" title="statement not covered" >        this.infoWindow.open(this.map, this);</span>
+      });
+    }
+<span class="cstat-no" title="statement not covered" >    placemark.marker = marker;</span>
+<span class="cstat-no" title="statement not covered" >    return marker;</span>
+  };
+  
+<span class="cstat-no" title="statement not covered" >  var createOverlay = <span class="fstat-no" title="function not covered" >function (groundOverlay, doc) {</span></span>
+    // Add a ProjectedOverlay to the map from a groundOverlay KML object
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (!window.ProjectedOverlay) {</span>
+<span class="cstat-no" title="statement not covered" >      throw 'geoXML3 error: ProjectedOverlay not found while rendering GroundOverlay from KML';</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    var bounds = new google.maps.LatLngBounds(</span>
+        new google.maps.LatLng(groundOverlay.latLonBox.south, groundOverlay.latLonBox.west),
+        new google.maps.LatLng(groundOverlay.latLonBox.north, groundOverlay.latLonBox.east)
+    );
+<span class="cstat-no" title="statement not covered" >    var overlayOptions = geoXML3.combineOptions(parserOptions.overlayOptions, {percentOpacity: groundOverlay.opacity*100});</span>
+<span class="cstat-no" title="statement not covered" >    var overlay = new ProjectedOverlay(parserOptions.map, groundOverlay.icon.href, bounds, overlayOptions);</span>
+    
+<span class="cstat-no" title="statement not covered" >    if (!!doc) {</span>
+<span class="cstat-no" title="statement not covered" >      doc.ggroundoverlays = doc.ggroundoverlays || [];</span>
+<span class="cstat-no" title="statement not covered" >      doc.ggroundoverlays.push(overlay);</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return overlay;</span>
+  };
+&nbsp;
+// Create Polyline
+<span class="cstat-no" title="statement not covered" >var createPolyline = <span class="fstat-no" title="function not covered" >function(placemark, doc) {</span></span>
+<span class="cstat-no" title="statement not covered" >  var paths = [];</span>
+<span class="cstat-no" title="statement not covered" >  var bounds = new google.maps.LatLngBounds();</span>
+<span class="cstat-no" title="statement not covered" >  for (var j=0; j&lt;placemark.LineString.length; j++) {</span>
+<span class="cstat-no" title="statement not covered" >    var path = [];</span>
+<span class="cstat-no" title="statement not covered" >    var coords = placemark.LineString[j].coordinates;</span>
+<span class="cstat-no" title="statement not covered" >    for (var i=0;i&lt;coords.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >      var pt = new google.maps.LatLng(coords[i].lat, coords[i].lng);</span>
+<span class="cstat-no" title="statement not covered" >      path.push(pt);</span>
+<span class="cstat-no" title="statement not covered" >      bounds.extend(pt);</span>
+    }
+<span class="cstat-no" title="statement not covered" >    paths.push(path);</span>
+  }
+    
+  // point to open the infowindow if triggered 
+<span class="cstat-no" title="statement not covered" >  var point = paths[0][Math.floor(path.length/2)];</span>
+  // Load basic polyline properties
+<span class="cstat-no" title="statement not covered" >  var kmlStrokeColor = kmlColor(placemark.style.color,placemark.style.colorMode);</span>
+<span class="cstat-no" title="statement not covered" >  var polyOptions = geoXML3.combineOptions(parserOptions.polylineOptions, {</span>
+    map:      parserOptions.map,
+    strokeColor: kmlStrokeColor.color,
+    strokeWeight: placemark.style.width,
+    strokeOpacity: kmlStrokeColor.opacity,
+    title:    placemark.name
+  });
+<span class="cstat-no" title="statement not covered" >  if (paths.length &gt; 1) {</span>
+<span class="cstat-no" title="statement not covered" >    polyOptions.paths = paths;</span>
+<span class="cstat-no" title="statement not covered" >    var p = new MultiGeometry(polyOptions);</span>
+  } else {
+<span class="cstat-no" title="statement not covered" >    polyOptions.path = paths[0];</span>
+<span class="cstat-no" title="statement not covered" >    var p = new google.maps.Polyline(polyOptions);</span>
+  }
+<span class="cstat-no" title="statement not covered" >  p.bounds = bounds;</span>
+  // setup and create the infoWindow if it is not suppressed
+<span class="cstat-no" title="statement not covered" >  if (!parserOptions.suppressInfoWindows) {</span>
+<span class="cstat-no" title="statement not covered" >    var infoWindowOptions = geoXML3.combineOptions(parserOptions.infoWindowOptions, {</span>
+      content: '&lt;div class="geoxml3_infowindow"&gt;&lt;h3&gt;' + placemark.name + 
+               '&lt;/h3&gt;&lt;div&gt;' + placemark.description + '&lt;/div&gt;&lt;/div&gt;',
+      pixelOffset: new google.maps.Size(0, 2)
+    });
+<span class="cstat-no" title="statement not covered" >    if (parserOptions.infoWindow) {</span>
+<span class="cstat-no" title="statement not covered" >      p.infoWindow = parserOptions.infoWindow;</span>
+    } else {
+<span class="cstat-no" title="statement not covered" >      p.infoWindow = new google.maps.InfoWindow(infoWindowOptions);</span>
+    }
+<span class="cstat-no" title="statement not covered" >    p.infoWindowOptions = infoWindowOptions;</span>
+    // Infowindow-opening event handler
+<span class="cstat-no" title="statement not covered" >    google.maps.event.addListener(p, 'click', <span class="fstat-no" title="function not covered" >function(e) {</span></span>
+<span class="cstat-no" title="statement not covered" >      p.infoWindow.close();</span>
+<span class="cstat-no" title="statement not covered" >      p.infoWindow.setOptions(p.infoWindowOptions);</span>
+<span class="cstat-no" title="statement not covered" >      if (e &amp;&amp; e.latLng) {</span>
+<span class="cstat-no" title="statement not covered" >        p.infoWindow.setPosition(e.latLng);</span>
+      } else {
+<span class="cstat-no" title="statement not covered" >        p.infoWindow.setPosition(point);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      p.infoWindow.open(p.map || p.polylines[0].map);</span>
+    });
+  }
+<span class="cstat-no" title="statement not covered" >  if (!!doc) <span class="cstat-no" title="statement not covered" >doc.gpolylines.push(p);</span></span>
+<span class="cstat-no" title="statement not covered" >  placemark.polyline = p;</span>
+<span class="cstat-no" title="statement not covered" >  return p;</span>
+}
+&nbsp;
+// Create Polygon
+<span class="cstat-no" title="statement not covered" >var createPolygon = <span class="fstat-no" title="function not covered" >function(placemark, doc) {</span></span>
+<span class="cstat-no" title="statement not covered" >  var bounds = new google.maps.LatLngBounds();</span>
+<span class="cstat-no" title="statement not covered" >  var pathsLength = 0;</span>
+<span class="cstat-no" title="statement not covered" >  var paths = [];</span>
+<span class="cstat-no" title="statement not covered" >  for (var polygonPart=0;polygonPart&lt;placemark.Polygon.length;polygonPart++) {</span>
+<span class="cstat-no" title="statement not covered" >    for (var j=0; j&lt;placemark.Polygon[polygonPart].outerBoundaryIs.length; j++) {</span>
+<span class="cstat-no" title="statement not covered" >      var coords = placemark.Polygon[polygonPart].outerBoundaryIs[j].coordinates;</span>
+<span class="cstat-no" title="statement not covered" >      var path = [];</span>
+<span class="cstat-no" title="statement not covered" >      for (var i=0;i&lt;coords.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >        var pt = new google.maps.LatLng(coords[i].lat, coords[i].lng);</span>
+<span class="cstat-no" title="statement not covered" >        path.push(pt);</span>
+<span class="cstat-no" title="statement not covered" >        bounds.extend(pt);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      paths.push(path);</span>
+<span class="cstat-no" title="statement not covered" >      pathsLength += path.length;</span>
+    }
+<span class="cstat-no" title="statement not covered" >    for (var j=0; j&lt;placemark.Polygon[polygonPart].innerBoundaryIs.length; j++) {</span>
+<span class="cstat-no" title="statement not covered" >      var coords = placemark.Polygon[polygonPart].innerBoundaryIs[j].coordinates;</span>
+<span class="cstat-no" title="statement not covered" >      var path = [];</span>
+<span class="cstat-no" title="statement not covered" >      for (var i=0;i&lt;coords.length;i++) {</span>
+<span class="cstat-no" title="statement not covered" >        var pt = new google.maps.LatLng(coords[i].lat, coords[i].lng);</span>
+<span class="cstat-no" title="statement not covered" >        path.push(pt);</span>
+<span class="cstat-no" title="statement not covered" >        bounds.extend(pt);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      paths.push(path);</span>
+<span class="cstat-no" title="statement not covered" >      pathsLength += path.length;</span>
+    }
+  }
+&nbsp;
+  // Load basic polygon properties
+<span class="cstat-no" title="statement not covered" >  var kmlStrokeColor = kmlColor(placemark.style.color,placemark.style.colorMode);</span>
+<span class="cstat-no" title="statement not covered" >  var kmlFillColor = kmlColor(placemark.style.fillcolor,placemark.style.colorMode);</span>
+<span class="cstat-no" title="statement not covered" >  if (!placemark.style.fill) <span class="cstat-no" title="statement not covered" >kmlFillColor.opacity = 0.0;</span></span>
+<span class="cstat-no" title="statement not covered" >  var strokeWeight = placemark.style.width;</span>
+<span class="cstat-no" title="statement not covered" >  if (!placemark.style.outline) {</span>
+<span class="cstat-no" title="statement not covered" >    strokeWeight = 0;</span>
+<span class="cstat-no" title="statement not covered" >    kmlStrokeColor.opacity = 0.0;</span>
+  }
+<span class="cstat-no" title="statement not covered" >  var polyOptions = geoXML3.combineOptions(parserOptions.polygonOptions, {</span>
+    map:      parserOptions.map,
+    paths:    paths,
+    title:    placemark.name,
+    strokeColor: kmlStrokeColor.color,
+    strokeWeight: strokeWeight,
+    strokeOpacity: kmlStrokeColor.opacity,
+    fillColor: kmlFillColor.color,
+    fillOpacity: kmlFillColor.opacity
+  });
+<span class="cstat-no" title="statement not covered" >  var p = new google.maps.Polygon(polyOptions);</span>
+<span class="cstat-no" title="statement not covered" >  p.bounds = bounds;</span>
+<span class="cstat-no" title="statement not covered" >  if (!parserOptions.suppressInfoWindows) {</span>
+<span class="cstat-no" title="statement not covered" >    var infoWindowOptions = geoXML3.combineOptions(parserOptions.infoWindowOptions, {</span>
+      content: '&lt;div class="geoxml3_infowindow"&gt;&lt;h3&gt;' + placemark.name + 
+               '&lt;/h3&gt;&lt;div&gt;' + placemark.description + '&lt;/div&gt;&lt;/div&gt;',
+      pixelOffset: new google.maps.Size(0, 2)
+    });
+<span class="cstat-no" title="statement not covered" >    if (parserOptions.infoWindow) {</span>
+<span class="cstat-no" title="statement not covered" >      p.infoWindow = parserOptions.infoWindow;</span>
+    } else {
+<span class="cstat-no" title="statement not covered" >      p.infoWindow = new google.maps.InfoWindow(infoWindowOptions);</span>
+    }
+<span class="cstat-no" title="statement not covered" >    p.infoWindowOptions = infoWindowOptions;</span>
+    // Infowindow-opening event handler
+<span class="cstat-no" title="statement not covered" >    google.maps.event.addListener(p, 'click', <span class="fstat-no" title="function not covered" >function(e) {</span></span>
+<span class="cstat-no" title="statement not covered" >      p.infoWindow.close();</span>
+<span class="cstat-no" title="statement not covered" >      p.infoWindow.setOptions(p.infoWindowOptions);</span>
+<span class="cstat-no" title="statement not covered" >      if (e &amp;&amp; e.latLng) {</span>
+<span class="cstat-no" title="statement not covered" >        p.infoWindow.setPosition(e.latLng);</span>
+      } else {
+<span class="cstat-no" title="statement not covered" >        p.infoWindow.setPosition(p.bounds.getCenter());</span>
+      }
+<span class="cstat-no" title="statement not covered" >      p.infoWindow.open(this.map);</span>
+    });
+  }
+<span class="cstat-no" title="statement not covered" >  if (!!doc) <span class="cstat-no" title="statement not covered" >doc.gpolygons.push(p);</span></span>
+<span class="cstat-no" title="statement not covered" >  placemark.polygon = p;</span>
+<span class="cstat-no" title="statement not covered" >  return p;</span>
+}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    // Expose some properties and methods
+&nbsp;
+    options: parserOptions,
+    docs:    docs,
+    
+    parse:          parse,
+    render:         render,
+    parseKmlString: parseKmlString,
+    hideDocument:   hideDocument,
+    showDocument:   showDocument,
+    processStyles:  processStyles, 
+    createMarker:   createMarker,
+    createOverlay:  createOverlay,
+    createPolyline: createPolyline,
+    createPolygon:  createPolygon
+  };
+};
+// End of KML Parser
+&nbsp;
+// Helper objects and functions
+geoXML3.getOpacity = <span class="fstat-no" title="function not covered" >function (kmlColor) {</span>
+  // Extract opacity encoded in a KML color value. Returns a number between 0 and 1.
+<span class="cstat-no" title="statement not covered" >  if (!!kmlColor &amp;&amp;</span>
+      (kmlColor !== '') &amp;&amp;
+      (kmlColor.length == 8)) {
+<span class="cstat-no" title="statement not covered" >    var transparency = parseInt(kmlColor.substr(0, 2), 16);</span>
+<span class="cstat-no" title="statement not covered" >    return transparency / 255;</span>
+  } else {
+<span class="cstat-no" title="statement not covered" >    return 1;</span>
+  }
+};
+&nbsp;
+// Log a message to the debugging console, if one exists
+geoXML3.log = <span class="fstat-no" title="function not covered" >function(msg) {</span>
+<span class="cstat-no" title="statement not covered" >  if (!!window.console) {</span>
+<span class="cstat-no" title="statement not covered" >    console.log(msg);</span>
+  } else { <span class="cstat-no" title="statement not covered" >alert("log:"+msg); </span>}
+};
+&nbsp;
+// Combine two options objects: a set of default values and a set of override values 
+geoXML3.combineOptions = <span class="fstat-no" title="function not covered" >function (overrides, defaults) {</span>
+<span class="cstat-no" title="statement not covered" >  var result = {};</span>
+<span class="cstat-no" title="statement not covered" >  if (!!overrides) {</span>
+<span class="cstat-no" title="statement not covered" >    for (var prop in overrides) {</span>
+<span class="cstat-no" title="statement not covered" >      if (overrides.hasOwnProperty(prop)) {</span>
+<span class="cstat-no" title="statement not covered" >        result[prop] = overrides[prop];</span>
+      }
+    }
+  }
+<span class="cstat-no" title="statement not covered" >  if (!!defaults) {</span>
+<span class="cstat-no" title="statement not covered" >    for (prop in defaults) {</span>
+<span class="cstat-no" title="statement not covered" >      if (defaults.hasOwnProperty(prop) &amp;&amp; (result[prop] === undefined)) {</span>
+<span class="cstat-no" title="statement not covered" >        result[prop] = defaults[prop];</span>
+      }
+    }
+  }
+<span class="cstat-no" title="statement not covered" >  return result;</span>
+};
+&nbsp;
+// Retrieve an XML document from url and pass it to callback as a DOM document
+geoXML3.fetchers = [];
+&nbsp;
+// parse text to XML doc
+/**
+ * Parses the given XML string and returns the parsed document in a
+ * DOM data structure. This function will return an empty DOM node if
+ * XML parsing is not supported in this browser.
+ * @param {string} str XML string.
+ * @return {Element|Document} DOM.
+ */
+geoXML3.xmlParse = <span class="fstat-no" title="function not covered" >function (str) {</span>
+<span class="cstat-no" title="statement not covered" >  if ((typeof ActiveXObject != 'undefined') || ("ActiveXObject" in window)) {</span>
+<span class="cstat-no" title="statement not covered" >    var doc = new ActiveXObject('Microsoft.XMLDOM');</span>
+<span class="cstat-no" title="statement not covered" >    doc.loadXML(str);</span>
+<span class="cstat-no" title="statement not covered" >    return doc;</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (typeof DOMParser != 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >    return (new DOMParser()).parseFromString(str, 'text/xml');</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return document.createElement('div', null);</span>
+}
+&nbsp;
+// from http://stackoverflow.com/questions/11563554/how-do-i-detect-xml-parsing-errors-when-using-javascripts-domparser-in-a-cross
+geoXML3.isParseError = <span class="fstat-no" title="function not covered" >function(parsedDocument) {</span>
+<span class="cstat-no" title="statement not covered" >    if ((typeof ActiveXObject != 'undefined') || ("ActiveXObject" in window))</span>
+<span class="cstat-no" title="statement not covered" >  return false;</span>
+    // parser and parsererrorNS could be cached on startup for efficiency
+<span class="cstat-no" title="statement not covered" >    var p = new DOMParser(),</span>
+        errorneousParse = p.parseFromString('&lt;', 'text/xml'),
+        parsererrorNS = errorneousParse.getElementsByTagName("parsererror")[0].namespaceURI;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (parsererrorNS === 'http://www.w3.org/1999/xhtml') {</span>
+        // In PhantomJS the parseerror element doesn't seem to have a special namespace, so we are just guessing here :(
+<span class="cstat-no" title="statement not covered" >        return parsedDocument.getElementsByTagName("parsererror").length &gt; 0;</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return parsedDocument.getElementsByTagNameNS(parsererrorNS, 'parsererror').length &gt; 0;</span>
+};
+&nbsp;
+geoXML3.fetchXML = <span class="fstat-no" title="function not covered" >function (url, callback) {</span>
+<span class="fstat-no" title="function not covered" >  function timeoutHandler() {</span>
+<span class="cstat-no" title="statement not covered" >    geoXML3.log('XHR timeout');</span>
+<span class="cstat-no" title="statement not covered" >    callback();</span>
+  };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var xhrFetcher = new Object();</span>
+<span class="cstat-no" title="statement not covered" >  if (!!geoXML3.fetchers.length) {</span>
+<span class="cstat-no" title="statement not covered" >    xhrFetcher = geoXML3.fetchers.pop();</span>
+  } else {
+<span class="cstat-no" title="statement not covered" >    if (!!window.XMLHttpRequest) {</span>
+<span class="cstat-no" title="statement not covered" >      xhrFetcher.fetcher = new window.XMLHttpRequest(); </span>// Most browsers
+    } else <span class="cstat-no" title="statement not covered" >if (!!window.ActiveXObject) {</span>
+<span class="cstat-no" title="statement not covered" >      xhrFetcher.fetcher = new window.ActiveXObject('Microsoft.XMLHTTP'); </span>// Some IE
+    }
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (!xhrFetcher.fetcher) {</span>
+<span class="cstat-no" title="statement not covered" >    geoXML3.log('Unable to create XHR object');</span>
+<span class="cstat-no" title="statement not covered" >    callback(null);</span>
+  } else {
+<span class="cstat-no" title="statement not covered" >      xhrFetcher.fetcher.open('GET', url, true);</span>
+<span class="cstat-no" title="statement not covered" >      if (xhrFetcher.fetcher.overrideMimeType) {</span>
+<span class="cstat-no" title="statement not covered" >        xhrFetcher.fetcher.overrideMimeType('text/xml');</span>
+      }
+<span class="cstat-no" title="statement not covered" >      xhrFetcher.fetcher.onreadystatechange = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >      if (xhrFetcher.fetcher.readyState === 4) {</span>
+        // Retrieval complete
+<span class="cstat-no" title="statement not covered" >        if (!!xhrFetcher.xhrtimeout)</span>
+<span class="cstat-no" title="statement not covered" >          clearTimeout(xhrFetcher.xhrtimeout);</span>
+<span class="cstat-no" title="statement not covered" >        if (xhrFetcher.fetcher.status &gt;= 400) {</span>
+<span class="cstat-no" title="statement not covered" >          geoXML3.log('HTTP error ' + xhrFetcher.fetcher.status + ' retrieving ' + url);</span>
+<span class="cstat-no" title="statement not covered" >          callback();</span>
+        } else {
+          // Returned successfully
+<span class="cstat-no" title="statement not covered" >          var xml = geoXML3.xmlParse(xhrFetcher.fetcher.responseText);</span>
+<span class="cstat-no" title="statement not covered" >          if (xml.parseError &amp;&amp; (xml.parseError.errorCode != 0)) {</span>
+<span class="cstat-no" title="statement not covered" >           geoXML3.log("XML parse error "+xml.parseError.errorCode+", "+xml.parseError.reason+"\nLine:"+xml.parseError.line+", Position:"+xml.parseError.linepos+", srcText:"+xml.parseError.srcText);</span>
+<span class="cstat-no" title="statement not covered" >           xml = "failed parse"</span>
+          } else <span class="cstat-no" title="statement not covered" >if (geoXML3.isParseError(xml)) {</span>
+<span class="cstat-no" title="statement not covered" >           geoXML3.log("XML parse error");</span>
+<span class="cstat-no" title="statement not covered" >           xml = "failed parse"</span>
+          }
+<span class="cstat-no" title="statement not covered" >          callback(xml);</span>
+        }
+        // We're done with this fetcher object
+<span class="cstat-no" title="statement not covered" >        geoXML3.fetchers.push(xhrFetcher);</span>
+      }
+    };
+<span class="cstat-no" title="statement not covered" >    xhrFetcher.xhrtimeout = setTimeout(timeoutHandler, geoXML3.xhrTimeout);</span>
+<span class="cstat-no" title="statement not covered" >    xhrFetcher.fetcher.send(null);</span>
+  }
+};
+&nbsp;
+//nodeValue: Extract the text value of a DOM node, with leading and trailing whitespace trimmed
+geoXML3.nodeValue = <span class="fstat-no" title="function not covered" >function(node, defVal) {</span>
+<span class="cstat-no" title="statement not covered" >  var retStr="";</span>
+<span class="cstat-no" title="statement not covered" >  if (!node) {</span>
+<span class="cstat-no" title="statement not covered" >    return (typeof defVal === 'undefined' || defVal === null) ? '' : defVal;</span>
+  }
+<span class="cstat-no" title="statement not covered" >   if(node.nodeType==3||node.nodeType==4||node.nodeType==2){</span>
+<span class="cstat-no" title="statement not covered" >      retStr+=node.nodeValue;</span>
+   }else <span class="cstat-no" title="statement not covered" >if(node.nodeType==1||node.nodeType==9||node.nodeType==11){</span>
+<span class="cstat-no" title="statement not covered" >      for(var i=0;i&lt;node.childNodes.length;++i){</span>
+<span class="cstat-no" title="statement not covered" >         retStr+=arguments.callee(node.childNodes[i]);</span>
+      }
+   }
+<span class="cstat-no" title="statement not covered" >   return retStr;</span>
+};</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Feb 14 2015 11:18:23 GMT+0000 (UTC)</div>
+</div>
+
+<script src="../../prettify.js"></script>
+
+<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
+<script>
+
+    YUI().use('datatable', function (Y) {
+
+        var formatters = {
+          pct: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              try {
+                  return o.value.toFixed(2) + '%';
+              } catch (ex) { return o.value + '%'; }
+          },
+          html: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.record.get(o.column.key + '_html');
+          }
+        },
+          defaultFormatter = function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.value;
+          };
+
+        function getColumns(theadNode) {
+            var colNodes = theadNode.all('tr th'),
+                cols = [],
+                col;
+            colNodes.each(function (colNode) {
+                col = {
+                    key: colNode.getAttribute('data-col'),
+                    label: colNode.get('innerHTML') || ' ',
+                    sortable: !colNode.getAttribute('data-nosort'),
+                    className: colNode.getAttribute('class'),
+                    type: colNode.getAttribute('data-type'),
+                    allowHTML: colNode.getAttribute('data-html') === 'true' || colNode.getAttribute('data-fmt') === 'html'
+                };
+                col.formatter = formatters[colNode.getAttribute('data-fmt')] || defaultFormatter;
+                cols.push(col);
+            });
+            return cols;
+        }
+
+        function getRowData(trNode, cols) {
+            var tdNodes = trNode.all('td'),
+                    i,
+                    row = { classes: {} },
+                    node,
+                    name;
+            for (i = 0; i < cols.length; i += 1) {
+                name = cols[i].key;
+                node = tdNodes.item(i);
+                row[name] = node.getAttribute('data-value') || node.get('innerHTML');
+                row[name + '_html'] = node.get('innerHTML');
+                row.classes[name] = node.getAttribute('class');
+                //Y.log('Name: ' + name + '; Value: ' + row[name]);
+                if (cols[i].type === 'number') { row[name] = row[name] * 1; }
+            }
+            //Y.log(row);
+            return row;
+        }
+
+        function getData(tbodyNode, cols) {
+            var data = [];
+            tbodyNode.all('tr').each(function (trNode) {
+                data.push(getRowData(trNode, cols));
+            });
+            return data;
+        }
+
+        function replaceTable(node) {
+            if (!node) { return; }
+            var cols = getColumns(node.one('thead')),
+                data = getData(node.one('tbody'), cols),
+                table,
+                parent = node.get('parentNode');
+
+            table = new Y.DataTable({
+                columns: cols,
+                data: data,
+                sortBy: 'file'
+            });
+            parent.set('innerHTML', '');
+            table.render(parent);
+        }
+
+        Y.on('domready', function () {
+            replaceTable(Y.one('div.coverage-summary table'));
+            if (typeof prettyPrint === 'function') {
+                prettyPrint();
+            }
+        });
+    });
+</script>
+</body>
+</html>
