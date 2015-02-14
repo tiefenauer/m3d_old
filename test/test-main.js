@@ -72,7 +72,9 @@ requirejs.config({
         threejs: {
           exports: 'THREE'
         },
-        'vendor/three/ThreeCSG': ['threejs','vendor/three/csg']        
+        'vendor/three/ThreeCSG': ['threejs','vendor/three/csg'],
+        'vendor/ProjectedOverlay': [ 'vendor/geoxml3', 'gmaps' ],
+        'vendor/geoxml3': ['gmaps']        
     },
 
     // ask Require.js to load these files (all our tests)

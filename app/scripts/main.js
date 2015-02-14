@@ -87,6 +87,13 @@ require.config({
     'vendor/three/ThreeCSG': [
       'threejs',
       'vendor/three/csg'
+    ],
+    'vendor/ProjectedOverlay': [
+      'vendor/geoxml3',
+      'gmaps'
+    ],
+    'vendor/geoxml3': [
+      'gmaps'
     ]
   },
   packages: [
