@@ -2,11 +2,13 @@
 define([
    'angular'
   ,'jquery'
-  ,'models/m3dProfilePoint'
+  ,'lodash'
+  ,'models/m3dProfile'
+  ,'models/m3dProfilePoint'  
   ,'vendor/geoxml3'
   ,'vendor/ProjectedOverlay'
   ], 
-  function (angular, $, ProfilePoint) {
+  function (angular, $, _, Profile, ProfilePoint) {
 
     var $log, $scope;
     var map, rect, kmlLayer;
@@ -24,9 +26,9 @@ define([
      * @name m3d.controller.MapController
      * @namespace
      */
-    var MapController = function ($scope, $log, ElevationDataService) {
+    var MapController = function ($scope, $log, ElevationDataService, ProfileOutlineService) {
         $log.debug('MapController created');
-        this.init($scope, $log, ElevationDataService);
+        this.init($scope, $log, ElevationDataService, ProfileOutlineService);
     };
 
     MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
@@ -34,35 +36,32 @@ define([
       /**
       * initialize controller
       */
-      init: function(scope, log, ElevationDataService){
+      init: function(scope, log, ElevationDataService, ProfileOutlineService){
         $scope = scope;
         $log = log;
 
-        $scope.getProfilePoints = this.getProfilePoints;
         $scope.$on('menu:places_changed', onPlacesChanged);
         $scope.$on('menu:model:generate', function(event){
-          ElevationDataService.calculateHeightMap($scope.getProfilePoints());
+          ElevationDataService.calculateHeightMap(this.getProfilePoints());
         });
-        $scope.$on('gemeinde:load', function(event, data){
+        $scope.$on('gemeinde:load', function(event, name){
           $log.debug('integrating in map');
-          var localUrl = 'assets/gemeinden/' + data + '.kml';
-          //localUrl = 'assets/gemeinden/a.xml';
+          var localUrl = 'assets/gemeinden/' + name + '.kml';
           var url = 'http://tiefenauer.github.io/m3d/' + localUrl;          
           var parser = new geoXML3.parser({
             map: map,
             afterParse: function(docs){
               var doc = docs[0];
               var coordinates = doc.placemarks[0].Polygon[0].outerBoundaryIs[0].coordinates;
-              $log.debug('Polyline coordinates: ' + coordinates);
+              var outline = ProfileOutlineService.createOutline(coordinates);
+              var outlineProfile = new Profile({ mesh: outline, name: name });
+              $scope.$broadcast('outline:created', outlineProfile);
             }
           });
           parser.parse(localUrl);
-          /*
-          kmlLayer = new google.maps.KmlLayer({ url: url });
-          kmlLayer.setMap(map);
-          */
         });
         initMap();
+        $scope.$broadcast('gemeinde:load', 'Aarau');
       },
 
       /**
@@ -192,6 +191,6 @@ define([
       map.fitBounds(bounds);
     };
 
-    return ['$scope', '$log', 'ElevationDataService', MapController];
+    return ['$scope', '$log', 'ElevationDataService', 'ProfileOutlineService', MapController];
 
 });

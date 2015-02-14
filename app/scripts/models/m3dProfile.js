@@ -42,9 +42,9 @@ define([
 		  * Get mold for profile (if not existent, it will be created)
 		  */
 		  getMold: function(){
-  		  	if (!this.mold)
+  		  if (!this.mold)
 				this.mold = invert(this);
-			return this.mold;
+				return this.mold;
 		  },
 
 		  /**
@@ -53,7 +53,7 @@ define([
 		  */ 
 		  init: function(options){		  			  	
 				this.thickness = options.thickness;		  	
-	  		this.name = options.name?options.name:'profile_' + Math.floor(Math.random()*100);
+				this.name = options.name?options.name:'profile_' + Math.floor(Math.random()*100);
 
 				if (options.profilePoints.length > 0){				
 					this.profilePoints = _.sortByAll(options.profilePoints, ['lat', 'lng']);
@@ -63,6 +63,7 @@ define([
 				}
 				else if (options.mesh){
 					this.mesh = options.mesh;
+					this.mesh.name = this.name;
 					//this.updateProfilePoints(this.mesh);
 					//this.updateMesh(this.profilePoints);
 				}			

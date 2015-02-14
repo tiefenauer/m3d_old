@@ -19,6 +19,7 @@ define([
      * Service to load and save files from/to file
      * @class
      * @name m3d.services.ProfileIOService 
+     * @constructor
      * @namespace
      */
     var ProfileIOService = function($log, $rootScope){

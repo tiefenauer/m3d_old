@@ -67,6 +67,11 @@ define([
         initScene();
         initRenderer();
         this.render();
+
+        $scope.$on('outline:created', function(event, outline){
+          $log.debug('drawing outline');
+          drawProfile(outline);
+        });        
       },
 
       /**
