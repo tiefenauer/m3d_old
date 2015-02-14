@@ -30,16 +30,25 @@ define([
         this.updateList();
       };
 
+      var _q = 'aar';
+      $scope.search = {
+        query: function(newQuery){
+          $log.debug(newQuery);
+          if (angular.isDefined(newQuery) && newQuery.length >= 3){
+            _q = newQuery;
+          }
+          return _q;
+        }
+      };      
+
       $scope.close = close;
     };
 
     
     GemeindeController.prototype = /** @lends m3d.controller.GemeindeController.prototype */{
-
-      tab: 'A',
+      tab: 'search',
       gemeinden: [],
       list: [],
-      q: '',
 
       /**
       * initialize controller
@@ -62,72 +71,30 @@ define([
           url: 'assets/gemeinden/gemeinden.json',
           success: function(data){
             ctrl.gemeinden = data;
-            ctrl.setTab('A');
+            //ctrl.setTab('A');
             $scope.$apply();
           }
         });
       },
 
       updateList: function(){
-        if (this.q.length == 0){
-          this.list = _.filter(this.gemeinden, function(name){
-            return name.toUpperCase().substr(0,1) === this.tab;
-          }, this);                  
+        if (this.isSet('search')) {
+          this.list = this.filter(this.gemeinden);
         }
         else {
           this.list = this.gemeinden;
         }
+      },
+
+      filter: function(gemeinden){
+        if (this.query.length == 0)
+          return [];
+
+        return _.filter(gemeinden, function(name){
+          return name.toUpperCase().substr(0,1) === this.tab;
+        }, this);
       }
 
-    };
-
-    var fsInit = function(fsObj){
-      console.log('Opened file system: ' + fsObj.name);
-      fs = fsObj;
-      var dirReader = fs.root.createReader();
-      var entries = [];
-      var readEntries = function(){
-        dirReader.readEntries(function(results){
-          if (!results.length){
-            $log.debug('directory read finished')
-          }
-          else{
-            $log.debug('read ' + results.length + ' entries');
-            readEntries();
-          }
-        });
-      };
-      readEntries();
-      fs.root.getDirectory('bliblablu', {create: true}, function(dirEntry){
-        gemeindeDir = dirEntry;
-      }, fsError);
-    };
-
-    var fsError = function(e) {
-      var msg = '';
-
-      switch (e.code) {
-        case FileError.QUOTA_EXCEEDED_ERR:
-          msg = 'QUOTA_EXCEEDED_ERR';
-          break;
-        case FileError.NOT_FOUND_ERR:
-          msg = 'NOT_FOUND_ERR';
-          break;
-        case FileError.SECURITY_ERR:
-          msg = 'SECURITY_ERR';
-          break;
-        case FileError.INVALID_MODIFICATION_ERR:
-          msg = 'INVALID_MODIFICATION_ERR';
-          break;
-        case FileError.INVALID_STATE_ERR:
-          msg = 'INVALID_STATE_ERR';
-          break;
-        default:
-          msg = 'Unknown Error';
-          break;
-      };
-
-      console.log('Error: ' + msg);
     };
 
     return ['$rootScope', '$scope', '$log', '$modalInstance', GemeindeController];

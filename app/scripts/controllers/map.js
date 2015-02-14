@@ -61,7 +61,7 @@ define([
           parser.parse(localUrl);
         });
         initMap();
-        $scope.$broadcast('gemeinde:load', 'Aarau');
+        //$scope.$broadcast('gemeinde:load', 'Aarau');
       },
 
       /**

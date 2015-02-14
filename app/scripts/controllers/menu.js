@@ -136,6 +136,7 @@ define([
         $log.debug('showing list of municipalities');
         $modal.open({
           templateUrl: 'views/templates/gemeinde_popup.html'
+          ,size: 'lg'
           ,controller: 'GemeindeCtrl'
           ,controllerAs: 'tab'
         });

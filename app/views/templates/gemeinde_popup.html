@@ -4,8 +4,8 @@
         <h3 class="modal-title">Gemeinden</h3>
     </div>
     <div class="modal-body">
-      <input type="search" ng-model="tab.q" ng-focus="tab.list = tab.gemeinden" ng-blur="tab.updateList()" placeholde="Suchen"/>
       <ul class="nav nav-pills">        
+        <li role="presentation" ng-class="{active: tab.isSet('search')}" ><a href="#" ng-click="tab.setTab('search')"><span class="glyphicon glyphicon-search"></span></a></li>
         <li role="presentation" ng-class="{active: tab.isSet('A')}" ><a href="#" ng-click="tab.setTab('A')">A</a></li>
         <li role="presentation" ng-class="{active: tab.isSet('B')}" ><a href="#" ng-click="tab.setTab('B')">B</a></li>
         <li role="presentation" ng-class="{active: tab.isSet('C')}" ><a href="#" ng-click="tab.setTab('C')">C</a></li>
@@ -33,6 +33,7 @@
         <li role="presentation" ng-class="{active: tab.isSet('Y')}" ><a href="#" ng-click="tab.setTab('Y')">Y</a></li>
         <li role="presentation" ng-class="{active: tab.isSet('Z')}" ><a href="#" ng-click="tab.setTab('Z')">Z</a></li>
       </ul>        
+      <input type="text" name="searchquery" ng-model="search.query" ng-model-options="{ getterSetter: true }" placeholder="Suchen" ng-show="tab.isSet('search')"/>
       <div class="list-group">
         <a href="#" class="list-group-item" ng-repeat="gemeinde in tab.list | filter:tab.q" ng-click="load(gemeinde)">{{gemeinde}}</a>
       </div>
