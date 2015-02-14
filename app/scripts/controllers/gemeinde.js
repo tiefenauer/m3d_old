@@ -22,19 +22,20 @@ define([
       $log.debug('GemeindeController created');      
       this.init($rootScope, $scope, $log, $modalInstance);
 
-      this.isSet = function(checkTab){
+      $scope.updateList = this.updateList;
+
+      $scope.isSet = function(checkTab){
         return this.tab === checkTab;
       };
-      this.setTab = function(setTab){
+      $scope.setTab = function(setTab){
         this.tab = setTab;
         this.updateList();
       };
 
-      var _q = 'aar';
+      var _q = '';
       $scope.search = {
         query: function(newQuery){
-          $log.debug(newQuery);
-          if (angular.isDefined(newQuery) && newQuery.length >= 3){
+          if (angular.isDefined(newQuery)){
             _q = newQuery;
           }
           return _q;
@@ -47,8 +48,6 @@ define([
     
     GemeindeController.prototype = /** @lends m3d.controller.GemeindeController.prototype */{
       tab: 'search',
-      gemeinden: [],
-      list: [],
 
       /**
       * initialize controller
@@ -59,6 +58,9 @@ define([
         $modalInstance = modalInstance;
         $rootScope = rootScope;
 
+        $scope.gemeinden = [];
+        $scope.list = [];
+
         $scope.load = function(gemeinde){          
           $rootScope.$broadcast('gemeinde:load', gemeinde);
           $modalInstance.close();
@@ -66,33 +68,32 @@ define([
         $scope.ok = $scope.cancel = function(){
           $modalInstance.close();
         };
-        var ctrl = this;
         $.ajax({
           url: 'assets/gemeinden/gemeinden.json',
           success: function(data){
-            ctrl.gemeinden = data;
-            //ctrl.setTab('A');
+            $scope.gemeinden = data;
+            $scope.setTab('search');
             $scope.$apply();
           }
         });
       },
 
       updateList: function(){
-        if (this.isSet('search')) {
-          this.list = this.filter(this.gemeinden);
+        if ($scope.isSet('search')) {
+          $scope.list = $scope.gemeinden;
         }
         else {
-          this.list = this.gemeinden;
+          $scope.list = _.filter($scope.gemeinden, function(name){
+            return name.toUpperCase().substr(0,1) === this.tab;
+          }, this);
         }
       },
 
-      filter: function(gemeinden){
-        if (this.query.length == 0)
+      filterList: function(gemeinden){
+        if ($scope.search.query.length < 3)
           return [];
 
-        return _.filter(gemeinden, function(name){
-          return name.toUpperCase().substr(0,1) === this.tab;
-        }, this);
+        return 
       }
 
     };
