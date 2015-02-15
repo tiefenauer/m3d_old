@@ -4,9 +4,11 @@ define([
   ,'jquery'
   ,'lodash'
   ,'models/m3dProfile'
-  ,'models/m3dProfilePoint'  
+  ,'models/m3dProfilePoint'    
   ,'vendor/geoxml3'
+    /*
   ,'vendor/ProjectedOverlay'
+  */
   ], 
   function (angular, $, _, Profile, ProfilePoint) {
 
