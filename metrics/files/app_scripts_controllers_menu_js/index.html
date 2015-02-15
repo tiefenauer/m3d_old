@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">71.85</p>
+      <p class="stat">74.00</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">159</p>
+      <p class="stat">133</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">17.11</p>
+      <p class="stat">16.31</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.16</p>
+      <p class="stat">1.07</p>
     </div>
   </div>
 </div>
@@ -116,13 +116,25 @@
       $log.debug(&#039;MenuController created&#039;);  
       this.init($rootScope, $scope, $log, $modal);
 
-      $scope.calculateHeightMap = this.calculateHeightMap;
-      $scope.showSettings = this.showSettings;
-      $scope.showInfo = this.showInfo;        
-      $scope.showStats = this.showStats;        
       $scope.loadModel = this.loadModel;
-      $scope.saveModel = this.saveModel;      
-      $scope.showTownList = this.showTownList;
+      $scope.saveModel = this.saveModel;
+      $scope.popup = this.popup;
+      $scope.generateProfile = function(){
+        $log.debug(&#039;process button clicked&#039;);
+        $rootScope.$broadcast(&#039;menu:model:generate&#039;);
+      };
+      $scope.showSettings = function(){
+        this.popup(&#039;views/templates/settings_popup.html&#039;, &#039;SettingsCtrl&#039;);
+      },
+      $scope.showInfo = function(){
+        this.popup(&#039;views/templates/info_popup.html&#039;, &#039;InfoCtrl&#039;);
+      };        
+      $scope.showStats = function(){
+        this.popup(&#039;views/templates/stats_popup.html&#039;, &#039;StatsController&#039;);
+      };        
+      $scope.showTownList = function(){
+        this.popup(&#039;views/templates/gemeinde_popup.html&#039;, &#039;GemeindeCtrl&#039;, &#039;lg&#039;);
+      };
     };
 
     MenuController.prototype = /** @lends m3d.controller.MenuController.prototype */{
@@ -163,6 +175,15 @@
         initSearchBox();
       },
 
+      popup: function(template, controller, size){
+        $log.debug(&#039;showing popup: &#039; + template);
+        $modal.open({
+           templateUrl: template
+          ,controller: controller
+          ,size: size
+        })
+      },
+
       /**
       * load model from file
       */
@@ -184,53 +205,6 @@
         $log.debug(&#039;save button clicked&#039;);
         $rootScope.$broadcast(&#039;menu:model:save&#039;);
       },
-
-      /**
-      * Show popup with settings
-      */
-      showSettings: function(){
-        $log.debug(&#039;showing settings...&#039;);
-        $modal.open({
-           templateUrl: &#039;views/templates/settings_popup.html&#039;
-          ,controller: &#039;SettingsCtrl&#039;
-        });
-      },
-
-      /**
-      * Show popup with statistics
-      */
-      showStats: function(){
-        $log.debug(&#039;showing stats...&#039;);
-        $modal.open({
-           templateUrl: &#039;views/templates/stats_popup.html&#039;
-          ,controller: &#039;StatsController&#039;
-        });
-      },
-
-      /**
-      * Show popup with information about the app
-      */
-      showInfo: function(){
-        $log.debug(&#039;showing info...&#039;);
-        $modal.open({
-           templateUrl: &#039;views/templates/info_popup.html&#039;
-          ,controller: &#039;InfoCtrl&#039;
-        });
-      },
-
-      calculateHeightMap: function(){
-        $log.debug(&#039;process button clicked&#039;);
-        $rootScope.$broadcast(&#039;menu:model:generate&#039;);
-      },
-
-      showTownList: function(){
-        $log.debug(&#039;showing list of municipalities&#039;);
-        $modal.open({
-          templateUrl: &#039;views/templates/gemeinde_popup.html&#039;
-          ,controller: &#039;GemeindeCtrl&#039;
-          ,controllerAs: &#039;tab&#039;
-        });
-      }
 
     };
 

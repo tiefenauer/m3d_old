@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">71.11</p>
+      <p class="stat">73.45</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">133</p>
+      <p class="stat">100</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">22.10</p>
+      <p class="stat">16.65</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.89</p>
+      <p class="stat">0.61</p>
     </div>
   </div>
 </div>
@@ -113,24 +113,33 @@ define([
       $log.debug(&#039;GemeindeController created&#039;);      
       this.init($rootScope, $scope, $log, $modalInstance);
 
-      this.isSet = function(checkTab){
+      $scope.updateList = this.updateList;
+
+      $scope.isSet = function(checkTab){
         return this.tab === checkTab;
       };
-      this.setTab = function(setTab){
+      $scope.setTab = function(setTab){
+        $scope.query = &#039;&#039;;
         this.tab = setTab;
         this.updateList();
       };
+
+      $scope.query = &#039;&#039;;
+      $scope.search = {
+        query: function(newQuery){
+          if (angular.isDefined(newQuery)){
+            $scope.query = newQuery;
+          }
+          return $scope.query;
+        }
+      };      
 
       $scope.close = close;
     };
 
     
     GemeindeController.prototype = /** @lends m3d.controller.GemeindeController.prototype */{
-
-      tab: &#039;A&#039;,
-      gemeinden: [],
-      list: [],
-      q: &#039;&#039;,
+      tab: &#039;search&#039;,
 
       /**
       * initialize controller
@@ -141,6 +150,14 @@ define([
         $modalInstance = modalInstance;
         $rootScope = rootScope;
 
+        $scope.gemeinden = {
+          all: [],          
+          list: function(){
+            return [];
+          }
+        };
+        $scope.list = [];
+
         $scope.load = function(gemeinde){          
           $rootScope.$broadcast(&#039;gemeinde:load&#039;, gemeinde);
           $modalInstance.close();
@@ -148,77 +165,27 @@ define([
         $scope.ok = $scope.cancel = function(){
           $modalInstance.close();
         };
-        var ctrl = this;
         $.ajax({
           url: &#039;assets/gemeinden/gemeinden.json&#039;,
           success: function(data){
-            ctrl.gemeinden = data;
-            ctrl.setTab(&#039;A&#039;);
+            $scope.gemeinden.all = data;
+            $scope.setTab(&#039;search&#039;);
             $scope.$apply();
           }
         });
       },
 
       updateList: function(){
-        if (this.q.length == 0){
-          this.list = _.filter(this.gemeinden, function(name){
-            return name.toUpperCase().substr(0,1) === this.tab;
-          }, this);                  
+        if ($scope.isSet(&#039;search&#039;)) {
+          $scope.gemeinden.list = $scope.gemeinden.all;
         }
         else {
-          this.list = this.gemeinden;
+          $scope.gemeinden.list = _.filter($scope.gemeinden.all, function(name){
+            return name.toUpperCase().substr(0,1) === this.tab;
+          }, this);
         }
       }
 
-    };
-
-    var fsInit = function(fsObj){
-      console.log(&#039;Opened file system: &#039; + fsObj.name);
-      fs = fsObj;
-      var dirReader = fs.root.createReader();
-      var entries = [];
-      var readEntries = function(){
-        dirReader.readEntries(function(results){
-          if (!results.length){
-            $log.debug(&#039;directory read finished&#039;)
-          }
-          else{
-            $log.debug(&#039;read &#039; + results.length + &#039; entries&#039;);
-            readEntries();
-          }
-        });
-      };
-      readEntries();
-      fs.root.getDirectory(&#039;bliblablu&#039;, {create: true}, function(dirEntry){
-        gemeindeDir = dirEntry;
-      }, fsError);
-    };
-
-    var fsError = function(e) {
-      var msg = &#039;&#039;;
-
-      switch (e.code) {
-        case FileError.QUOTA_EXCEEDED_ERR:
-          msg = &#039;QUOTA_EXCEEDED_ERR&#039;;
-          break;
-        case FileError.NOT_FOUND_ERR:
-          msg = &#039;NOT_FOUND_ERR&#039;;
-          break;
-        case FileError.SECURITY_ERR:
-          msg = &#039;SECURITY_ERR&#039;;
-          break;
-        case FileError.INVALID_MODIFICATION_ERR:
-          msg = &#039;INVALID_MODIFICATION_ERR&#039;;
-          break;
-        case FileError.INVALID_STATE_ERR:
-          msg = &#039;INVALID_STATE_ERR&#039;;
-          break;
-        default:
-          msg = &#039;Unknown Error&#039;;
-          break;
-      };
-
-      console.log(&#039;Error: &#039; + msg);
     };
 
     return [&#039;$rootScope&#039;, &#039;$scope&#039;, &#039;$log&#039;, &#039;$modalInstance&#039;, GemeindeController];

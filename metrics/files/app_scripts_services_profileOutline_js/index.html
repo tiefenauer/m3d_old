@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">62.82</p>
+      <p class="stat">58.60</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">107</p>
+      <p class="stat">212</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">26.85</p>
+      <p class="stat">43.90</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.02</p>
+      <p class="stat">2.66</p>
     </div>
   </div>
 </div>
@@ -98,7 +98,16 @@ define([
   ],
   function(angular, THREE, _, Profile){
 
-    var $log, $rootScope;
+    var extrudeSettings = { 
+      amount: 40, 
+      bevelEnabled: true, 
+      bevelSegments: 2, 
+      steps: 2, 
+      bevelSize: 1, 
+      bevelThickness: 1 
+    };
+
+    var $log;
     /**
      * ProfileOutlineService
      * Service to load and save files from/to file
@@ -107,23 +116,18 @@ define([
      * @constructor
      * @namespace
      */
-    var ProfileOutlineService = function($log, $rootScope){
-      this.init($log, $rootScope);
+    var ProfileOutlineService = function(log){
+      $log = log;
     };
 
     ProfileOutlineService.prototype = /** @lends m3d.services.ProfileOutlineService.prototype */{
-      extrudeSettings: { 
-        amount: 40, 
-        bevelEnabled: true, 
-        bevelSegments: 2, 
-        steps: 2, 
-        bevelSize: 1, 
-        bevelThickness: 1 
-      },
 
-      init: function(log, rootScope){
-        $log = log;
-        $rootScope = rootScope;
+      createProfile: function(profilePoints){
+        var profile = new Profile({
+          profilePoints: profilePoints,
+          thickness: localStorage.getItem(&#039;thickness&#039;) || undefined
+        });
+        return profile;
       },
 
       createOutline: function(points){
@@ -145,13 +149,12 @@ define([
         var posX, posY=0;
         posX = (maxLng - minLng)*scale/2;
         posY = (maxLat - minLat)*-scale/2;        
-        var mesh = this.extrude(shape, this.extrudeSettings, posX, 0, posY);        
+        var extrudedMesh = this.extrude(shape, extrudeSettings, posX, 0, posY);
+        var mesh = this.rasterize(extrudedMesh);
         return mesh;
       },
 
       extrude: function(shape, extrudeSettings, x, y, z){
-        //var points = shape.createPointsGeometry();
-        //var spacedPoints = shape.createSpacedPointsGeometry(50);
         var flatGeometry = new THREE.ShapeGeometry(shape);
         var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
         var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial( { color: 0x00ff00, ambient: 0x00ff00 } ));
@@ -169,7 +172,109 @@ define([
         mesh.matrix.identity();
 
         return mesh;
+      },
+
+      rasterize: function(extrudedMesh){
+        var maxX = _.max(extrudedMesh.geometry.vertices, &#039;x&#039;).x;
+        var minX = _.min(extrudedMesh.geometry.vertices, &#039;x&#039;).x;
+        var maxY = _.max(extrudedMesh.geometry.vertices, &#039;y&#039;).y;
+        var minY = _.min(extrudedMesh.geometry.vertices, &#039;y&#039;).y;        
+        var maxZ = _.max(extrudedMesh.geometry.vertices, &#039;z&#039;).z;
+        var minZ = _.min(extrudedMesh.geometry.vertices, &#039;z&#039;).z;
+
+        var boxWidth = maxX - minX;
+        var boxHeight = (maxY - minY)/2;
+        var boxDepth = maxZ - minZ;
+
+        var boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth, 10, 1, 10);
+        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: false });
+        //var boxMesh = new THREE.Mesh(boxGeometry, material);
+
+        var csgBox = new THREE.ThreeBSP(boxGeometry);
+        var csgProfile = new THREE.ThreeBSP(extrudedMesh);
+        var csgRasterized = csgBox.intersect(csgProfile);
+        var geometry = csgRasterized.toGeometry();
+        
+        var rasterized = new THREE.Mesh(geometry, material);
+        return rasterized;
+      },
+
+      /**
+      * create a mold by inverting the objects
+      * @param {m3d.models.Profile} profile the profile to be inverted
+      */
+      invert: function(profile){
+        profile.mesh.geometry.computeVertexNormals();
+        // Quader für Gussform vorbereiten
+        var boxBorderThickness = profile.getDimensionY() * 1.1 - profile.getDimensionY();
+        var boxWidth = profile.getDimensionZ() + boxBorderThickness;
+        var boxHeight = profile.getDimensionY() * 2 + boxBorderThickness;
+        var boxDepth =  profile.getDimensionX() + boxBorderThickness;
+        var boxGeometry = new THREE.BoxGeometry(boxDepth, boxHeight, boxWidth);
+        boxGeometry.dynamic = true;
+        // y-Position der unteren Vertices anpassen
+        boxGeometry.vertices.forEach(function(vertex){
+          if (vertex.y &lt; 0)
+            vertex.y = -1 * boxBorderThickness;
+        });
+        boxGeometry.verticesNeedUpdate = true;
+
+        // Modell kopieren und Sockel erstellen
+        profile.mesh.geometry.computeVertexNormals();
+        var profileCopy = new Profile({
+          profilePoints: profile.profilePoints,
+          mesh: profile.mesh
+        });   
+        profile.mesh.geometry.computeVertexNormals();
+        profileCopy.mesh.geometry.computeVertexNormals();
+
+        profileCopy.mesh.dynamic = true;
+
+        profile.mesh.geometry.computeVertexNormals();
+        profileCopy.mesh.geometry.computeVertexNormals();
+
+        // Sockel erstellen
+        if (profileCopy.profilePoints.length &gt; 0){
+        _.forEach(profileCopy.profilePoints, function(point, i){
+              var bottomIndex = profileCopy.getBottomIndex(i);                        
+            profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;
+            });   
+        } 
+        else{
+          var half = Math.ceil(profileCopy.mesh.geometry.vertices.length / 2);
+          var getBoti = function(n){        
+            var side = Math.sqrt(half);       
+            return half + n + side - 2*(n%side) - 1;
+          }
+          for(var i=0; i&lt;half; i++){
+            var boti = getBoti(i);
+            profileCopy.mesh.geometry.vertices[boti].y = -1 * boxHeight;
+          }
+        };    
+        //profileCopy.mesh = profile.mesh;
+        profileCopy.mesh.geometry.verticesNeedUpdate = true;
+        profileCopy.mesh.geometry.mergeVertices();
+        profileCopy.mesh.geometry.computeVertexNormals();
+
+        // Gussform aus Quader konstruieren          
+        var csgBox = new THREE.ThreeBSP(boxGeometry);
+        var csgProfile = new THREE.ThreeBSP(profileCopy.mesh);
+        var csgMold = csgBox.subtract(csgProfile);
+        var geometry = csgMold.toGeometry();
+
+        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
+        var mold = new THREE.Mesh(geometry, material);
+
+        // Gussform um 180° drehen
+        var moldRotation = new THREE.Matrix4().makeRotationX( Math.PI );
+        mold.updateMatrix();
+        mold.geometry.applyMatrix(mold.matrix);
+        mold.geometry.applyMatrix(moldRotation);
+        mold.matrix.identity();
+        mold.name = profile.mesh.name + &#039;mold&#039;;
+        return mold;
       }
+
     };
 
     /**
@@ -194,7 +299,7 @@ define([
       return circle.makeGeometry();
     };
 
-    return [&#039;$log&#039;, &#039;$rootScope&#039;, ProfileOutlineService];
+    return [&#039;$log&#039;, ProfileOutlineService];
 });</textarea>
   </div>
 </div>

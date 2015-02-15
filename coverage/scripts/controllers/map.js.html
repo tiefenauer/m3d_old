@@ -199,16 +199,16 @@
     <h1>Code coverage report for <span class="entity">scripts/controllers/map.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">17.44% <small>(15 / 86)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">17.24% <small>(15 / 87)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Branches: <span class="metric">0% <small>(0 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">7.14% <small>(1 / 14)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">7.69% <small>(1 / 13)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">17.44% <small>(15 / 86)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">17.24% <small>(15 / 87)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -408,11 +408,7 @@
 190
 191
 192
-193
-194
-195
-196
-197</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+193</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -443,40 +439,36 @@
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -620,7 +612,7 @@ define([
   ], 
   function (angular, $, _, Profile, ProfilePoint) {
 &nbsp;
-    var $log, $scope;
+    var $log, $scope, $ElevationDataService, $ProfileOutlineService;
     var map, rect, kmlLayer;
     var markers = [];
     var gridSize;
@@ -636,23 +628,18 @@ define([
      * @name m3d.controller.MapController
      * @namespace
      */
-    var MapController = <span class="fstat-no" title="function not covered" >function ($scope, $log, ElevationDataService, ProfileOutlineService) {</span>
-<span class="cstat-no" title="statement not covered" >        $log.debug('MapController created');</span>
-<span class="cstat-no" title="statement not covered" >        this.init($scope, $log, ElevationDataService, ProfileOutlineService);</span>
-    };
-&nbsp;
-    MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
-&nbsp;
-      /**
-      * initialize controller
-      */
-      init: <span class="fstat-no" title="function not covered" >function(scope, log, ElevationDataService, ProfileOutlineService){</span>
+    var MapController = <span class="fstat-no" title="function not covered" >function (scope, log, ElevationDataService, ProfileOutlineService) {</span>
 <span class="cstat-no" title="statement not covered" >        $scope = scope;</span>
 <span class="cstat-no" title="statement not covered" >        $log = log;</span>
+<span class="cstat-no" title="statement not covered" >        $ElevationDataService = ElevationDataService;</span>
+<span class="cstat-no" title="statement not covered" >        $ProfileOutlineService = ProfileOutlineService;</span>
+<span class="cstat-no" title="statement not covered" >        $log.debug('MapController created');</span>
+<span class="cstat-no" title="statement not covered" >        initMap();</span>
 &nbsp;
+<span class="cstat-no" title="statement not covered" >        $scope.getCoordinates = this.getCoordinates;</span>
 <span class="cstat-no" title="statement not covered" >        $scope.$on('menu:places_changed', onPlacesChanged);</span>
 <span class="cstat-no" title="statement not covered" >        $scope.$on('menu:model:generate', <span class="fstat-no" title="function not covered" >function(event){</span></span>
-<span class="cstat-no" title="statement not covered" >          ElevationDataService.calculateHeightMap(this.getProfilePoints());</span>
+<span class="cstat-no" title="statement not covered" >          $ElevationDataService.getElevationData($scope.getCoordinates());</span>
         });
 <span class="cstat-no" title="statement not covered" >        $scope.$on('gemeinde:load', <span class="fstat-no" title="function not covered" >function(event, name){</span></span>
 <span class="cstat-no" title="statement not covered" >          $log.debug('integrating in map');</span>
@@ -670,15 +657,16 @@ define([
           });
 <span class="cstat-no" title="statement not covered" >          parser.parse(localUrl);</span>
         });
-<span class="cstat-no" title="statement not covered" >        initMap();</span>
-<span class="cstat-no" title="statement not covered" >        $scope.$broadcast('gemeinde:load', 'Aarau');</span>
-      },
+        //$scope.$broadcast('gemeinde:load', 'Aarau');        
+    };
+&nbsp;
+    MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
 &nbsp;
       /**
       * Rasterize selection rectangle to determine points for which the elevation must be determined.
       * @return {m3d.models.ProfilePoint[]} list of single profile Points for the rasterized selection rectangle. The elevation is zero for each point.
       */
-      getProfilePoints: <span class="fstat-no" title="function not covered" >function(){</span>
+      getCoordinates: <span class="fstat-no" title="function not covered" >function(){</span>
 <span class="cstat-no" title="statement not covered" >        var resolution = localStorage.getItem('resolution') || 25;</span>
 <span class="cstat-no" title="statement not covered" >        gridSize = horizontalSegments = verticalSegments = parseInt(resolution);</span>
 &nbsp;
@@ -809,7 +797,7 @@ define([
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Feb 14 2015 13:36:12 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Feb 15 2015 12:47:49 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

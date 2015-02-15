@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">64.16</p>
+      <p class="stat">66.73</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">356</p>
+      <p class="stat">272</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">73.73</p>
+      <p class="stat">56.86</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">3.74</p>
+      <p class="stat">2.58</p>
     </div>
   </div>
 </div>
@@ -90,20 +90,21 @@
 <div class="container">
   <div class="row">
     <textarea id="file-source" class="col-md-12">define([
-	&#039;lodash&#039;
+	 &#039;angular&#039;
+	,&#039;lodash&#039;
 	,&#039;models/m3dProfilePoint&#039;
 	,&#039;util/GoogleMapsUtil&#039;
 	],
-	function(_, ProfilePoint, gmUtil){
+	function(angular, _, ProfilePoint, gmUtil){
 
-	    /**
-	     * Profile
-	     * Model for virtual elevation model
-	     * @class
-	     * @name m3d.model.Profile
-	     * @namespace
-	     * @constructor
-	     */
+    /**
+     * Profile
+     * Model for virtual elevation model
+     * @class
+     * @name m3d.model.Profile
+     * @namespace
+     * @constructor
+     */
 		var Profile = function(){
 			var options = {};
 			if (arguments[0]) options = arguments[0];
@@ -128,15 +129,6 @@
 		  segmentsZ: 0,
 		  mesh: null,
 		  mold: null,
-
-		  /**
-		  * Get mold for profile (if not existent, it will be created)
-		  */
-		  getMold: function(){
-  		  if (!this.mold)
-				this.mold = invert(this);
-				return this.mold;
-		  },
 
 		  /**
 		  * initialize the object
@@ -366,82 +358,6 @@
 		  	return bottomVertex;
 		  }
 	};
-
-	/**
-  	* create a mold by inverting the objects
-  	* @param {m3d.models.Profile[]} profiles the profiles to be inverted
-  	*/
-  	var invert = function(profile){
-  	  profile.mesh.geometry.computeVertexNormals();
-		  // Quader für Gussform vorbereiten
-		  var boxBorderThickness = profile.getDimensionY() * 1.1 - profile.getDimensionY();
-		  var boxWidth = profile.getDimensionZ() + boxBorderThickness;
-		  var boxHeight = profile.getDimensionY() * 2 + boxBorderThickness;
-		  var boxDepth =  profile.getDimensionX() + boxBorderThickness;
-		  var boxGeometry = new THREE.BoxGeometry(boxDepth, boxHeight, boxWidth);
-		  boxGeometry.dynamic = true;
-		  // y-Position der unteren Vertices anpassen
-		  boxGeometry.vertices.forEach(function(vertex){
-		    if (vertex.y &lt; 0)
-		      vertex.y = -1 * boxBorderThickness;
-		  });
-		  boxGeometry.verticesNeedUpdate = true;
-
-		  // Modell kopieren und Sockel erstellen
-		  profile.mesh.geometry.computeVertexNormals();
-		  var profileCopy = new Profile({
-		    profilePoints: profile.profilePoints,
-		    mesh: profile.mesh
-		  });	  
-		  profile.mesh.geometry.computeVertexNormals();
-		  profileCopy.mesh.geometry.computeVertexNormals();
-
-		  profileCopy.mesh.dynamic = true;
-
-		  profile.mesh.geometry.computeVertexNormals();
-		  profileCopy.mesh.geometry.computeVertexNormals();
-
-		  // Sockel erstellen
-		  if (profileCopy.profilePoints.length &gt; 0){
-			_.forEach(profileCopy.profilePoints, function(point, i){
-		  	  	var bottomIndex = profileCopy.getBottomIndex(i);                        
-			    profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;
-	  	  	});		
-		  } 
-		  else{
-		  	var half = Math.ceil(profileCopy.mesh.geometry.vertices.length / 2);
-		  	var getBoti = function(n){	  		
-		  		var side = Math.sqrt(half);		  	
-			  	return half + n + side - 2*(n%side) - 1;
-		  	}
-		  	for(var i=0; i&lt;half; i++){
-		    	var boti = getBoti(i);
-		    	profileCopy.mesh.geometry.vertices[boti].y = -1 * boxHeight;
-				}
-		  };	  
-		  //profileCopy.mesh = profile.mesh;
-		  profileCopy.mesh.geometry.verticesNeedUpdate = true;
-		  profileCopy.mesh.geometry.mergeVertices();
-		  profileCopy.mesh.geometry.computeVertexNormals();
-
-		  // Gussform aus Quader konstruieren          
-		  var csgBox = new THREE.ThreeBSP(boxGeometry);
-		  var csgProfile = new THREE.ThreeBSP(profileCopy.mesh);
-		  var csgMold = csgBox.subtract(csgProfile);
-		  var geometry = csgMold.toGeometry();
-
-		  var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
-		  var mold = new THREE.Mesh(geometry, material);
-
-		  // Gussform um 180° drehen
-		  var moldRotation = new THREE.Matrix4().makeRotationX( Math.PI );
-		  mold.updateMatrix();
-		  mold.geometry.applyMatrix(mold.matrix);
-		  mold.geometry.applyMatrix(moldRotation);
-		  mold.matrix.identity();
-		  mold.name = profile.mesh.name + &#039;mold&#039;;
-		  return mold;
-  	};	
 
 	return Profile;
 });</textarea>

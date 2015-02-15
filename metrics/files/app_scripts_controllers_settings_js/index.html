@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">70.54</p>
+      <p class="stat">69.05</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">69</p>
+      <p class="stat">48</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">13.56</p>
+      <p class="stat">11.44</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.49</p>
+      <p class="stat">0.34</p>
     </div>
   </div>
 </div>
@@ -94,70 +94,49 @@
 define([
   &#039;angular&#039;
   ,&#039;jquery-ui&#039;
-  ], function (angular) {
+  ], 
+  function (angular) {
 
-  var $log, $modalInstance, $scope;
-  var $resolutionSlider, $thicknessSlider;
+    var $log, $modalInstance, $scope;
+    var $resolutionSlider, $thicknessSlider;
 
-  var SettingsController = function($scope, $log, $modalInstance){
-    $log.debug(&#039;SettingsController created&#039;);
-    init($scope, $log, $modalInstance);
+    /**
+     * SettingsController
+     * Model for virtual elevation model
+     * @class
+     * @name m3d.controllers.SettingsController
+     * @namespace
+     * @constructor
+     */
+    var SettingsController = function(scope, log, modalInstance){
+      $scope = scope;
+      $log = log;
+      $modalInstance = modalInstance;      
+      $log.debug(&#039;SettingsController created&#039;);
 
-    $scope.close = close;
-    $scope.mockCallsEnabled = localStorage.getItem(&#039;mockCallsEnabled&#039;) === &#039;true&#039; || false;
-    $scope.resolution = parseInt(localStorage.getItem(&#039;resolution&#039;)) || 25;
-    $scope.thickness = parseInt(localStorage.getItem(&#039;thickness&#039;)) || 2;
-    $scope.resolutionSlider = {        
-      min: 1,
-      max: 100,
-      step: 1
+      $scope.mockCallsEnabled = localStorage.getItem(&#039;mockCallsEnabled&#039;) === &#039;true&#039; || false;
+      $scope.resolution = parseInt(localStorage.getItem(&#039;resolution&#039;)) || 25;
+      $scope.thickness = parseInt(localStorage.getItem(&#039;thickness&#039;)) || 2;
+      $scope.resolutionSlider = { min: 1, max: 100, step: 1 };
+      $scope.thicknessSlider = { min: 1, max: 400, step: 1 };
+
+      $scope.setResolution = function(res){
+        $scope.resolution = res;
+      };
+
+      $scope.ok = function(){
+        localStorage.setItem(&#039;resolution&#039;, $scope.resolution);
+        localStorage.setItem(&#039;mockCallsEnabled&#039;, $scope.mockCallsEnabled);  
+        localStorage.setItem(&#039;thickness&#039;, $scope.thickness);
+        $modalInstance.close(null);
+      }
+
+      $scope.cancel = function() {
+        $modalInstance.dismiss(&#039;cancel&#039;);
+      };
     };
-    $scope.thicknessSlider = {
-      min: 1,
-      max: 20,
-      step: 1
-    };
-    $scope.setResolution = function(res){
-      $scope.resolution = res;
-    };
 
-
-    return {
-       showSettings: showSettings
-      ,close: close
-      ,cancel: cancel
-    };
-  };
-
-  var init = function(scope, log, modalInstance){
-    $log = log;
-    $scope = scope;
-    $modalInstance = modalInstance;
-
-    addEventListeners();
-  };
-
-  var addEventListeners = function(){
-    $scope.ok = angular.bind(this, close);
-    $scope.cancel = angular.bind(this, cancel);
-  };
-
-  var close = function() {
-    localStorage.setItem(&#039;resolution&#039;, $resolutionSlider.slider(&#039;value&#039;));
-    localStorage.setItem(&#039;mockCallsEnabled&#039;, $scope.mockCallsEnabled);  
-    localStorage.setItem(&#039;thickness&#039;, $thicknessSlider.slider(&#039;value&#039;));
-      $modalInstance.close(null);
-  };
-
-  var cancel = function() {
-    $modalInstance.dismiss(&#039;cancel&#039;);
-  };
-
-  var showSettings = function(){
-    $log.debug(&#039;showing settings&#039;);
-  };
-
-  return [&#039;$scope&#039;, &#039;$log&#039;, &#039;$modalInstance&#039;, SettingsController];
+    return [&#039;$scope&#039;, &#039;$log&#039;, &#039;$modalInstance&#039;, SettingsController];
 });</textarea>
   </div>
 </div>
