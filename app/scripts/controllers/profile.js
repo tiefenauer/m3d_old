@@ -13,7 +13,7 @@ define([
     'use strict';
 
     var el, $el;
-    var $log, $rootScope, $scope;
+    var $log, $scope, $ProfileIOService, $ProfileOutlineService;
     var profiles = {};
     var scene;
     var renderer;
@@ -27,62 +27,56 @@ define([
    * @name m3d.controller.ProfileController
    * @namespace
    */
-    var ProfileController = function ($scope, $rootScope, $log, ProfileIOService) {
+    var ProfileController = function (scope, log, ProfileIOService, ProfileOutlineService) {
+      $log = log;
+      $scope = scope;
+      $ProfileOutlineService = ProfileOutlineService;
+      $ProfileIOService = ProfileIOService;
       $log.debug('ProfileController created');        
+
+      el = $('#profile')[0];
+      $el = $(el);      
       renderer = new THREE.WebGLRenderer({ antialias: true });
       scene = new THREE.Scene();
-      this.init($scope, $rootScope, $log, ProfileIOService);
+      
+      $scope.$on('adapter:end', function(event, profilePoints){
+        clearScene();
+        var m3dProfile = ProfileOutlineService.createProfile(profilePoints);
+        drawProfile(m3dProfile);
+      });
+      $scope.$on('io:model:loaded', function(event, profile){
+        drawProfile(profile);
+      });
+      $scope.$on('menu:model:save', function(){
+        ProfileIOService.save(currentProfile);
+      });
+      $scope.$on('menu:model:invert', this.toggleInvert);
+
+      initScene();
+      initRenderer();
+      this.render();
+
+      $scope.$on('outline:created', function(event, outline){
+        drawProfile(outline);
+      });            
     };
 
     ProfileController.prototype = /** @lends m3d.controller.MenuController.prototype */{
 
       /**
-      * initalize controller
-      */
-      init: function(scope, rootScope, logger, ProfileIOService){
-        $log = logger;
-        $scope = scope;
-        $rootScope = rootScope;
-
-        el = $('#profile')[0];
-        $el = $(el);
-
-        $scope.$on('adapter:end', function(event, profilePoints){
-          clearScene();
-          var thickness = localStorage.getItem('thickness') || undefined;
-          var m3dProfile = new Profile({
-            profilePoints: profilePoints,
-            thickness: thickness
-          });
-          drawProfile(m3dProfile);
-        });
-        $scope.$on('io:model:loaded', function(event, profile){
-          drawProfile(profile);
-        });
-        $scope.$on('menu:model:save', function(){
-          ProfileIOService.save(currentProfile);
-        });
-        $scope.$on('menu:model:invert', this.toggleInvert);
-
-        initScene();
-        initRenderer();
-        this.render();
-
-        $scope.$on('outline:created', function(event, outline){
-          $log.debug('drawing outline');
-          drawProfile(outline);
-        });        
-      },
-
-      /**
       * Toggle between model and inverted model (mold)
       */
       toggleInvert: function(){
+        if (!currentProfile)
+          return;
+
         if (currentMesh == currentProfile.mesh){
-          drawMold(currentProfile);
+          if (!currentProfile.mold)
+            currentProfile.mold = $ProfileOutlineService.invert(currentProfile);
+          draw(currentProfile.mold);
         }
         else {
-          drawProfile(currentProfile);
+          draw(currentProfile.mesh);
         }
       },
 
@@ -116,21 +110,14 @@ define([
       });
     };
 
-    var drawProfile = function(m3dProfile){
-      clearScene();
+    var drawProfile = function(m3dProfile){      
       currentProfile = m3dProfile;
       profiles[m3dProfile.name] = m3dProfile;
       draw(m3dProfile.mesh);
     };
 
-    var drawMold = function(m3dProfile){
-      clearScene();
-      currentProfile = m3dProfile;
-      profiles[m3dProfile.name] = m3dProfile;
-      draw(m3dProfile.getMold());
-    };
-
     var draw = function(mesh){
+      clearScene();
       currentMesh = mesh;
       scene.add(mesh);      
     };
@@ -204,5 +191,5 @@ define([
       controls.noRotate = true;     
     };
 
-    return ['$scope', '$rootScope', '$log', 'ProfileIOService', ProfileController];
+    return ['$scope', '$log', 'ProfileIOService', 'ProfileOutlineService', ProfileController];
 });

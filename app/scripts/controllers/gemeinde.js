@@ -28,17 +28,18 @@ define([
         return this.tab === checkTab;
       };
       $scope.setTab = function(setTab){
+        $scope.query = '';
         this.tab = setTab;
         this.updateList();
       };
 
-      var _q = '';
+      $scope.query = '';
       $scope.search = {
         query: function(newQuery){
           if (angular.isDefined(newQuery)){
-            _q = newQuery;
+            $scope.query = newQuery;
           }
-          return _q;
+          return $scope.query;
         }
       };      
 
@@ -58,7 +59,12 @@ define([
         $modalInstance = modalInstance;
         $rootScope = rootScope;
 
-        $scope.gemeinden = [];
+        $scope.gemeinden = {
+          all: [],          
+          list: function(){
+            return [];
+          }
+        };
         $scope.list = [];
 
         $scope.load = function(gemeinde){          
@@ -71,7 +77,7 @@ define([
         $.ajax({
           url: 'assets/gemeinden/gemeinden.json',
           success: function(data){
-            $scope.gemeinden = data;
+            $scope.gemeinden.all = data;
             $scope.setTab('search');
             $scope.$apply();
           }
@@ -80,20 +86,13 @@ define([
 
       updateList: function(){
         if ($scope.isSet('search')) {
-          $scope.list = $scope.gemeinden;
+          $scope.gemeinden.list = $scope.gemeinden.all;
         }
         else {
-          $scope.list = _.filter($scope.gemeinden, function(name){
+          $scope.gemeinden.list = _.filter($scope.gemeinden.all, function(name){
             return name.toUpperCase().substr(0,1) === this.tab;
           }, this);
         }
-      },
-
-      filterList: function(gemeinden){
-        if ($scope.search.query.length < 3)
-          return [];
-
-        return 
       }
 
     };

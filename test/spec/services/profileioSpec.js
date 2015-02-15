@@ -54,7 +54,6 @@ define([
       expect(typeof(ProfileIOService.load)).toBe('function');
       expect(ProfileIOService.save).not.toBe(null);
       expect(typeof(ProfileIOService.save)).toBe('function');
-
     });
 
     it('should broadcast an event when file is loaded', function(){

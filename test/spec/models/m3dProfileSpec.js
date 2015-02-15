@@ -132,13 +132,6 @@ define([
         }
       });
 
-      it('should calculate a correct inverted model', function(){
-        var profile = new Profile({profilePoints: orderedPoints});
-        var mold = profile.getMold();
-        expect(mold).not.toBe(null);
-        expect(mold instanceof THREE.Mesh).toBe(true);
-      });
-
     });
 
 });

@@ -1,18 +1,19 @@
 define([
-	'lodash'
+	 'angular'
+	,'lodash'
 	,'models/m3dProfilePoint'
 	,'util/GoogleMapsUtil'
 	],
-	function(_, ProfilePoint, gmUtil){
+	function(angular, _, ProfilePoint, gmUtil){
 
-	    /**
-	     * Profile
-	     * Model for virtual elevation model
-	     * @class
-	     * @name m3d.model.Profile
-	     * @namespace
-	     * @constructor
-	     */
+    /**
+     * Profile
+     * Model for virtual elevation model
+     * @class
+     * @name m3d.model.Profile
+     * @namespace
+     * @constructor
+     */
 		var Profile = function(){
 			var options = {};
 			if (arguments[0]) options = arguments[0];
@@ -37,15 +38,6 @@ define([
 		  segmentsZ: 0,
 		  mesh: null,
 		  mold: null,
-
-		  /**
-		  * Get mold for profile (if not existent, it will be created)
-		  */
-		  getMold: function(){
-  		  if (!this.mold)
-				this.mold = invert(this);
-				return this.mold;
-		  },
 
 		  /**
 		  * initialize the object
@@ -275,82 +267,6 @@ define([
 		  	return bottomVertex;
 		  }
 	};
-
-	/**
-  	* create a mold by inverting the objects
-  	* @param {m3d.models.Profile[]} profiles the profiles to be inverted
-  	*/
-  	var invert = function(profile){
-  	  profile.mesh.geometry.computeVertexNormals();
-		  // Quader für Gussform vorbereiten
-		  var boxBorderThickness = profile.getDimensionY() * 1.1 - profile.getDimensionY();
-		  var boxWidth = profile.getDimensionZ() + boxBorderThickness;
-		  var boxHeight = profile.getDimensionY() * 2 + boxBorderThickness;
-		  var boxDepth =  profile.getDimensionX() + boxBorderThickness;
-		  var boxGeometry = new THREE.BoxGeometry(boxDepth, boxHeight, boxWidth);
-		  boxGeometry.dynamic = true;
-		  // y-Position der unteren Vertices anpassen
-		  boxGeometry.vertices.forEach(function(vertex){
-		    if (vertex.y < 0)
-		      vertex.y = -1 * boxBorderThickness;
-		  });
-		  boxGeometry.verticesNeedUpdate = true;
-
-		  // Modell kopieren und Sockel erstellen
-		  profile.mesh.geometry.computeVertexNormals();
-		  var profileCopy = new Profile({
-		    profilePoints: profile.profilePoints,
-		    mesh: profile.mesh
-		  });	  
-		  profile.mesh.geometry.computeVertexNormals();
-		  profileCopy.mesh.geometry.computeVertexNormals();
-
-		  profileCopy.mesh.dynamic = true;
-
-		  profile.mesh.geometry.computeVertexNormals();
-		  profileCopy.mesh.geometry.computeVertexNormals();
-
-		  // Sockel erstellen
-		  if (profileCopy.profilePoints.length > 0){
-			_.forEach(profileCopy.profilePoints, function(point, i){
-		  	  	var bottomIndex = profileCopy.getBottomIndex(i);                        
-			    profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;
-	  	  	});		
-		  } 
-		  else{
-		  	var half = Math.ceil(profileCopy.mesh.geometry.vertices.length / 2);
-		  	var getBoti = function(n){	  		
-		  		var side = Math.sqrt(half);		  	
-			  	return half + n + side - 2*(n%side) - 1;
-		  	}
-		  	for(var i=0; i<half; i++){
-		    	var boti = getBoti(i);
-		    	profileCopy.mesh.geometry.vertices[boti].y = -1 * boxHeight;
-				}
-		  };	  
-		  //profileCopy.mesh = profile.mesh;
-		  profileCopy.mesh.geometry.verticesNeedUpdate = true;
-		  profileCopy.mesh.geometry.mergeVertices();
-		  profileCopy.mesh.geometry.computeVertexNormals();
-
-		  // Gussform aus Quader konstruieren          
-		  var csgBox = new THREE.ThreeBSP(boxGeometry);
-		  var csgProfile = new THREE.ThreeBSP(profileCopy.mesh);
-		  var csgMold = csgBox.subtract(csgProfile);
-		  var geometry = csgMold.toGeometry();
-
-		  var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
-		  var mold = new THREE.Mesh(geometry, material);
-
-		  // Gussform um 180° drehen
-		  var moldRotation = new THREE.Matrix4().makeRotationX( Math.PI );
-		  mold.updateMatrix();
-		  mold.geometry.applyMatrix(mold.matrix);
-		  mold.geometry.applyMatrix(moldRotation);
-		  mold.matrix.identity();
-		  mold.name = profile.mesh.name + 'mold';
-		  return mold;
-  	};	
 
 	return Profile;
 });

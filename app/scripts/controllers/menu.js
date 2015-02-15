@@ -25,13 +25,25 @@ define([
       $log.debug('MenuController created');  
       this.init($rootScope, $scope, $log, $modal);
 
-      $scope.calculateHeightMap = this.calculateHeightMap;
-      $scope.showSettings = this.showSettings;
-      $scope.showInfo = this.showInfo;        
-      $scope.showStats = this.showStats;        
       $scope.loadModel = this.loadModel;
-      $scope.saveModel = this.saveModel;      
-      $scope.showTownList = this.showTownList;
+      $scope.saveModel = this.saveModel;
+      $scope.popup = this.popup;
+      $scope.generateProfile = function(){
+        $log.debug('process button clicked');
+        $rootScope.$broadcast('menu:model:generate');
+      };
+      $scope.showSettings = function(){
+        this.popup('views/templates/settings_popup.html', 'SettingsCtrl');
+      },
+      $scope.showInfo = function(){
+        this.popup('views/templates/info_popup.html', 'InfoCtrl');
+      };        
+      $scope.showStats = function(){
+        this.popup('views/templates/stats_popup.html', 'StatsController');
+      };        
+      $scope.showTownList = function(){
+        this.popup('views/templates/gemeinde_popup.html', 'GemeindeCtrl', 'lg');
+      };
     };
 
     MenuController.prototype = /** @lends m3d.controller.MenuController.prototype */{
@@ -72,6 +84,15 @@ define([
         initSearchBox();
       },
 
+      popup: function(template, controller, size){
+        $log.debug('showing popup: ' + template);
+        $modal.open({
+           templateUrl: template
+          ,controller: controller
+          ,size: size
+        })
+      },
+
       /**
       * load model from file
       */
@@ -93,54 +114,6 @@ define([
         $log.debug('save button clicked');
         $rootScope.$broadcast('menu:model:save');
       },
-
-      /**
-      * Show popup with settings
-      */
-      showSettings: function(){
-        $log.debug('showing settings...');
-        $modal.open({
-           templateUrl: 'views/templates/settings_popup.html'
-          ,controller: 'SettingsCtrl'
-        });
-      },
-
-      /**
-      * Show popup with statistics
-      */
-      showStats: function(){
-        $log.debug('showing stats...');
-        $modal.open({
-           templateUrl: 'views/templates/stats_popup.html'
-          ,controller: 'StatsController'
-        });
-      },
-
-      /**
-      * Show popup with information about the app
-      */
-      showInfo: function(){
-        $log.debug('showing info...');
-        $modal.open({
-           templateUrl: 'views/templates/info_popup.html'
-          ,controller: 'InfoCtrl'
-        });
-      },
-
-      calculateHeightMap: function(){
-        $log.debug('process button clicked');
-        $rootScope.$broadcast('menu:model:generate');
-      },
-
-      showTownList: function(){
-        $log.debug('showing list of municipalities');
-        $modal.open({
-          templateUrl: 'views/templates/gemeinde_popup.html'
-          ,size: 'lg'
-          ,controller: 'GemeindeCtrl'
-          ,controllerAs: 'tab'
-        });
-      }
 
     };
 

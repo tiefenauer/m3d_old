@@ -10,7 +10,7 @@ define([
   ], 
   function (angular, $, _, Profile, ProfilePoint) {
 
-    var $log, $scope;
+    var $log, $scope, $ElevationDataService, $ProfileOutlineService;
     var map, rect, kmlLayer;
     var markers = [];
     var gridSize;
@@ -26,23 +26,18 @@ define([
      * @name m3d.controller.MapController
      * @namespace
      */
-    var MapController = function ($scope, $log, ElevationDataService, ProfileOutlineService) {
-        $log.debug('MapController created');
-        this.init($scope, $log, ElevationDataService, ProfileOutlineService);
-    };
-
-    MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
-
-      /**
-      * initialize controller
-      */
-      init: function(scope, log, ElevationDataService, ProfileOutlineService){
+    var MapController = function (scope, log, ElevationDataService, ProfileOutlineService) {
         $scope = scope;
         $log = log;
+        $ElevationDataService = ElevationDataService;
+        $ProfileOutlineService = ProfileOutlineService;
+        $log.debug('MapController created');
+        initMap();
 
+        $scope.getCoordinates = this.getCoordinates;
         $scope.$on('menu:places_changed', onPlacesChanged);
         $scope.$on('menu:model:generate', function(event){
-          ElevationDataService.calculateHeightMap(this.getProfilePoints());
+          $ElevationDataService.getElevationData($scope.getCoordinates());
         });
         $scope.$on('gemeinde:load', function(event, name){
           $log.debug('integrating in map');
@@ -60,15 +55,16 @@ define([
           });
           parser.parse(localUrl);
         });
-        initMap();
-        //$scope.$broadcast('gemeinde:load', 'Aarau');
-      },
+        //$scope.$broadcast('gemeinde:load', 'Aarau');        
+    };
+
+    MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
 
       /**
       * Rasterize selection rectangle to determine points for which the elevation must be determined.
       * @return {m3d.models.ProfilePoint[]} list of single profile Points for the rasterized selection rectangle. The elevation is zero for each point.
       */
-      getProfilePoints: function(){
+      getCoordinates: function(){
         var resolution = localStorage.getItem('resolution') || 25;
         gridSize = horizontalSegments = verticalSegments = parseInt(resolution);
 

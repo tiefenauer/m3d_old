@@ -7,7 +7,16 @@ define([
   ],
   function(angular, THREE, _, Profile){
 
-    var $log, $rootScope;
+    var extrudeSettings = { 
+      amount: 40, 
+      bevelEnabled: true, 
+      bevelSegments: 2, 
+      steps: 2, 
+      bevelSize: 1, 
+      bevelThickness: 1 
+    };
+
+    var $log;
     /**
      * ProfileOutlineService
      * Service to load and save files from/to file
@@ -16,23 +25,18 @@ define([
      * @constructor
      * @namespace
      */
-    var ProfileOutlineService = function($log, $rootScope){
-      this.init($log, $rootScope);
+    var ProfileOutlineService = function(log){
+      $log = log;
     };
 
     ProfileOutlineService.prototype = /** @lends m3d.services.ProfileOutlineService.prototype */{
-      extrudeSettings: { 
-        amount: 40, 
-        bevelEnabled: true, 
-        bevelSegments: 2, 
-        steps: 2, 
-        bevelSize: 1, 
-        bevelThickness: 1 
-      },
 
-      init: function(log, rootScope){
-        $log = log;
-        $rootScope = rootScope;
+      createProfile: function(profilePoints){
+        var profile = new Profile({
+          profilePoints: profilePoints,
+          thickness: localStorage.getItem('thickness') || undefined
+        });
+        return profile;
       },
 
       createOutline: function(points){
@@ -54,13 +58,12 @@ define([
         var posX, posY=0;
         posX = (maxLng - minLng)*scale/2;
         posY = (maxLat - minLat)*-scale/2;        
-        var mesh = this.extrude(shape, this.extrudeSettings, posX, 0, posY);        
+        var extrudedMesh = this.extrude(shape, extrudeSettings, posX, 0, posY);
+        var mesh = this.rasterize(extrudedMesh);
         return mesh;
       },
 
       extrude: function(shape, extrudeSettings, x, y, z){
-        //var points = shape.createPointsGeometry();
-        //var spacedPoints = shape.createSpacedPointsGeometry(50);
         var flatGeometry = new THREE.ShapeGeometry(shape);
         var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
         var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial( { color: 0x00ff00, ambient: 0x00ff00 } ));
@@ -78,7 +81,109 @@ define([
         mesh.matrix.identity();
 
         return mesh;
+      },
+
+      rasterize: function(extrudedMesh){
+        var maxX = _.max(extrudedMesh.geometry.vertices, 'x').x;
+        var minX = _.min(extrudedMesh.geometry.vertices, 'x').x;
+        var maxY = _.max(extrudedMesh.geometry.vertices, 'y').y;
+        var minY = _.min(extrudedMesh.geometry.vertices, 'y').y;        
+        var maxZ = _.max(extrudedMesh.geometry.vertices, 'z').z;
+        var minZ = _.min(extrudedMesh.geometry.vertices, 'z').z;
+
+        var boxWidth = maxX - minX;
+        var boxHeight = (maxY - minY)/2;
+        var boxDepth = maxZ - minZ;
+
+        var boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth, 10, 1, 10);
+        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: false });
+        //var boxMesh = new THREE.Mesh(boxGeometry, material);
+
+        var csgBox = new THREE.ThreeBSP(boxGeometry);
+        var csgProfile = new THREE.ThreeBSP(extrudedMesh);
+        var csgRasterized = csgBox.intersect(csgProfile);
+        var geometry = csgRasterized.toGeometry();
+        
+        var rasterized = new THREE.Mesh(geometry, material);
+        return rasterized;
+      },
+
+      /**
+      * create a mold by inverting the objects
+      * @param {m3d.models.Profile} profile the profile to be inverted
+      */
+      invert: function(profile){
+        profile.mesh.geometry.computeVertexNormals();
+        // Quader für Gussform vorbereiten
+        var boxBorderThickness = profile.getDimensionY() * 1.1 - profile.getDimensionY();
+        var boxWidth = profile.getDimensionZ() + boxBorderThickness;
+        var boxHeight = profile.getDimensionY() * 2 + boxBorderThickness;
+        var boxDepth =  profile.getDimensionX() + boxBorderThickness;
+        var boxGeometry = new THREE.BoxGeometry(boxDepth, boxHeight, boxWidth);
+        boxGeometry.dynamic = true;
+        // y-Position der unteren Vertices anpassen
+        boxGeometry.vertices.forEach(function(vertex){
+          if (vertex.y < 0)
+            vertex.y = -1 * boxBorderThickness;
+        });
+        boxGeometry.verticesNeedUpdate = true;
+
+        // Modell kopieren und Sockel erstellen
+        profile.mesh.geometry.computeVertexNormals();
+        var profileCopy = new Profile({
+          profilePoints: profile.profilePoints,
+          mesh: profile.mesh
+        });   
+        profile.mesh.geometry.computeVertexNormals();
+        profileCopy.mesh.geometry.computeVertexNormals();
+
+        profileCopy.mesh.dynamic = true;
+
+        profile.mesh.geometry.computeVertexNormals();
+        profileCopy.mesh.geometry.computeVertexNormals();
+
+        // Sockel erstellen
+        if (profileCopy.profilePoints.length > 0){
+        _.forEach(profileCopy.profilePoints, function(point, i){
+              var bottomIndex = profileCopy.getBottomIndex(i);                        
+            profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;
+            });   
+        } 
+        else{
+          var half = Math.ceil(profileCopy.mesh.geometry.vertices.length / 2);
+          var getBoti = function(n){        
+            var side = Math.sqrt(half);       
+            return half + n + side - 2*(n%side) - 1;
+          }
+          for(var i=0; i<half; i++){
+            var boti = getBoti(i);
+            profileCopy.mesh.geometry.vertices[boti].y = -1 * boxHeight;
+          }
+        };    
+        //profileCopy.mesh = profile.mesh;
+        profileCopy.mesh.geometry.verticesNeedUpdate = true;
+        profileCopy.mesh.geometry.mergeVertices();
+        profileCopy.mesh.geometry.computeVertexNormals();
+
+        // Gussform aus Quader konstruieren          
+        var csgBox = new THREE.ThreeBSP(boxGeometry);
+        var csgProfile = new THREE.ThreeBSP(profileCopy.mesh);
+        var csgMold = csgBox.subtract(csgProfile);
+        var geometry = csgMold.toGeometry();
+
+        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
+        var mold = new THREE.Mesh(geometry, material);
+
+        // Gussform um 180° drehen
+        var moldRotation = new THREE.Matrix4().makeRotationX( Math.PI );
+        mold.updateMatrix();
+        mold.geometry.applyMatrix(mold.matrix);
+        mold.geometry.applyMatrix(moldRotation);
+        mold.matrix.identity();
+        mold.name = profile.mesh.name + 'mold';
+        return mold;
       }
+
     };
 
     /**
@@ -103,5 +208,5 @@ define([
       return circle.makeGeometry();
     };
 
-    return ['$log', '$rootScope', ProfileOutlineService];
+    return ['$log', ProfileOutlineService];
 });

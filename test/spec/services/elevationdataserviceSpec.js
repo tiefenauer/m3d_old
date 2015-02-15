@@ -55,13 +55,13 @@ define([
 
       it('should be a valid ElevationDataService object', function () {
         expect(!!ElevationDataService).toBe(true);
-        expect(ElevationDataService.calculateHeightMap).not.toBe(null);
-        expect(typeof(ElevationDataService.calculateHeightMap)).toBe('function');
+        expect(ElevationDataService.getElevationData).not.toBe(null);
+        expect(typeof(ElevationDataService.getElevationData)).toBe('function');
       });
 
       it('should work with empty array', function(){
         spyOn(rootScope, '$broadcast');        
-        ElevationDataService.calculateHeightMap([]);
+        ElevationDataService.getElevationData([]);
 
         expect(rootScope.$broadcast).toHaveBeenCalled();
         expect(rootScope.$broadcast.calls.first().args[0]).toBe('adapter:start');
@@ -92,7 +92,7 @@ define([
         });
         spyOn(rootScope, '$broadcast').and.callThrough();
         spyOn(google.maps.ElevationService.prototype, 'getElevationForLocations').and.callFake(dummyGoogleMapsFunction);
-        ElevationDataService.calculateHeightMap(dummyCoordinates);
+        ElevationDataService.getElevationData(dummyCoordinates);
 
         // start event
         expect(rootScope.$broadcast).toHaveBeenCalled();

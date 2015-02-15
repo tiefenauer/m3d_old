@@ -52,9 +52,8 @@ define([
       * @fires adapter:end
       * @fires adapter:queue:progress
       */
-      calculateHeightMap: function(coordinates){
-        $log.debug('calculating heigth map in service ...');
-        $log.debug(coordinates.length + ' points');
+      getElevationData: function(coordinates){
+        $log.debug('getting elevation data for ' + coordinates.length + ' points');
         coords = coordinates;
 
         service = new google.maps.ElevationService();

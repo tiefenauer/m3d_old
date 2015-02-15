@@ -33,9 +33,11 @@
         <li role="presentation" ng-class="{active: isSet('Y')}" ><a href="#" ng-click="setTab('Y')">Y</a></li>
         <li role="presentation" ng-class="{active: isSet('Z')}" ><a href="#" ng-click="setTab('Z')">Z</a></li>
       </ul>        
-      <input type="text" name="searchquery" ng-model="search.query" ng-model-options="{ getterSetter: true }" placeholder="Suchen" ng-show="tab.isSet('search')"/>
+      <div class="form-group">
+        <input type="text" class="form-control" name="searchquery" ng-model="search.query" ng-model-options="{ getterSetter: true }" placeholder="Gemeinde Suchen" ng-show="isSet('search')"/>    
+      </div>      
       <div class="list-group">
-        <a href="#" class="list-group-item" ng-repeat="gemeinde in list | filter:search.query" ng-click="load(gemeinde)">{{gemeinde}}</a>
+        <a href="#" class="list-group-item" ng-repeat="gemeinde in gemeinden.list | filter:query" ng-click="load(gemeinde)">{{gemeinde}}</a>
       </div>
     </div>
     <div class="modal-footer">
