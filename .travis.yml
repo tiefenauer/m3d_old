@@ -17,5 +17,5 @@ after_success:
 - chmod +x ./update-gh-pages.sh
 - ./update-gh-pages.sh
 - cd dist
-- find . -type f -exec curl -u $FTP_USER:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://ftp.tiefenauer.info/web/m3d/{}
+- find . -type f -exec curl -u $FTP_USER:$FTP_PASSWORD --ftp-create-dirs -T {} ftp://ftp.tiefenauer.info/web/m3d/{} 
   \;
