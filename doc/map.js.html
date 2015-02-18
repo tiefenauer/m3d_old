@@ -60,7 +60,7 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="m3d.controller.MapController#getCoordinates"><a href="m3d.controller.MapController.html#getCoordinates">getCoordinates</a></li>
+                <li data-name="m3d.controller.MapController#rasterizeRectangle"><a href="m3d.controller.MapController.html#rasterizeRectangle">rasterizeRectangle</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -134,6 +134,14 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="m3d.services.ProfileOutlineService#calculateRasterPoints"><a href="m3d.services.ProfileOutlineService.html#calculateRasterPoints">calculateRasterPoints</a></li>
+            
+                <li data-name="m3d.services.ProfileOutlineService#createShape"><a href="m3d.services.ProfileOutlineService.html#createShape">createShape</a></li>
+            
+                <li data-name="m3d.services.ProfileOutlineService#getCommonVertices"><a href="m3d.services.ProfileOutlineService.html#getCommonVertices">getCommonVertices</a></li>
+            
+                <li data-name="m3d.services.ProfileOutlineService#getTopVertices"><a href="m3d.services.ProfileOutlineService.html#getTopVertices">getTopVertices</a></li>
             
                 <li data-name="m3d.services.ProfileOutlineService#invert"><a href="m3d.services.ProfileOutlineService.html#invert">invert</a></li>
             
@@ -365,8 +373,6 @@ define([
   function (angular, $, _, Profile, ProfilePoint) {
 
     var $log, $scope, $ElevationDataService, $ProfileOutlineService;
-    var map, rect, kmlLayer;
-    var markers = [];
     var gridSize;
     var verticalSegments = 25;
     var horizontalSegments = 25;    
@@ -386,42 +392,58 @@ define([
         $ElevationDataService = ElevationDataService;
         $ProfileOutlineService = ProfileOutlineService;
         $log.debug('MapController created');
-        initMap();
+        //this.resetMap = angular.bind(this, this.resetMap);
+        this.fitBounds = angular.bind(this, this.fitBounds);
+        this.resetMap();
 
-        $scope.getCoordinates = this.getCoordinates;
-        $scope.$on('menu:places_changed', onPlacesChanged);
-        $scope.$on('menu:model:generate', function(event){
-          $ElevationDataService.getElevationData($scope.getCoordinates());
-        });
-        $scope.$on('gemeinde:load', function(event, name){
-          $log.debug('integrating in map');
-          var localUrl = 'assets/gemeinden/' + name + '.kml';
-          var url = 'http://tiefenauer.github.io/m3d/' + localUrl;          
-          var parser = new geoXML3.parser({
-            map: map,
-            afterParse: function(docs){
-              var doc = docs[0];
-              var coordinates = doc.placemarks[0].Polygon[0].outerBoundaryIs[0].coordinates;
-              var outline = ProfileOutlineService.createOutline(coordinates);
-              var outlineProfile = new Profile({ mesh: outline, name: name });
-              $scope.$broadcast('outline:created', outlineProfile);
-            }
-          });
-          parser.parse(localUrl);
-        });
+        $scope.$on('menu:places:changed', angular.bind(this, function(event, places){                    
+          this.fitBounds(places);          
+          this.resetZoom();
+        }));
+        $scope.$on('menu:model:generate', angular.bind(this, function(event){
+          $ElevationDataService.getElevationData(this.getCoordinates());
+        }));
+        $scope.$on('gemeinde:load', angular.bind(this, function(event, name){
+          $log.debug('loading ' + name + ' from file...');
+          this.loadGemeinde(name);
+        }));
+        $scope.$on('menu:drawing:type', angular.bind(this, function(event, type){
+          if (type == 'rect')
+            this.resetRect();
+          else if (type == 'poly')
+            this.resetPolygon();            
+        }));
         //$scope.$broadcast('gemeinde:load', 'Aarau');        
     };
 
     MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
+      map: null,
+      rect: null,
+      polygon: null,
+      _area: null,
+
+      getCoordinates: function(){
+        if (!this._area)
+          return [];
+
+        if (this._area == this.rect)
+          return this.rasterizeRectangle();
+
+        if (this._area == this.polygon)
+          return this.rasterizePolygon();
+      },
 
       /**
       * Rasterize selection rectangle to determine points for which the elevation must be determined.
       * @return {m3d.models.ProfilePoint[]} list of single profile Points for the rasterized selection rectangle. The elevation is zero for each point.
       */
-      getCoordinates: function(){
+      rasterizeRectangle: function(){
+        if (!this.rect)
+          return [];
         var resolution = localStorage.getItem('resolution') || 25;
         gridSize = horizontalSegments = verticalSegments = parseInt(resolution);
 
+        var rect = this.rect;
         // Positionen der Ecken bestimmen
         var ne = rect.getBounds().getNorthEast();
         var sw = rect.getBounds().getSouthWest();
@@ -450,95 +472,154 @@ define([
           }
         }
         return profilePoints;
+      },
+
+      rasterizePolygon: function(){
+        if (!this.polygon)
+          return [];
+        return [];
+      },
+
+      resetMap: function(){
+        var el = $('#map')[0];
+        this.map = new google.maps.Map(el, {
+          center : new google.maps.LatLng(45.976433, 7.658448), // Matterhorn
+          zoom : 12,
+          mapTypeId : google.maps.MapTypeId.ROADMAP,
+          scrollwheel: true,
+          zoomControl: true
+        });
+        
+
+        var tilesLoadedListener = google.maps.event.addListener(this.map, 'tilesloaded', angular.bind(this, function(){
+          $log.debug('map:tilesloaded');          
+          this.resetRect();
+          google.maps.event.removeListener(tilesLoadedListener);
+        }));
+        google.maps.event.addListener(this.map, 'bounds_changed', angular.bind(this, function(){
+          $log.debug('map:bounds_changed : ' + this.map.getBounds().getSouthWest().lat() + ',' + this.map.getBounds().getSouthWest().lng() + '/' + this.map.getBounds().getNorthEast().lat() + ',' + this.map.getBounds().getNorthEast().lng());
+          if (this.rect)
+            this.rect.setBounds(this.getRectBounds());
+        }));
+      },
+
+      resetRect: function(){
+        this.setPolygon(null);
+        this.setRect(null);
+        var rect = new google.maps.Rectangle({editable: true, draggable: true, map: this.map})
+        this.setRect(rect);        
+        /*
+        // Matterhorn
+        new google.maps.LatLngBounds(   
+          new google.maps.LatLng(45.956433, 7.63),
+          new google.maps.LatLng(46, 7.7 )
+        )
+        */
+      },
+
+      resetPolygon: function(){
+        this.setPolygon(null);
+        this.setRect(null);
+        var dm = new google.maps.drawing.DrawingManager({
+           map: this.map
+          ,drawingControl: false
+          ,drawingMode: google.maps.drawing.OverlayType.POLYGON
+        });
+        google.maps.event.addListener(dm, 'polygoncomplete', angular.bind(this, function(polygon){
+          this.setPolygon(polygon);
+          dm.setDrawingMode(null);
+        }));
+      },
+
+      resetZoom: function(){
+        this.map.setZoom(12);
+      },
+
+      fitBounds: function(places){
+        if (places.length == 0)
+          return;
+        var place = places[0];        
+        var bounds = new google.maps.LatLngBounds();
+        bounds.extend(place.geometry.location);
+        this.map.fitBounds(bounds);        
+      },
+
+      loadGemeinde: function(name){
+        var localUrl = 'assets/gemeinden/' + name + '.kml';
+        var url = 'http://tiefenauer.github.io/m3d/' + localUrl;                  
+        this.parser = new geoXML3.parser({
+          map: this.map,
+          afterParse: angular.bind(this, function(docs){              
+            $scope.$broadcast('gemeinde:loaded', docs);
+            if (this.doc)
+              this.parser.hideDocument(this.doc);
+            this.doc = docs[0];
+            var polygon = this.doc.placemarks[0].Polygon[0];
+            this.setPolygon(polygon);
+          })
+        });
+        this.parser.parse(localUrl);
+      },
+
+      getRectBounds: function(){
+        var mapBounds = this.map.getBounds();
+        var rectNorthEast = new google.maps.LatLng(
+           mapBounds.getNorthEast().lat() - (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
+          ,mapBounds.getNorthEast().lng() - (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
+        );
+        var rectSouthWest = new google.maps.LatLng(
+           mapBounds.getSouthWest().lat() + (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
+          ,mapBounds.getSouthWest().lng() + (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
+        );
+        var bounds = new google.maps.LatLngBounds(rectSouthWest,rectNorthEast);
+        return bounds;
+      },
+
+      setPolygon: function(polygon){
+        if (polygon == null){
+          if (this.polygon){
+            this.polygon.setMap = this.polygon.setMap || function(){};
+            this.polygon.setMap(null);
+            this.polygon = null;
+          }
+          return;
+        };
+
+        if (this.rect){
+          this.rect.setMap(null);
+          this.rect = null;          
+        } 
+        if (this.polygon)
+          this.setPolygon(null);      
+        this.polygon = polygon; 
+        this.polygon.setOptions = this.polygon.setOptions || function(options){};
+        this.polygon.setOptions({
+          draggable: true, editable: true ,
+          strokeColor: '#ff0000',
+          strokeWeight: 5
+        });
+        this._area = this.polygon;
+      },
+
+      setRect: function(rect){
+        if (rect == null){
+          if (this.rect){
+            this.rect.setMap(null);
+            this.rect = null;
+          }
+          return;
+        };
+
+        if (this.polygon){
+          this.polygon.setMap(null);
+          this.polygon = null;
+        }                
+        if (this.rect)
+          this.setRect(null);
+        this.rect = rect;
+        this.rect.setBounds(this.getRectBounds());
+        this._area = this.rect;
       }
-    };
-
-    var initMap = function(){
-      var el = $('#map')[0];
-      map = new google.maps.Map(el, {
-        center : new google.maps.LatLng(45.976433, 7.658448), // Matterhorn
-        zoom : 12,
-        mapTypeId : google.maps.MapTypeId.ROADMAP,
-        scrollwheel: true,
-        zoomControl: true
-      });
-
-      google.maps.event.addListener(map, 'tilesloaded', function(){
-        $log.debug('map:tilesloaded');
-        initRect();
-      });
-      google.maps.event.addListener(map, 'bounds_changed', function(){
-        $log.debug('map:bounds_changed : ' + map.getBounds().getSouthWest().lat() + ',' + map.getBounds().getSouthWest().lng() + '/' + map.getBounds().getNorthEast().lat() + ',' + map.getBounds().getNorthEast().lng());
-        initRect();
-      });
-      //initRect();
-    };  
-
-    var initRect = function(){    
-      if (rect){
-        rect.setMap(null);
-      }        
-      rect = new google.maps.Rectangle({editable: true, draggable: true});
-      rect.setMap(map);
-      rect.setBounds(getRectBounds());      
-      /*
-      // Matterhorn
-      new google.maps.LatLngBounds(   
-        new google.maps.LatLng(45.956433, 7.63),
-        new google.maps.LatLng(46, 7.7 )
-      )
-      */
-    };
-
-    var getRectBounds = function(){
-      var mapBounds = map.getBounds();
-      var rectNorthEast = new google.maps.LatLng(
-         mapBounds.getNorthEast().lat() - (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
-        ,mapBounds.getNorthEast().lng() - (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
-      );
-      var rectSouthWest = new google.maps.LatLng(
-         mapBounds.getSouthWest().lat() + (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
-        ,mapBounds.getSouthWest().lng() + (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
-      );
-      var bounds = new google.maps.LatLngBounds(rectSouthWest,rectNorthEast);
-      return bounds;
-    };
-
-
-    var onPlacesChanged = function(event, places){
-      $log.debug('onPlacesChanged' + places.length);
-
-      markers.forEach(function(marker){
-        marker.setMap(null);
-      });
-
-      // For each place, get the icon, place name, and location.
-      markers = [];
-      var bounds = new google.maps.LatLngBounds();
-      for (var i = 0; i&lt;places.length; i++) {
-        var place = places[i];
-        var image = {
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(25, 25)
-          };
-
-          // Create a marker for each place.
-          var marker = new google.maps.Marker({
-            map: map,
-            icon: image,
-            title: place.name,
-            position: place.geometry.location
-          });
-
-          markers.push(marker);
-
-          bounds.extend(place.geometry.location);
-      }
-
-      map.fitBounds(bounds);
     };
 
     return ['$scope', '$log', 'ElevationDataService', 'ProfileOutlineService', MapController];
@@ -556,7 +637,7 @@ define([
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Feb 16 2015 19:20:29 GMT-0000 (UTC)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Feb 18 2015 20:36:32 GMT-0000 (UTC)
         </footer>
     </div>
 </div>

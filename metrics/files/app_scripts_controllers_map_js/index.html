@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">62.35</p>
+      <p class="stat">65.20</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">194</p>
+      <p class="stat">267</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">26.58</p>
+      <p class="stat">41.56</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">2.28</p>
+      <p class="stat">3.23</p>
     </div>
   </div>
 </div>
@@ -104,8 +104,6 @@ define([
   function (angular, $, _, Profile, ProfilePoint) {
 
     var $log, $scope, $ElevationDataService, $ProfileOutlineService;
-    var map, rect, kmlLayer;
-    var markers = [];
     var gridSize;
     var verticalSegments = 25;
     var horizontalSegments = 25;    
@@ -125,42 +123,58 @@ define([
         $ElevationDataService = ElevationDataService;
         $ProfileOutlineService = ProfileOutlineService;
         $log.debug(&#039;MapController created&#039;);
-        initMap();
+        //this.resetMap = angular.bind(this, this.resetMap);
+        this.fitBounds = angular.bind(this, this.fitBounds);
+        this.resetMap();
 
-        $scope.getCoordinates = this.getCoordinates;
-        $scope.$on(&#039;menu:places_changed&#039;, onPlacesChanged);
-        $scope.$on(&#039;menu:model:generate&#039;, function(event){
-          $ElevationDataService.getElevationData($scope.getCoordinates());
-        });
-        $scope.$on(&#039;gemeinde:load&#039;, function(event, name){
-          $log.debug(&#039;integrating in map&#039;);
-          var localUrl = &#039;assets/gemeinden/&#039; + name + &#039;.kml&#039;;
-          var url = &#039;http://tiefenauer.github.io/m3d/&#039; + localUrl;          
-          var parser = new geoXML3.parser({
-            map: map,
-            afterParse: function(docs){
-              var doc = docs[0];
-              var coordinates = doc.placemarks[0].Polygon[0].outerBoundaryIs[0].coordinates;
-              var outline = ProfileOutlineService.createOutline(coordinates);
-              var outlineProfile = new Profile({ mesh: outline, name: name });
-              $scope.$broadcast(&#039;outline:created&#039;, outlineProfile);
-            }
-          });
-          parser.parse(localUrl);
-        });
+        $scope.$on(&#039;menu:places:changed&#039;, angular.bind(this, function(event, places){                    
+          this.fitBounds(places);          
+          this.resetZoom();
+        }));
+        $scope.$on(&#039;menu:model:generate&#039;, angular.bind(this, function(event){
+          $ElevationDataService.getElevationData(this.getCoordinates());
+        }));
+        $scope.$on(&#039;gemeinde:load&#039;, angular.bind(this, function(event, name){
+          $log.debug(&#039;loading &#039; + name + &#039; from file...&#039;);
+          this.loadGemeinde(name);
+        }));
+        $scope.$on(&#039;menu:drawing:type&#039;, angular.bind(this, function(event, type){
+          if (type == &#039;rect&#039;)
+            this.resetRect();
+          else if (type == &#039;poly&#039;)
+            this.resetPolygon();            
+        }));
         //$scope.$broadcast(&#039;gemeinde:load&#039;, &#039;Aarau&#039;);        
     };
 
     MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
+      map: null,
+      rect: null,
+      polygon: null,
+      _area: null,
+
+      getCoordinates: function(){
+        if (!this._area)
+          return [];
+
+        if (this._area == this.rect)
+          return this.rasterizeRectangle();
+
+        if (this._area == this.polygon)
+          return this.rasterizePolygon();
+      },
 
       /**
       * Rasterize selection rectangle to determine points for which the elevation must be determined.
       * @return {m3d.models.ProfilePoint[]} list of single profile Points for the rasterized selection rectangle. The elevation is zero for each point.
       */
-      getCoordinates: function(){
+      rasterizeRectangle: function(){
+        if (!this.rect)
+          return [];
         var resolution = localStorage.getItem(&#039;resolution&#039;) || 25;
         gridSize = horizontalSegments = verticalSegments = parseInt(resolution);
 
+        var rect = this.rect;
         // Positionen der Ecken bestimmen
         var ne = rect.getBounds().getNorthEast();
         var sw = rect.getBounds().getSouthWest();
@@ -189,95 +203,154 @@ define([
           }
         }
         return profilePoints;
+      },
+
+      rasterizePolygon: function(){
+        if (!this.polygon)
+          return [];
+        return [];
+      },
+
+      resetMap: function(){
+        var el = $(&#039;#map&#039;)[0];
+        this.map = new google.maps.Map(el, {
+          center : new google.maps.LatLng(45.976433, 7.658448), // Matterhorn
+          zoom : 12,
+          mapTypeId : google.maps.MapTypeId.ROADMAP,
+          scrollwheel: true,
+          zoomControl: true
+        });
+        
+
+        var tilesLoadedListener = google.maps.event.addListener(this.map, &#039;tilesloaded&#039;, angular.bind(this, function(){
+          $log.debug(&#039;map:tilesloaded&#039;);          
+          this.resetRect();
+          google.maps.event.removeListener(tilesLoadedListener);
+        }));
+        google.maps.event.addListener(this.map, &#039;bounds_changed&#039;, angular.bind(this, function(){
+          $log.debug(&#039;map:bounds_changed : &#039; + this.map.getBounds().getSouthWest().lat() + &#039;,&#039; + this.map.getBounds().getSouthWest().lng() + &#039;/&#039; + this.map.getBounds().getNorthEast().lat() + &#039;,&#039; + this.map.getBounds().getNorthEast().lng());
+          if (this.rect)
+            this.rect.setBounds(this.getRectBounds());
+        }));
+      },
+
+      resetRect: function(){
+        this.setPolygon(null);
+        this.setRect(null);
+        var rect = new google.maps.Rectangle({editable: true, draggable: true, map: this.map})
+        this.setRect(rect);        
+        /*
+        // Matterhorn
+        new google.maps.LatLngBounds(   
+          new google.maps.LatLng(45.956433, 7.63),
+          new google.maps.LatLng(46, 7.7 )
+        )
+        */
+      },
+
+      resetPolygon: function(){
+        this.setPolygon(null);
+        this.setRect(null);
+        var dm = new google.maps.drawing.DrawingManager({
+           map: this.map
+          ,drawingControl: false
+          ,drawingMode: google.maps.drawing.OverlayType.POLYGON
+        });
+        google.maps.event.addListener(dm, &#039;polygoncomplete&#039;, angular.bind(this, function(polygon){
+          this.setPolygon(polygon);
+          dm.setDrawingMode(null);
+        }));
+      },
+
+      resetZoom: function(){
+        this.map.setZoom(12);
+      },
+
+      fitBounds: function(places){
+        if (places.length == 0)
+          return;
+        var place = places[0];        
+        var bounds = new google.maps.LatLngBounds();
+        bounds.extend(place.geometry.location);
+        this.map.fitBounds(bounds);        
+      },
+
+      loadGemeinde: function(name){
+        var localUrl = &#039;assets/gemeinden/&#039; + name + &#039;.kml&#039;;
+        var url = &#039;http://tiefenauer.github.io/m3d/&#039; + localUrl;                  
+        this.parser = new geoXML3.parser({
+          map: this.map,
+          afterParse: angular.bind(this, function(docs){              
+            $scope.$broadcast(&#039;gemeinde:loaded&#039;, docs);
+            if (this.doc)
+              this.parser.hideDocument(this.doc);
+            this.doc = docs[0];
+            var polygon = this.doc.placemarks[0].Polygon[0];
+            this.setPolygon(polygon);
+          })
+        });
+        this.parser.parse(localUrl);
+      },
+
+      getRectBounds: function(){
+        var mapBounds = this.map.getBounds();
+        var rectNorthEast = new google.maps.LatLng(
+           mapBounds.getNorthEast().lat() - (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
+          ,mapBounds.getNorthEast().lng() - (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
+        );
+        var rectSouthWest = new google.maps.LatLng(
+           mapBounds.getSouthWest().lat() + (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
+          ,mapBounds.getSouthWest().lng() + (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
+        );
+        var bounds = new google.maps.LatLngBounds(rectSouthWest,rectNorthEast);
+        return bounds;
+      },
+
+      setPolygon: function(polygon){
+        if (polygon == null){
+          if (this.polygon){
+            this.polygon.setMap = this.polygon.setMap || function(){};
+            this.polygon.setMap(null);
+            this.polygon = null;
+          }
+          return;
+        };
+
+        if (this.rect){
+          this.rect.setMap(null);
+          this.rect = null;          
+        } 
+        if (this.polygon)
+          this.setPolygon(null);      
+        this.polygon = polygon; 
+        this.polygon.setOptions = this.polygon.setOptions || function(options){};
+        this.polygon.setOptions({
+          draggable: true, editable: true ,
+          strokeColor: &#039;#ff0000&#039;,
+          strokeWeight: 5
+        });
+        this._area = this.polygon;
+      },
+
+      setRect: function(rect){
+        if (rect == null){
+          if (this.rect){
+            this.rect.setMap(null);
+            this.rect = null;
+          }
+          return;
+        };
+
+        if (this.polygon){
+          this.polygon.setMap(null);
+          this.polygon = null;
+        }                
+        if (this.rect)
+          this.setRect(null);
+        this.rect = rect;
+        this.rect.setBounds(this.getRectBounds());
+        this._area = this.rect;
       }
-    };
-
-    var initMap = function(){
-      var el = $(&#039;#map&#039;)[0];
-      map = new google.maps.Map(el, {
-        center : new google.maps.LatLng(45.976433, 7.658448), // Matterhorn
-        zoom : 12,
-        mapTypeId : google.maps.MapTypeId.ROADMAP,
-        scrollwheel: true,
-        zoomControl: true
-      });
-
-      google.maps.event.addListener(map, &#039;tilesloaded&#039;, function(){
-        $log.debug(&#039;map:tilesloaded&#039;);
-        initRect();
-      });
-      google.maps.event.addListener(map, &#039;bounds_changed&#039;, function(){
-        $log.debug(&#039;map:bounds_changed : &#039; + map.getBounds().getSouthWest().lat() + &#039;,&#039; + map.getBounds().getSouthWest().lng() + &#039;/&#039; + map.getBounds().getNorthEast().lat() + &#039;,&#039; + map.getBounds().getNorthEast().lng());
-        initRect();
-      });
-      //initRect();
-    };  
-
-    var initRect = function(){    
-      if (rect){
-        rect.setMap(null);
-      }        
-      rect = new google.maps.Rectangle({editable: true, draggable: true});
-      rect.setMap(map);
-      rect.setBounds(getRectBounds());      
-      /*
-      // Matterhorn
-      new google.maps.LatLngBounds(   
-        new google.maps.LatLng(45.956433, 7.63),
-        new google.maps.LatLng(46, 7.7 )
-      )
-      */
-    };
-
-    var getRectBounds = function(){
-      var mapBounds = map.getBounds();
-      var rectNorthEast = new google.maps.LatLng(
-         mapBounds.getNorthEast().lat() - (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
-        ,mapBounds.getNorthEast().lng() - (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
-      );
-      var rectSouthWest = new google.maps.LatLng(
-         mapBounds.getSouthWest().lat() + (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
-        ,mapBounds.getSouthWest().lng() + (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
-      );
-      var bounds = new google.maps.LatLngBounds(rectSouthWest,rectNorthEast);
-      return bounds;
-    };
-
-
-    var onPlacesChanged = function(event, places){
-      $log.debug(&#039;onPlacesChanged&#039; + places.length);
-
-      markers.forEach(function(marker){
-        marker.setMap(null);
-      });
-
-      // For each place, get the icon, place name, and location.
-      markers = [];
-      var bounds = new google.maps.LatLngBounds();
-      for (var i = 0; i&lt;places.length; i++) {
-        var place = places[i];
-        var image = {
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(25, 25)
-          };
-
-          // Create a marker for each place.
-          var marker = new google.maps.Marker({
-            map: map,
-            icon: image,
-            title: place.name,
-            position: place.geometry.location
-          });
-
-          markers.push(marker);
-
-          bounds.extend(place.geometry.location);
-      }
-
-      map.fitBounds(bounds);
     };
 
     return [&#039;$scope&#039;, &#039;$log&#039;, &#039;ElevationDataService&#039;, &#039;ProfileOutlineService&#039;, MapController];
