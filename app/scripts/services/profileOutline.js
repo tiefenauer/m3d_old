@@ -4,8 +4,9 @@ define([
   ,'threejs'  
   ,'lodash'
   ,'models/m3dProfile'
+  ,'models/m3dProfilePoint'
   ],
-  function(angular, THREE, _, Profile){
+  function(angular, THREE, _, Profile, ProfilePoint){
 
     var extrudeSettings = { 
       amount: 40, 
@@ -39,28 +40,99 @@ define([
         return profile;
       },
 
-      createOutline: function(points){
-        $log.debug('creating outline for ' + points.length + ' coordinates');            
+      createPolygon: function(coordinates){
+        $log.debug('creating outline for ' + coordinates.length + ' coordinates');            
 
-        var maxLat = _.max(points, 'lat').lat;
-        var maxLng = _.max(points, 'lng').lng;
-        var minLat = _.min(points, 'lat').lat;
-        var minLng = _.min(points, 'lng').lng;
-
+        var maxLat = _.max(coordinates, 'lat').lat;
+        var maxLng = _.max(coordinates, 'lng').lng;
+        var minLat = _.min(coordinates, 'lat').lat;
+        var minLng = _.min(coordinates, 'lng').lng;
         var scale = 50000;
-        var shape = new THREE.Shape();
-        _.forEach(points, function(point, i){
-          var x = (point.lat-maxLat) * scale;
-          var y = (point.lng-maxLng) * scale;
-          shape.moveTo(x, y);
-        });
 
+        // Schritt 1: Shape aus Einzelpunkten konstruieren
+        var shape = this.createShape(coordinates, scale);
+
+        // Schritt 2: Aus 2D-Shape eine 3D-Geometrie erstellen
         var posX, posY=0;
         posX = (maxLng - minLng)*scale/2;
         posY = (maxLat - minLat)*-scale/2;        
         var extrudedMesh = this.extrude(shape, extrudeSettings, posX, 0, posY);
-        var mesh = this.rasterize(extrudedMesh);
-        return mesh;
+
+        // Schritt 3: Die 3D-Geometrie regelmässig rastern und die Rasterpunkte ermitteln (ohne Randpunkte)
+        var rasterResult = this.rasterize(extrudedMesh);
+        var rasterizedMesh = rasterResult.mesh;
+        var rasterVertices = rasterResult.vertices;
+
+        // Schritt 4: Die ermittelten Rasterpunkte durch die Punkte auf dem Shaperands ergänzen
+        var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);
+
+        // Schritt 5: Die Komplette Liste an Rasterpunkten zurückrechnen  in Koordinaten (ProfilePoints)
+        var profilePoints = this.calculateProfilePoints(rasterPoints);
+
+        // Mesh und Koordinaten zurückgeben
+        return {
+           mesh: rasterizedMesh
+          ,profilePoints: profilePoints
+        };
+      },
+
+      /**
+      * Create Shape f
+      * @param {m3d.models.ProfilePoint} coordinates list of coordinates to process
+      * @returns {THREE.Shape} Shape representing the coordinates as a polygon
+      */
+      createShape: function(coordinates, scale){
+        var maxLat = _.max(coordinates, 'lat').lat;
+        var maxLng = _.max(coordinates, 'lng').lng;
+        var minLat = _.min(coordinates, 'lat').lat;
+        var minLng = _.min(coordinates, 'lng').lng;
+
+        var shape = new THREE.Shape();
+        _.forEach(coordinates, function(coordinate, i){
+          var x = (coordinate.lat - maxLat) * scale;
+          var y = (coordinate.lng - maxLng) * scale;
+          shape.moveTo(x, y);
+        });
+        return shape;
+      },
+
+      /**
+      * Calculates all raster points for a rasterized, but irregular polygon
+      * @param {THREE.Mesh} mesh the rasterized mesh used to display the profile which contains all the vertices (but more than actually needed)
+      * @param {THREE.Mesh} extrudedMesh the un-rasterized mesh 
+      * @param {THREE.Shape} shape the shape used for extrusion
+      */ 
+      calculateRasterPoints: function(rasterizedMesh, extrudedMesh, shape){
+        var rasterPoints = [];
+        // Schritt 1: Alle Punkte auf dem Polygonrand gehören dazu
+        var actions = _.filter(shape.actions, {'action': 'moveTo'});
+        _.forEach(actions, function(action, n){
+          var x = action.args[0];
+          var y = action.args[1];
+          //rasterPoints.push({x: x, y: y});
+        });
+
+        var isInExtrudedMesh = function(vertex){
+          var found = false;
+          for (var i=0; i<extrudedMesh.geometry.vertices.length && !found; i++){
+            var v = extrudedMesh.geometry.vertices[i];
+            if (v.x == vertex.x && v.y == vertex.y && v.z == vertex.z)
+              found = true;
+          }
+          return found;
+        };
+        // Schritt 2: Alle Punkte des gerasterten Meshes, welche nicht auch im extrudierten Mesh vorkommen, gehören dazu
+        rasterizedMesh.geometry.vertices.forEach(function(vertex){
+          var inExtrudedMesh = isInExtrudedMesh(vertex);
+          if (!inExtrudedMesh)
+            rasterPoints.push({x: vertex.x, y: vertex.y});
+        });
+
+        return rasterPoints;
+      },
+
+      calculateProfilePoints: function(rasterPoints){
+
       },
 
       extrude: function(shape, extrudeSettings, x, y, z){
@@ -95,17 +167,60 @@ define([
         var boxHeight = (maxY - minY)/2;
         var boxDepth = maxZ - minZ;
 
-        var boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth, 10, 1, 10);
-        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: false });
-        //var boxMesh = new THREE.Mesh(boxGeometry, material);
+        // Rasterbox zum Rastern
+        var boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth, 10, 1, 10);        
+        var topVertices = this.getTopVertices(boxGeometry);
+
+        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: true });
+        //return new THREE.Mesh(boxGeometry, material);
 
         var csgBox = new THREE.ThreeBSP(boxGeometry);
         var csgProfile = new THREE.ThreeBSP(extrudedMesh);
         var csgRasterized = csgBox.intersect(csgProfile);
         var geometry = csgRasterized.toGeometry();
+        geometry.mergeVertices();
+
+        // relevante Rasterpunkte ermitteln, für die Höhendaten ermittelt werden sollen
+        // Diese ergeben sich aus denjenigen Vertices auf der Oberseite des Polygons, welche auch in der Rasterbox enthalten sind
+        var topPolygonVertices = this.getCommonVertices(geometry.vertices, topVertices);
         
-        var rasterized = new THREE.Mesh(geometry, material);
-        return rasterized;
+        var rasterizedMesh = new THREE.Mesh(geometry, material);
+        return {
+          mesh: rasterizedMesh,
+          vertices: topPolygonVertices
+        };
+      },
+
+      /**
+      * Only for rectangular Get the index on the bottom for a vertex on top
+      * @return {Number} the index of the vertex on the bottom
+      */
+      getTopVertices: function(boxGeometry){
+        var topVertices = [];
+        _.forEach(boxGeometry.vertices, function(vertex, n){
+          var pair = _.filter(boxGeometry.vertices, {'x': vertex.x, 'z': vertex.z});
+          var top = _.max(pair, 'y');
+          var alreadyInList = _.filter(topVertices, {'x': top.x, 'z': top.z}).length > 0;
+          // zweite Bedinggung wegen Genauigkeitsverlust
+          if (!alreadyInList && top.y > 0)
+            topVertices.push(top);
+        });
+        return topVertices;
+      },
+
+      /**
+      * Get common vertices of two arrays
+      */
+      getCommonVertices: function(array1, array2){
+        var result = [];
+        var refArray = array1.length > array2.length?array2:array1;
+        var otherArray = refArray == array1?array2:array1;
+
+        _.forEach(refArray, function(vertex, n){
+          filtered = _.filter(otherArray, {'x': vertex.x, 'z': vertex.z});
+          result = result.concat(filtered);
+        });
+        return result;
       },
 
       /**

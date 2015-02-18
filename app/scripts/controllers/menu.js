@@ -44,6 +44,10 @@ define([
       $scope.showTownList = function(){
         this.popup('views/templates/gemeinde_popup.html', 'GemeindeCtrl', 'lg');
       };
+      $scope.setDrawingType = function(type){
+        $scope.drawingType = type;
+        $scope.$broadcast('menu:drawing:type', type);
+      };
     };
 
     MenuController.prototype = /** @lends m3d.controller.MenuController.prototype */{
@@ -120,14 +124,11 @@ define([
     var initSearchBox = function(){
       var searchInput = $('#pac-input')[0];
       searchBox = new google.maps.places.SearchBox(searchInput);
-      google.maps.event.addListener(searchBox, 'places_changed', onPlacesChanged);
+      google.maps.event.addListener(searchBox, 'places_changed', function(/* places */){
+        $log.debug('menu:places:changed');
+        $rootScope.$broadcast('menu:places:changed', searchBox.getPlaces());
+      });
     };
-
-    var onPlacesChanged = function(/* places */){
-      $log.debug('menu:places_changed');
-      $rootScope.$broadcast('menu:places_changed', searchBox.getPlaces());
-    };    
-
 
     return ['$rootScope', '$scope', '$log', '$modal', MenuController];
 });

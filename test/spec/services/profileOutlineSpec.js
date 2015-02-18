@@ -43,8 +43,8 @@ define([
       it('should be a valid ProfileOutlineService object', function () {
         expect(!!ProfileOutlineService).toBe(true);
         expect(typeof(ProfileOutlineService)).toBe('object');
-        expect(ProfileOutlineService.createOutline).not.toBe(null);
-        expect(typeof(ProfileOutlineService.createOutline)).toBe('function');
+        expect(ProfileOutlineService.createPolygon).not.toBe(null);
+        expect(typeof(ProfileOutlineService.createPolygon)).toBe('function');
         expect(ProfileOutlineService.extrude).not.toBe(null);
         expect(typeof(ProfileOutlineService.extrude)).toBe('function');
         expect(ProfileOutlineService.rasterize).not.toBe(null);
