@@ -23,6 +23,10 @@ define([
 
       it('should be a valid Logger object', function () {
         expect(!!log).toBe(true);
+        });
+
+      xit('ignored tests', function(){
+        expect(true).toBe(true);
       });
 
 

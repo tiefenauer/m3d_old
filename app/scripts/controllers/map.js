@@ -160,12 +160,12 @@ define([
       resetPolygon: function(){
         this.setPolygon(null);
         this.setRect(null);
-        var dm = new google.maps.drawing.DrawingManager({
+        var dm = this.dm = new google.maps.drawing.DrawingManager({
            map: this.map
           ,drawingControl: false
           ,drawingMode: google.maps.drawing.OverlayType.POLYGON
         });
-        google.maps.event.addListener(dm, 'polygoncomplete', angular.bind(this, function(polygon){
+        google.maps.event.addListener(this.dm, 'polygoncomplete', angular.bind(this, function(polygon){
           this.setPolygon(polygon);
           dm.setDrawingMode(null);
         }));
