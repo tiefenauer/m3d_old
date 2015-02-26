@@ -26,9 +26,6 @@ define(
 				,get targetRotation(){
 					return targetRotation;
 				}
-				,set targetRotation(value){
-					targetRotation = value;
-				}
 			};
 		};
 
