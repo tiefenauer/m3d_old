@@ -6,192 +6,11 @@
 
     <link rel="stylesheet" href="../../prettify.css">
 
-    <style>
-        body, html {
-            margin:0; padding: 0;
+    <link rel="stylesheet" href="../../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
         }
-        body {
-            font-family: Helvetica Neue, Helvetica,Arial;
-            font-size: 10pt;
-        }
-        div.header, div.footer {
-            background: #eee;
-            padding: 1em;
-        }
-        div.header {
-            z-index: 100;
-            position: fixed;
-            top: 0;
-            border-bottom: 1px solid #666;
-            width: 100%;
-        }
-        div.footer {
-            border-top: 1px solid #666;
-        }
-        div.body {
-            margin-top: 10em;
-        }
-        div.meta {
-            font-size: 90%;
-            text-align: center;
-        }
-        h1, h2, h3 {
-            font-weight: normal;
-        }
-        h1 {
-            font-size: 12pt;
-        }
-        h2 {
-            font-size: 10pt;
-        }
-        pre {
-            font-family: Consolas, Menlo, Monaco, monospace;
-            margin: 0;
-            padding: 0;
-            line-height: 14px;
-            font-size: 14px;
-            -moz-tab-size: 2;
-            -o-tab-size:  2;
-            tab-size: 2;
-        }
-
-        div.path { font-size: 110%; }
-        div.path a:link, div.path a:visited { color: #000; }
-        table.coverage { border-collapse: collapse; margin:0; padding: 0 }
-
-        table.coverage td {
-            margin: 0;
-            padding: 0;
-            color: #111;
-            vertical-align: top;
-        }
-        table.coverage td.line-count {
-            width: 50px;
-            text-align: right;
-            padding-right: 5px;
-        }
-        table.coverage td.line-coverage {
-            color: #777 !important;
-            text-align: right;
-            border-left: 1px solid #666;
-            border-right: 1px solid #666;
-        }
-
-        table.coverage td.text {
-        }
-
-        table.coverage td span.cline-any {
-            display: inline-block;
-            padding: 0 5px;
-            width: 40px;
-        }
-        table.coverage td span.cline-neutral {
-            background: #eee;
-        }
-        table.coverage td span.cline-yes {
-            background: #b5d592;
-            color: #999;
-        }
-        table.coverage td span.cline-no {
-            background: #fc8c84;
-        }
-
-        .cstat-yes { color: #111; }
-        .cstat-no { background: #fc8c84; color: #111; }
-        .fstat-no { background: #ffc520; color: #111 !important; }
-        .cbranch-no { background:  yellow !important; color: #111; }
-
-        .cstat-skip { background: #ddd; color: #111; }
-        .fstat-skip { background: #ddd; color: #111 !important; }
-        .cbranch-skip { background: #ddd !important; color: #111; }
-
-        .missing-if-branch {
-            display: inline-block;
-            margin-right: 10px;
-            position: relative;
-            padding: 0 4px;
-            background: black;
-            color: yellow;
-        }
-
-        .skip-if-branch {
-            display: none;
-            margin-right: 10px;
-            position: relative;
-            padding: 0 4px;
-            background: #ccc;
-            color: white;
-        }
-
-        .missing-if-branch .typ, .skip-if-branch .typ {
-            color: inherit !important;
-        }
-
-        .entity, .metric { font-weight: bold; }
-        .metric { display: inline-block; border: 1px solid #333; padding: 0.3em; background: white; }
-        .metric small { font-size: 80%; font-weight: normal; color: #666; }
-
-        div.coverage-summary table { border-collapse: collapse; margin: 3em; font-size: 110%; }
-        div.coverage-summary td, div.coverage-summary table  th { margin: 0; padding: 0.25em 1em; border-top: 1px solid #666; border-bottom: 1px solid #666; }
-        div.coverage-summary th { text-align: left; border: 1px solid #666; background: #eee; font-weight: normal; }
-        div.coverage-summary th.file { border-right: none !important; }
-        div.coverage-summary th.pic { border-left: none !important; text-align: right; }
-        div.coverage-summary th.pct { border-right: none !important; }
-        div.coverage-summary th.abs { border-left: none !important; text-align: right; }
-        div.coverage-summary td.pct { text-align: right; border-left: 1px solid #666; }
-        div.coverage-summary td.abs { text-align: right; font-size: 90%; color: #444; border-right: 1px solid #666; }
-        div.coverage-summary td.file { text-align: right; border-left: 1px solid #666; white-space: nowrap;  }
-        div.coverage-summary td.pic { min-width: 120px !important;  }
-        div.coverage-summary a:link { text-decoration: none; color: #000; }
-        div.coverage-summary a:visited { text-decoration: none; color: #333; }
-        div.coverage-summary a:hover { text-decoration: underline; }
-        div.coverage-summary tfoot td { border-top: 1px solid #666; }
-
-        div.coverage-summary .yui3-datatable-sort-indicator, div.coverage-summary .dummy-sort-indicator {
-            height: 10px;
-            width: 7px;
-            display: inline-block;
-            margin-left: 0.5em;
-        }
-        div.coverage-summary .yui3-datatable-sort-indicator {
-            background: url("https://yui-s.yahooapis.com/3.6.0/build/datatable-sort/assets/skins/sam/sort-arrow-sprite.png") no-repeat scroll 0 0 transparent;
-        }
-        div.coverage-summary .yui3-datatable-sorted .yui3-datatable-sort-indicator {
-            background-position: 0 -20px;
-        }
-        div.coverage-summary .yui3-datatable-sorted-desc .yui3-datatable-sort-indicator {
-            background-position: 0 -10px;
-        }
-
-        .high { background: #b5d592 !important; }
-        .medium { background: #ffe87c !important; }
-        .low { background: #fc8c84 !important; }
-
-        span.cover-fill, span.cover-empty {
-            display:inline-block;
-            border:1px solid #444;
-            background: white;
-            height: 12px;
-        }
-        span.cover-fill {
-            background: #ccc;
-            border-right: 1px solid #444;
-        }
-        span.cover-empty {
-            background: white;
-            border-left: none;
-        }
-        span.cover-full {
-            border-right: none !important;
-        }
-        pre.prettyprint {
-            border: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        .com { color: #999 !important; }
-        .ignore-none { color: #999; font-weight: normal; }
-
     </style>
 </head>
 <body>
@@ -199,16 +18,16 @@
     <h1>Code coverage report for <span class="entity">scripts/services/profileOutline.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">29.11% <small>(46 / 158)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">28.93% <small>(46 / 159)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Branches: <span class="metric">12% <small>(3 / 25)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">10.34% <small>(3 / 29)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Functions: <span class="metric">22.73% <small>(5 / 22)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">29.11% <small>(46 / 158)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">28.93% <small>(46 / 159)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -542,8 +361,17 @@
 324
 325
 326
-327</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+327
+328
+329
+330
+331
+332</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -578,6 +406,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -608,16 +440,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -875,8 +704,12 @@ define([
   ,'lodash'
   ,'models/m3dProfile'
   ,'models/m3dProfilePoint'
+  ,'models/footprint'
+  ,'models/rectFootprint'
+  ,'models/polyFootprint'
+  ,'models/gemeindeFootprint'
   ],
-  function(angular, THREE, _, Profile, ProfilePoint){
+  function(angular, THREE, _, Profile, ProfilePoint, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint){
 &nbsp;
     var extrudeSettings = { 
       amount: 40, 
@@ -902,15 +735,19 @@ define([
 &nbsp;
     ProfileOutlineService.prototype = /** @lends m3d.services.ProfileOutlineService.prototype */{
 &nbsp;
-      createProfile: <span class="fstat-no" title="function not covered" >function(profilePoints){</span>
+      createProfile: <span class="fstat-no" title="function not covered" >function(footprint, profilePoints){</span>
+<span class="cstat-no" title="statement not covered" >        var mesh = null;</span>
+<span class="cstat-no" title="statement not covered" >        if (footprint instanceof PolyFootprint || footprint instanceof GemeindeFootprint)</span>
+<span class="cstat-no" title="statement not covered" >          mesh = this.createPolyMesh(profilePoints)</span>
 <span class="cstat-no" title="statement not covered" >        var profile = new Profile({</span>
+          mesh: mesh,
           profilePoints: profilePoints,
           thickness: localStorage.getItem('thickness') || undefined
         });
 <span class="cstat-no" title="statement not covered" >        return profile;</span>
       },
 &nbsp;
-      createPolygon: <span class="fstat-no" title="function not covered" >function(coordinates){</span>
+      createPolyMesh: <span class="fstat-no" title="function not covered" >function(coordinates){</span>
 <span class="cstat-no" title="statement not covered" >        $log.debug('creating outline for ' + coordinates.length + ' coordinates');            </span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        var maxLat = _.max(coordinates, 'lat').lat;</span>
@@ -934,16 +771,13 @@ define([
 <span class="cstat-no" title="statement not covered" >        var rasterVertices = rasterResult.vertices;</span>
 &nbsp;
         // Schritt 4: Die ermittelten Rasterpunkte durch die Punkte auf dem Shaperands ergänzen
-<span class="cstat-no" title="statement not covered" >        var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);</span>
+        //var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);
 &nbsp;
         // Schritt 5: Die Komplette Liste an Rasterpunkten zurückrechnen  in Koordinaten (ProfilePoints)
-<span class="cstat-no" title="statement not covered" >        var profilePoints = this.calculateProfilePoints(rasterPoints);</span>
+        //var profilePoints = this.calculateProfilePoints(rasterPoints);
 &nbsp;
-        // Mesh und Koordinaten zurückgeben
-<span class="cstat-no" title="statement not covered" >        return {</span>
-           mesh: rasterizedMesh
-          ,profilePoints: profilePoints
-        };
+        // Mesh zurückgeben
+<span class="cstat-no" title="statement not covered" >        return rasterizedMesh;</span>
       },
 &nbsp;
       /**
@@ -1041,7 +875,7 @@ define([
 <span class="cstat-no" title="statement not covered" >        var boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth, 10, 1, 10);        </span>
 <span class="cstat-no" title="statement not covered" >        var topVertices = this.getTopVertices(boxGeometry);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: true });</span>
+<span class="cstat-no" title="statement not covered" >        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: false });</span>
         //return new THREE.Mesh(boxGeometry, material);
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        var csgBox = new THREE.ThreeBSP(boxGeometry);</span>
@@ -1087,7 +921,7 @@ define([
 <span class="cstat-no" title="statement not covered" >        var otherArray = refArray == array1?array2:array1;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        _.forEach(refArray, <span class="fstat-no" title="function not covered" >function(vertex, n){</span></span>
-<span class="cstat-no" title="statement not covered" >          filtered = _.filter(otherArray, {'x': vertex.x, 'z': vertex.z});</span>
+<span class="cstat-no" title="statement not covered" >          var filtered = _.filter(otherArray, {'x': vertex.x, 'z': vertex.z});</span>
 <span class="cstat-no" title="statement not covered" >          result = result.concat(filtered);</span>
         });
 <span class="cstat-no" title="statement not covered" >        return result;</span>
@@ -1199,102 +1033,18 @@ define([
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Feb 18 2015 20:36:17 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Feb 26 2015 17:57:54 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>
-
-<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
 <script>
-
-    YUI().use('datatable', function (Y) {
-
-        var formatters = {
-          pct: function (o) {
-              o.className += o.record.get('classes')[o.column.key];
-              try {
-                  return o.value.toFixed(2) + '%';
-              } catch (ex) { return o.value + '%'; }
-          },
-          html: function (o) {
-              o.className += o.record.get('classes')[o.column.key];
-              return o.record.get(o.column.key + '_html');
-          }
-        },
-          defaultFormatter = function (o) {
-              o.className += o.record.get('classes')[o.column.key];
-              return o.value;
-          };
-
-        function getColumns(theadNode) {
-            var colNodes = theadNode.all('tr th'),
-                cols = [],
-                col;
-            colNodes.each(function (colNode) {
-                col = {
-                    key: colNode.getAttribute('data-col'),
-                    label: colNode.get('innerHTML') || ' ',
-                    sortable: !colNode.getAttribute('data-nosort'),
-                    className: colNode.getAttribute('class'),
-                    type: colNode.getAttribute('data-type'),
-                    allowHTML: colNode.getAttribute('data-html') === 'true' || colNode.getAttribute('data-fmt') === 'html'
-                };
-                col.formatter = formatters[colNode.getAttribute('data-fmt')] || defaultFormatter;
-                cols.push(col);
-            });
-            return cols;
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
         }
-
-        function getRowData(trNode, cols) {
-            var tdNodes = trNode.all('td'),
-                    i,
-                    row = { classes: {} },
-                    node,
-                    name;
-            for (i = 0; i < cols.length; i += 1) {
-                name = cols[i].key;
-                node = tdNodes.item(i);
-                row[name] = node.getAttribute('data-value') || node.get('innerHTML');
-                row[name + '_html'] = node.get('innerHTML');
-                row.classes[name] = node.getAttribute('class');
-                //Y.log('Name: ' + name + '; Value: ' + row[name]);
-                if (cols[i].type === 'number') { row[name] = row[name] * 1; }
-            }
-            //Y.log(row);
-            return row;
-        }
-
-        function getData(tbodyNode, cols) {
-            var data = [];
-            tbodyNode.all('tr').each(function (trNode) {
-                data.push(getRowData(trNode, cols));
-            });
-            return data;
-        }
-
-        function replaceTable(node) {
-            if (!node) { return; }
-            var cols = getColumns(node.one('thead')),
-                data = getData(node.one('tbody'), cols),
-                table,
-                parent = node.get('parentNode');
-
-            table = new Y.DataTable({
-                columns: cols,
-                data: data,
-                sortBy: 'file'
-            });
-            parent.set('innerHTML', '');
-            table.render(parent);
-        }
-
-        Y.on('domready', function () {
-            replaceTable(Y.one('div.coverage-summary table'));
-            if (typeof prettyPrint === 'function') {
-                prettyPrint();
-            }
-        });
-    });
+};
 </script>
+
+<script src="../../sorter.js"></script>
 </body>
 </html>

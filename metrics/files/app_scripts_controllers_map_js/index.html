@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">65.20</p>
+      <p class="stat">68.21</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">267</p>
+      <p class="stat">150</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">41.56</p>
+      <p class="stat">26.55</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">3.23</p>
+      <p class="stat">1.55</p>
     </div>
   </div>
 </div>
@@ -94,14 +94,16 @@ define([
    &#039;angular&#039;
   ,&#039;jquery&#039;
   ,&#039;lodash&#039;
-  ,&#039;models/m3dProfile&#039;
-  ,&#039;models/m3dProfilePoint&#039;    
+  ,&#039;models/footprint&#039; 
+  ,&#039;models/rectFootprint&#039;
+  ,&#039;models/polyFootprint&#039;
+  ,&#039;models/gemeindeFootprint&#039;
   ,&#039;vendor/geoxml3&#039;
     /*
   ,&#039;vendor/ProjectedOverlay&#039;
   */
   ], 
-  function (angular, $, _, Profile, ProfilePoint) {
+  function (angular, $, _, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint) {
 
     var $log, $scope, $ElevationDataService, $ProfileOutlineService;
     var gridSize;
@@ -132,7 +134,7 @@ define([
           this.resetZoom();
         }));
         $scope.$on(&#039;menu:model:generate&#039;, angular.bind(this, function(event){
-          $ElevationDataService.getElevationData(this.getCoordinates());
+          $ElevationDataService.getElevationData(this.footprint);
         }));
         $scope.$on(&#039;gemeinde:load&#039;, angular.bind(this, function(event, name){
           $log.debug(&#039;loading &#039; + name + &#039; from file...&#039;);
@@ -140,76 +142,16 @@ define([
         }));
         $scope.$on(&#039;menu:drawing:type&#039;, angular.bind(this, function(event, type){
           if (type == &#039;rect&#039;)
-            this.resetRect();
+            this.setFootprint(new RectFootprint());
           else if (type == &#039;poly&#039;)
-            this.resetPolygon();            
+            this.setFootprint(new PolyFootprint());
         }));
         //$scope.$broadcast(&#039;gemeinde:load&#039;, &#039;Aarau&#039;);        
     };
 
     MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
       map: null,
-      rect: null,
-      polygon: null,
-      _area: null,
-
-      getCoordinates: function(){
-        if (!this._area)
-          return [];
-
-        if (this._area == this.rect)
-          return this.rasterizeRectangle();
-
-        if (this._area == this.polygon)
-          return this.rasterizePolygon();
-      },
-
-      /**
-      * Rasterize selection rectangle to determine points for which the elevation must be determined.
-      * @return {m3d.models.ProfilePoint[]} list of single profile Points for the rasterized selection rectangle. The elevation is zero for each point.
-      */
-      rasterizeRectangle: function(){
-        if (!this.rect)
-          return [];
-        var resolution = localStorage.getItem(&#039;resolution&#039;) || 25;
-        gridSize = horizontalSegments = verticalSegments = parseInt(resolution);
-
-        var rect = this.rect;
-        // Positionen der Ecken bestimmen
-        var ne = rect.getBounds().getNorthEast();
-        var sw = rect.getBounds().getSouthWest();
-        var nw = new google.maps.LatLng(ne.lat(), sw.lng());
-        var se = new google.maps.LatLng(sw.lat(), ne.lng());
-        
-        // get values on x-axis
-        var xFrom = nw.lng();
-        var xTo = ne.lng(); 
-        var xStep = (xTo-xFrom)/(horizontalSegments - 1);
-        
-        // get values on y-axis
-        var yFrom = se.lat();
-        var yTo = ne.lat();
-        var yStep = (yTo-yFrom)/(verticalSegments - 1);
-        
-        var profilePoints = [];
-        for(var y=0; y&lt;verticalSegments; y++){
-          var yVal = yTo - y*yStep;
-          
-          for (var x=0; x&lt;horizontalSegments; x++){
-            var xVal = xFrom + x*xStep;
-            var lat = Number(parseFloat(yVal).toFixed(4));
-            var lng = Number(parseFloat(xVal).toFixed(4));
-            profilePoints.push(new ProfilePoint({lat: lat, lng: lng, elv: 0}));
-          }
-        }
-        return profilePoints;
-      },
-
-      rasterizePolygon: function(){
-        if (!this.polygon)
-          return [];
-        return [];
-      },
+      footprint: null,
 
       resetMap: function(){
         var el = $(&#039;#map&#039;)[0];
@@ -221,44 +163,10 @@ define([
           zoomControl: true
         });
         
-
         var tilesLoadedListener = google.maps.event.addListener(this.map, &#039;tilesloaded&#039;, angular.bind(this, function(){
           $log.debug(&#039;map:tilesloaded&#039;);          
-          this.resetRect();
+          this.setFootprint(new RectFootprint());
           google.maps.event.removeListener(tilesLoadedListener);
-        }));
-        google.maps.event.addListener(this.map, &#039;bounds_changed&#039;, angular.bind(this, function(){
-          $log.debug(&#039;map:bounds_changed : &#039; + this.map.getBounds().getSouthWest().lat() + &#039;,&#039; + this.map.getBounds().getSouthWest().lng() + &#039;/&#039; + this.map.getBounds().getNorthEast().lat() + &#039;,&#039; + this.map.getBounds().getNorthEast().lng());
-          if (this.rect)
-            this.rect.setBounds(this.getRectBounds());
-        }));
-      },
-
-      resetRect: function(){
-        this.setPolygon(null);
-        this.setRect(null);
-        var rect = new google.maps.Rectangle({editable: true, draggable: true, map: this.map})
-        this.setRect(rect);        
-        /*
-        // Matterhorn
-        new google.maps.LatLngBounds(   
-          new google.maps.LatLng(45.956433, 7.63),
-          new google.maps.LatLng(46, 7.7 )
-        )
-        */
-      },
-
-      resetPolygon: function(){
-        this.setPolygon(null);
-        this.setRect(null);
-        var dm = new google.maps.drawing.DrawingManager({
-           map: this.map
-          ,drawingControl: false
-          ,drawingMode: google.maps.drawing.OverlayType.POLYGON
-        });
-        google.maps.event.addListener(dm, &#039;polygoncomplete&#039;, angular.bind(this, function(polygon){
-          this.setPolygon(polygon);
-          dm.setDrawingMode(null);
         }));
       },
 
@@ -284,9 +192,10 @@ define([
             $scope.$broadcast(&#039;gemeinde:loaded&#039;, docs);
             if (this.doc)
               this.parser.hideDocument(this.doc);
-            this.doc = docs[0];
-            var polygon = this.doc.placemarks[0].Polygon[0];
-            this.setPolygon(polygon);
+            this.doc = docs[0];            
+            var footprint = new GemeindeFootprint();
+            footprint.setShape(this.doc);
+            this.setFootprint(footprint);
           })
         });
         this.parser.parse(localUrl);
@@ -306,51 +215,25 @@ define([
         return bounds;
       },
 
-      setPolygon: function(polygon){
-        if (polygon == null){
-          if (this.polygon){
-            this.polygon.setMap = this.polygon.setMap || function(){};
-            this.polygon.setMap(null);
-            this.polygon = null;
+      setFootprint: function(footprint){        
+        // bisherige Auswahl löschen
+        if (this.footprint){
+          // Rect/Polygon
+          if (this.footprint instanceof Footprint &amp;&amp; this.footprint.shape){
+            this.footprint.shape.setMap(null);
+            this.footprint.shape = null;            
           }
-          return;
+          // Gemeinde
+          //if (this.footprint instanceof GemeindeFootprint &amp;&amp; this.footprint.)
+          this.footprint = null;
         };
+              
 
-        if (this.rect){
-          this.rect.setMap(null);
-          this.rect = null;          
-        } 
-        if (this.polygon)
-          this.setPolygon(null);      
-        this.polygon = polygon; 
-        this.polygon.setOptions = this.polygon.setOptions || function(options){};
-        this.polygon.setOptions({
-          draggable: true, editable: true ,
-          strokeColor: &#039;#ff0000&#039;,
-          strokeWeight: 5
-        });
-        this._area = this.polygon;
-      },
 
-      setRect: function(rect){
-        if (rect == null){
-          if (this.rect){
-            this.rect.setMap(null);
-            this.rect = null;
-          }
-          return;
-        };
-
-        if (this.polygon){
-          this.polygon.setMap(null);
-          this.polygon = null;
-        }                
-        if (this.rect)
-          this.setRect(null);
-        this.rect = rect;
-        this.rect.setBounds(this.getRectBounds());
-        this._area = this.rect;
+        this.footprint = footprint;
+        this.footprint.setMap(this.map);
       }
+
     };
 
     return [&#039;$scope&#039;, &#039;$log&#039;, &#039;ElevationDataService&#039;, &#039;ProfileOutlineService&#039;, MapController];

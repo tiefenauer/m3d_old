@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">61.61</p>
+      <p class="stat">61.64</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">327</p>
+      <p class="stat">332</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">58.14</p>
+      <p class="stat">57.83</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">3.93</p>
+      <p class="stat">3.98</p>
     </div>
   </div>
 </div>
@@ -96,8 +96,12 @@ define([
   ,&#039;lodash&#039;
   ,&#039;models/m3dProfile&#039;
   ,&#039;models/m3dProfilePoint&#039;
+  ,&#039;models/footprint&#039;
+  ,&#039;models/rectFootprint&#039;
+  ,&#039;models/polyFootprint&#039;
+  ,&#039;models/gemeindeFootprint&#039;
   ],
-  function(angular, THREE, _, Profile, ProfilePoint){
+  function(angular, THREE, _, Profile, ProfilePoint, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint){
 
     var extrudeSettings = { 
       amount: 40, 
@@ -123,15 +127,19 @@ define([
 
     ProfileOutlineService.prototype = /** @lends m3d.services.ProfileOutlineService.prototype */{
 
-      createProfile: function(profilePoints){
+      createProfile: function(footprint, profilePoints){
+        var mesh = null;
+        if (footprint instanceof PolyFootprint || footprint instanceof GemeindeFootprint)
+          mesh = this.createPolyMesh(profilePoints)
         var profile = new Profile({
+          mesh: mesh,
           profilePoints: profilePoints,
           thickness: localStorage.getItem(&#039;thickness&#039;) || undefined
         });
         return profile;
       },
 
-      createPolygon: function(coordinates){
+      createPolyMesh: function(coordinates){
         $log.debug(&#039;creating outline for &#039; + coordinates.length + &#039; coordinates&#039;);            
 
         var maxLat = _.max(coordinates, &#039;lat&#039;).lat;
@@ -155,16 +163,13 @@ define([
         var rasterVertices = rasterResult.vertices;
 
         // Schritt 4: Die ermittelten Rasterpunkte durch die Punkte auf dem Shaperands ergänzen
-        var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);
+        //var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);
 
         // Schritt 5: Die Komplette Liste an Rasterpunkten zurückrechnen  in Koordinaten (ProfilePoints)
-        var profilePoints = this.calculateProfilePoints(rasterPoints);
+        //var profilePoints = this.calculateProfilePoints(rasterPoints);
 
-        // Mesh und Koordinaten zurückgeben
-        return {
-           mesh: rasterizedMesh
-          ,profilePoints: profilePoints
-        };
+        // Mesh zurückgeben
+        return rasterizedMesh;
       },
 
       /**
@@ -262,7 +267,7 @@ define([
         var boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth, 10, 1, 10);        
         var topVertices = this.getTopVertices(boxGeometry);
 
-        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: true });
+        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: false });
         //return new THREE.Mesh(boxGeometry, material);
 
         var csgBox = new THREE.ThreeBSP(boxGeometry);
@@ -308,7 +313,7 @@ define([
         var otherArray = refArray == array1?array2:array1;
 
         _.forEach(refArray, function(vertex, n){
-          filtered = _.filter(otherArray, {&#039;x&#039;: vertex.x, &#039;z&#039;: vertex.z});
+          var filtered = _.filter(otherArray, {&#039;x&#039;: vertex.x, &#039;z&#039;: vertex.z});
           result = result.concat(filtered);
         });
         return result;

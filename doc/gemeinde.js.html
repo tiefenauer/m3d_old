@@ -58,10 +58,6 @@
             </ul>
             <ul class="methods itemMembers">
             
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.controller.MapController#rasterizeRectangle"><a href="m3d.controller.MapController.html#rasterizeRectangle">rasterizeRectangle</a></li>
-            
             </ul>
             <ul class="events itemMembers">
             
@@ -164,10 +160,6 @@
             </ul>
             <ul class="methods itemMembers">
             
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.controller.GemeindeController#init"><a href="m3d.controller.GemeindeController.html#init">init</a></li>
-            
             </ul>
             <ul class="events itemMembers">
             
@@ -208,6 +200,63 @@
         <li class="item" data-name="m3d.controllers.SettingsController">
             <span class="title">
                 <a href="m3d.controllers.SettingsController.html">m3d.controllers.SettingsController</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.model.Footprint">
+            <span class="title">
+                <a href="m3d.model.Footprint.html">m3d.model.Footprint</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.model.Footprint">
+            <span class="title">
+                <a href="m3d.model.Footprint.html">m3d.model.Footprint</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.model.Footprint">
+            <span class="title">
+                <a href="m3d.model.Footprint.html">m3d.model.Footprint</a>
                 
             </span>
             <ul class="members itemMembers">
@@ -305,23 +354,11 @@
             </span>
             <ul class="members itemMembers">
             
-            <span class="subtitle">Members</span>
-            
-                <li data-name="m3d.services.ElevationDataService#CHUNK_SIZE"><a href="m3d.services.ElevationDataService.html#CHUNK_SIZE">CHUNK_SIZE</a></li>
-            
-                <li data-name="m3d.services.ElevationDataService#DELAY"><a href="m3d.services.ElevationDataService.html#DELAY">DELAY</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
             </ul>
             <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.services.ElevationDataService#getElevationData"><a href="m3d.services.ElevationDataService.html#getElevationData">getElevationData</a></li>
-            
-                <li data-name="m3d.services.ElevationDataService#init"><a href="m3d.services.ElevationDataService.html#init">init</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -367,7 +404,7 @@ define([
   ], 
   function (angular, $) {
 
-    var $rootScope, $log, $modalInstance, $scope;
+    var $log, $modalInstance, $scope, $rootScope;
     var fs, gemeindeDir;
 
     /**
@@ -378,12 +415,27 @@ define([
      * @namespace
      * @constructor
      */
-    var GemeindeController = function($rootScope, $scope, $log, $modalInstance){
+    var GemeindeController = function(rootScope, scope, log, modalInstance){
+      $log = log;
+      $scope = scope;
+      $modalInstance = modalInstance;
+      $rootScope = rootScope;
       $log.debug('GemeindeController created');      
-      this.init($rootScope, $scope, $log, $modalInstance);
+
+      $scope.query = '';
+      $scope.gemeinden = {
+        all: [],          
+        list: function(){
+          return [];
+        }
+      };
 
       $scope.updateList = this.updateList;
 
+      $scope.load = function(gemeinde){          
+        $rootScope.$broadcast('gemeinde:load', gemeinde);
+        $modalInstance.close();
+      };
       $scope.isSet = function(checkTab){
         return this.tab === checkTab;
       };
@@ -393,7 +445,10 @@ define([
         this.updateList();
       };
 
-      $scope.query = '';
+      $scope.ok = $scope.cancel = function(){
+        $modalInstance.close();
+      };
+      
       $scope.search = {
         query: function(newQuery){
           if (angular.isDefined(newQuery)){
@@ -402,59 +457,32 @@ define([
           return $scope.query;
         }
       };      
-
-      $scope.close = close;
+      this.init();
     };
 
     
-    GemeindeController.prototype = /** @lends m3d.controller.GemeindeController.prototype */{
-      tab: 'search',
+    GemeindeController.prototype.tab = 'search';
 
-      /**
-      * initialize controller
-      */
-      init: function(rootScope, scope, log, modalInstance){
-        $log = log;
-        $scope = scope;
-        $modalInstance = modalInstance;
-        $rootScope = rootScope;
-
-        $scope.gemeinden = {
-          all: [],          
-          list: function(){
-            return [];
-          }
-        };
-        $scope.list = [];
-
-        $scope.load = function(gemeinde){          
-          $rootScope.$broadcast('gemeinde:load', gemeinde);
-          $modalInstance.close();
-        };
-        $scope.ok = $scope.cancel = function(){
-          $modalInstance.close();
-        };
-        $.ajax({
-          url: 'assets/gemeinden/gemeinden.json',
-          success: function(data){
-            $scope.gemeinden.all = data;
-            $scope.setTab('search');
-            $scope.$apply();
-          }
-        });
-      },
-
-      updateList: function(){
-        if ($scope.isSet('search')) {
-          $scope.gemeinden.list = $scope.gemeinden.all;
+    GemeindeController.prototype.init = function(){
+      $.ajax({
+        url: 'assets/gemeinden/gemeinden.json',
+        success: function(data){
+          $scope.gemeinden.all = data;
+          $scope.setTab('search');
+          $scope.$apply();
         }
-        else {
-          $scope.gemeinden.list = _.filter($scope.gemeinden.all, function(name){
-            return name.toUpperCase().substr(0,1) === this.tab;
-          }, this);
-        }
+      });
+    };
+
+    GemeindeController.prototype.updateList = function(){
+      if ($scope.isSet('search')) {
+        $scope.gemeinden.list = $scope.gemeinden.all;
       }
-
+      else {
+        $scope.gemeinden.list = _.filter($scope.gemeinden.all, function(name){
+          return name.toUpperCase().substr(0,1) === this.tab;
+        }, this);
+      }
     };
 
     return ['$rootScope', '$scope', '$log', '$modalInstance', GemeindeController];
@@ -471,7 +499,7 @@ define([
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Feb 18 2015 20:36:32 GMT-0000 (UTC)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Feb 26 2015 17:58:38 GMT-0000 (UTC)
         </footer>
     </div>
 </div>

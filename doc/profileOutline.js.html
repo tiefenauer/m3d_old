@@ -58,10 +58,6 @@
             </ul>
             <ul class="methods itemMembers">
             
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.controller.MapController#rasterizeRectangle"><a href="m3d.controller.MapController.html#rasterizeRectangle">rasterizeRectangle</a></li>
-            
             </ul>
             <ul class="events itemMembers">
             
@@ -164,10 +160,6 @@
             </ul>
             <ul class="methods itemMembers">
             
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.controller.GemeindeController#init"><a href="m3d.controller.GemeindeController.html#init">init</a></li>
-            
             </ul>
             <ul class="events itemMembers">
             
@@ -208,6 +200,63 @@
         <li class="item" data-name="m3d.controllers.SettingsController">
             <span class="title">
                 <a href="m3d.controllers.SettingsController.html">m3d.controllers.SettingsController</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.model.Footprint">
+            <span class="title">
+                <a href="m3d.model.Footprint.html">m3d.model.Footprint</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.model.Footprint">
+            <span class="title">
+                <a href="m3d.model.Footprint.html">m3d.model.Footprint</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="m3d.model.Footprint">
+            <span class="title">
+                <a href="m3d.model.Footprint.html">m3d.model.Footprint</a>
                 
             </span>
             <ul class="members itemMembers">
@@ -305,23 +354,11 @@
             </span>
             <ul class="members itemMembers">
             
-            <span class="subtitle">Members</span>
-            
-                <li data-name="m3d.services.ElevationDataService#CHUNK_SIZE"><a href="m3d.services.ElevationDataService.html#CHUNK_SIZE">CHUNK_SIZE</a></li>
-            
-                <li data-name="m3d.services.ElevationDataService#DELAY"><a href="m3d.services.ElevationDataService.html#DELAY">DELAY</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
             </ul>
             <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.services.ElevationDataService#getElevationData"><a href="m3d.services.ElevationDataService.html#getElevationData">getElevationData</a></li>
-            
-                <li data-name="m3d.services.ElevationDataService#init"><a href="m3d.services.ElevationDataService.html#init">init</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -365,8 +402,12 @@ define([
   ,'lodash'
   ,'models/m3dProfile'
   ,'models/m3dProfilePoint'
+  ,'models/footprint'
+  ,'models/rectFootprint'
+  ,'models/polyFootprint'
+  ,'models/gemeindeFootprint'
   ],
-  function(angular, THREE, _, Profile, ProfilePoint){
+  function(angular, THREE, _, Profile, ProfilePoint, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint){
 
     var extrudeSettings = { 
       amount: 40, 
@@ -392,15 +433,19 @@ define([
 
     ProfileOutlineService.prototype = /** @lends m3d.services.ProfileOutlineService.prototype */{
 
-      createProfile: function(profilePoints){
+      createProfile: function(footprint, profilePoints){
+        var mesh = null;
+        if (footprint instanceof PolyFootprint || footprint instanceof GemeindeFootprint)
+          mesh = this.createPolyMesh(profilePoints)
         var profile = new Profile({
+          mesh: mesh,
           profilePoints: profilePoints,
           thickness: localStorage.getItem('thickness') || undefined
         });
         return profile;
       },
 
-      createPolygon: function(coordinates){
+      createPolyMesh: function(coordinates){
         $log.debug('creating outline for ' + coordinates.length + ' coordinates');            
 
         var maxLat = _.max(coordinates, 'lat').lat;
@@ -424,16 +469,13 @@ define([
         var rasterVertices = rasterResult.vertices;
 
         // Schritt 4: Die ermittelten Rasterpunkte durch die Punkte auf dem Shaperands ergänzen
-        var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);
+        //var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);
 
         // Schritt 5: Die Komplette Liste an Rasterpunkten zurückrechnen  in Koordinaten (ProfilePoints)
-        var profilePoints = this.calculateProfilePoints(rasterPoints);
+        //var profilePoints = this.calculateProfilePoints(rasterPoints);
 
-        // Mesh und Koordinaten zurückgeben
-        return {
-           mesh: rasterizedMesh
-          ,profilePoints: profilePoints
-        };
+        // Mesh zurückgeben
+        return rasterizedMesh;
       },
 
       /**
@@ -531,7 +573,7 @@ define([
         var boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth, 10, 1, 10);        
         var topVertices = this.getTopVertices(boxGeometry);
 
-        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: true });
+        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: false });
         //return new THREE.Mesh(boxGeometry, material);
 
         var csgBox = new THREE.ThreeBSP(boxGeometry);
@@ -577,7 +619,7 @@ define([
         var otherArray = refArray == array1?array2:array1;
 
         _.forEach(refArray, function(vertex, n){
-          filtered = _.filter(otherArray, {'x': vertex.x, 'z': vertex.z});
+          var filtered = _.filter(otherArray, {'x': vertex.x, 'z': vertex.z});
           result = result.concat(filtered);
         });
         return result;
@@ -696,7 +738,7 @@ define([
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Feb 18 2015 20:36:32 GMT-0000 (UTC)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Feb 26 2015 17:58:38 GMT-0000 (UTC)
         </footer>
     </div>
 </div>

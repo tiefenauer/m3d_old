@@ -27,6 +27,10 @@ util/FileSaver.min.js
 vendor/three/csg.js
 vendor/three/ThreeCSG.js
 services/profileio.js
+models/footprint.js
+models/rectFootprint.js
+models/polyFootprint.js
+models/gemeindeFootprint.js
 services/profileOutline.js
 services.js
 directives/m3dmenu.js

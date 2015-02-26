@@ -6,192 +6,11 @@
 
     <link rel="stylesheet" href="../../prettify.css">
 
-    <style>
-        body, html {
-            margin:0; padding: 0;
+    <link rel="stylesheet" href="../../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
         }
-        body {
-            font-family: Helvetica Neue, Helvetica,Arial;
-            font-size: 10pt;
-        }
-        div.header, div.footer {
-            background: #eee;
-            padding: 1em;
-        }
-        div.header {
-            z-index: 100;
-            position: fixed;
-            top: 0;
-            border-bottom: 1px solid #666;
-            width: 100%;
-        }
-        div.footer {
-            border-top: 1px solid #666;
-        }
-        div.body {
-            margin-top: 10em;
-        }
-        div.meta {
-            font-size: 90%;
-            text-align: center;
-        }
-        h1, h2, h3 {
-            font-weight: normal;
-        }
-        h1 {
-            font-size: 12pt;
-        }
-        h2 {
-            font-size: 10pt;
-        }
-        pre {
-            font-family: Consolas, Menlo, Monaco, monospace;
-            margin: 0;
-            padding: 0;
-            line-height: 14px;
-            font-size: 14px;
-            -moz-tab-size: 2;
-            -o-tab-size:  2;
-            tab-size: 2;
-        }
-
-        div.path { font-size: 110%; }
-        div.path a:link, div.path a:visited { color: #000; }
-        table.coverage { border-collapse: collapse; margin:0; padding: 0 }
-
-        table.coverage td {
-            margin: 0;
-            padding: 0;
-            color: #111;
-            vertical-align: top;
-        }
-        table.coverage td.line-count {
-            width: 50px;
-            text-align: right;
-            padding-right: 5px;
-        }
-        table.coverage td.line-coverage {
-            color: #777 !important;
-            text-align: right;
-            border-left: 1px solid #666;
-            border-right: 1px solid #666;
-        }
-
-        table.coverage td.text {
-        }
-
-        table.coverage td span.cline-any {
-            display: inline-block;
-            padding: 0 5px;
-            width: 40px;
-        }
-        table.coverage td span.cline-neutral {
-            background: #eee;
-        }
-        table.coverage td span.cline-yes {
-            background: #b5d592;
-            color: #999;
-        }
-        table.coverage td span.cline-no {
-            background: #fc8c84;
-        }
-
-        .cstat-yes { color: #111; }
-        .cstat-no { background: #fc8c84; color: #111; }
-        .fstat-no { background: #ffc520; color: #111 !important; }
-        .cbranch-no { background:  yellow !important; color: #111; }
-
-        .cstat-skip { background: #ddd; color: #111; }
-        .fstat-skip { background: #ddd; color: #111 !important; }
-        .cbranch-skip { background: #ddd !important; color: #111; }
-
-        .missing-if-branch {
-            display: inline-block;
-            margin-right: 10px;
-            position: relative;
-            padding: 0 4px;
-            background: black;
-            color: yellow;
-        }
-
-        .skip-if-branch {
-            display: none;
-            margin-right: 10px;
-            position: relative;
-            padding: 0 4px;
-            background: #ccc;
-            color: white;
-        }
-
-        .missing-if-branch .typ, .skip-if-branch .typ {
-            color: inherit !important;
-        }
-
-        .entity, .metric { font-weight: bold; }
-        .metric { display: inline-block; border: 1px solid #333; padding: 0.3em; background: white; }
-        .metric small { font-size: 80%; font-weight: normal; color: #666; }
-
-        div.coverage-summary table { border-collapse: collapse; margin: 3em; font-size: 110%; }
-        div.coverage-summary td, div.coverage-summary table  th { margin: 0; padding: 0.25em 1em; border-top: 1px solid #666; border-bottom: 1px solid #666; }
-        div.coverage-summary th { text-align: left; border: 1px solid #666; background: #eee; font-weight: normal; }
-        div.coverage-summary th.file { border-right: none !important; }
-        div.coverage-summary th.pic { border-left: none !important; text-align: right; }
-        div.coverage-summary th.pct { border-right: none !important; }
-        div.coverage-summary th.abs { border-left: none !important; text-align: right; }
-        div.coverage-summary td.pct { text-align: right; border-left: 1px solid #666; }
-        div.coverage-summary td.abs { text-align: right; font-size: 90%; color: #444; border-right: 1px solid #666; }
-        div.coverage-summary td.file { text-align: right; border-left: 1px solid #666; white-space: nowrap;  }
-        div.coverage-summary td.pic { min-width: 120px !important;  }
-        div.coverage-summary a:link { text-decoration: none; color: #000; }
-        div.coverage-summary a:visited { text-decoration: none; color: #333; }
-        div.coverage-summary a:hover { text-decoration: underline; }
-        div.coverage-summary tfoot td { border-top: 1px solid #666; }
-
-        div.coverage-summary .yui3-datatable-sort-indicator, div.coverage-summary .dummy-sort-indicator {
-            height: 10px;
-            width: 7px;
-            display: inline-block;
-            margin-left: 0.5em;
-        }
-        div.coverage-summary .yui3-datatable-sort-indicator {
-            background: url("https://yui-s.yahooapis.com/3.6.0/build/datatable-sort/assets/skins/sam/sort-arrow-sprite.png") no-repeat scroll 0 0 transparent;
-        }
-        div.coverage-summary .yui3-datatable-sorted .yui3-datatable-sort-indicator {
-            background-position: 0 -20px;
-        }
-        div.coverage-summary .yui3-datatable-sorted-desc .yui3-datatable-sort-indicator {
-            background-position: 0 -10px;
-        }
-
-        .high { background: #b5d592 !important; }
-        .medium { background: #ffe87c !important; }
-        .low { background: #fc8c84 !important; }
-
-        span.cover-fill, span.cover-empty {
-            display:inline-block;
-            border:1px solid #444;
-            background: white;
-            height: 12px;
-        }
-        span.cover-fill {
-            background: #ccc;
-            border-right: 1px solid #444;
-        }
-        span.cover-empty {
-            background: white;
-            border-left: none;
-        }
-        span.cover-full {
-            border-right: none !important;
-        }
-        pre.prettyprint {
-            border: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        .com { color: #999 !important; }
-        .ignore-none { color: #999; font-weight: normal; }
-
     </style>
 </head>
 <body>
@@ -199,16 +18,16 @@
     <h1>Code coverage report for <span class="entity">scripts/controllers/map.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">6.82% <small>(9 / 132)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">13.85% <small>(9 / 65)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Branches: <span class="metric">0% <small>(0 / 42)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 14)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">4.17% <small>(1 / 24)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">7.14% <small>(1 / 14)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">6.82% <small>(9 / 132)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">13.85% <small>(9 / 65)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -366,125 +185,10 @@
 148
 149
 150
-151
-152
-153
-154
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249
-250
-251
-252
-253
-254
-255
-256
-257
-258
-259
-260
-261
-262
-263
-264
-265
-266
-267
-268</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+151</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -546,80 +250,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -630,33 +268,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -664,23 +283,15 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -698,52 +309,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -755,14 +340,16 @@ define([
    'angular'
   ,'jquery'
   ,'lodash'
-  ,'models/m3dProfile'
-  ,'models/m3dProfilePoint'    
+  ,'models/footprint' 
+  ,'models/rectFootprint'
+  ,'models/polyFootprint'
+  ,'models/gemeindeFootprint'
   ,'vendor/geoxml3'
     /*
   ,'vendor/ProjectedOverlay'
   */
   ], 
-  function (angular, $, _, Profile, ProfilePoint) {
+  function (angular, $, _, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint) {
 &nbsp;
     var $log, $scope, $ElevationDataService, $ProfileOutlineService;
     var gridSize;
@@ -793,7 +380,7 @@ define([
 <span class="cstat-no" title="statement not covered" >          this.resetZoom();</span>
         }));
 <span class="cstat-no" title="statement not covered" >        $scope.$on('menu:model:generate', angular.bind(this, <span class="fstat-no" title="function not covered" >function(event){</span></span>
-<span class="cstat-no" title="statement not covered" >          $ElevationDataService.getElevationData(this.getCoordinates());</span>
+<span class="cstat-no" title="statement not covered" >          $ElevationDataService.getElevationData(this.footprint);</span>
         }));
 <span class="cstat-no" title="statement not covered" >        $scope.$on('gemeinde:load', angular.bind(this, <span class="fstat-no" title="function not covered" >function(event, name){</span></span>
 <span class="cstat-no" title="statement not covered" >          $log.debug('loading ' + name + ' from file...');</span>
@@ -801,76 +388,16 @@ define([
         }));
 <span class="cstat-no" title="statement not covered" >        $scope.$on('menu:drawing:type', angular.bind(this, <span class="fstat-no" title="function not covered" >function(event, type){</span></span>
 <span class="cstat-no" title="statement not covered" >          if (type == 'rect')</span>
-<span class="cstat-no" title="statement not covered" >            this.resetRect();</span>
+<span class="cstat-no" title="statement not covered" >            this.setFootprint(new RectFootprint());</span>
           else <span class="cstat-no" title="statement not covered" >if (type == 'poly')</span>
-<span class="cstat-no" title="statement not covered" >            this.resetPolygon();            </span>
+<span class="cstat-no" title="statement not covered" >            this.setFootprint(new PolyFootprint());</span>
         }));
         //$scope.$broadcast('gemeinde:load', 'Aarau');        
     };
 &nbsp;
     MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
       map: null,
-      rect: null,
-      polygon: null,
-      _area: null,
-&nbsp;
-      getCoordinates: <span class="fstat-no" title="function not covered" >function(){</span>
-<span class="cstat-no" title="statement not covered" >        if (!this._area)</span>
-<span class="cstat-no" title="statement not covered" >          return [];</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        if (this._area == this.rect)</span>
-<span class="cstat-no" title="statement not covered" >          return this.rasterizeRectangle();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        if (this._area == this.polygon)</span>
-<span class="cstat-no" title="statement not covered" >          return this.rasterizePolygon();</span>
-      },
-&nbsp;
-      /**
-      * Rasterize selection rectangle to determine points for which the elevation must be determined.
-      * @return {m3d.models.ProfilePoint[]} list of single profile Points for the rasterized selection rectangle. The elevation is zero for each point.
-      */
-      rasterizeRectangle: <span class="fstat-no" title="function not covered" >function(){</span>
-<span class="cstat-no" title="statement not covered" >        if (!this.rect)</span>
-<span class="cstat-no" title="statement not covered" >          return [];</span>
-<span class="cstat-no" title="statement not covered" >        var resolution = localStorage.getItem('resolution') || 25;</span>
-<span class="cstat-no" title="statement not covered" >        gridSize = horizontalSegments = verticalSegments = parseInt(resolution);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        var rect = this.rect;</span>
-        // Positionen der Ecken bestimmen
-<span class="cstat-no" title="statement not covered" >        var ne = rect.getBounds().getNorthEast();</span>
-<span class="cstat-no" title="statement not covered" >        var sw = rect.getBounds().getSouthWest();</span>
-<span class="cstat-no" title="statement not covered" >        var nw = new google.maps.LatLng(ne.lat(), sw.lng());</span>
-<span class="cstat-no" title="statement not covered" >        var se = new google.maps.LatLng(sw.lat(), ne.lng());</span>
-        
-        // get values on x-axis
-<span class="cstat-no" title="statement not covered" >        var xFrom = nw.lng();</span>
-<span class="cstat-no" title="statement not covered" >        var xTo = ne.lng(); </span>
-<span class="cstat-no" title="statement not covered" >        var xStep = (xTo-xFrom)/(horizontalSegments - 1);</span>
-        
-        // get values on y-axis
-<span class="cstat-no" title="statement not covered" >        var yFrom = se.lat();</span>
-<span class="cstat-no" title="statement not covered" >        var yTo = ne.lat();</span>
-<span class="cstat-no" title="statement not covered" >        var yStep = (yTo-yFrom)/(verticalSegments - 1);</span>
-        
-<span class="cstat-no" title="statement not covered" >        var profilePoints = [];</span>
-<span class="cstat-no" title="statement not covered" >        for(var y=0; y&lt;verticalSegments; y++){</span>
-<span class="cstat-no" title="statement not covered" >          var yVal = yTo - y*yStep;</span>
-          
-<span class="cstat-no" title="statement not covered" >          for (var x=0; x&lt;horizontalSegments; x++){</span>
-<span class="cstat-no" title="statement not covered" >            var xVal = xFrom + x*xStep;</span>
-<span class="cstat-no" title="statement not covered" >            var lat = Number(parseFloat(yVal).toFixed(4));</span>
-<span class="cstat-no" title="statement not covered" >            var lng = Number(parseFloat(xVal).toFixed(4));</span>
-<span class="cstat-no" title="statement not covered" >            profilePoints.push(new ProfilePoint({lat: lat, lng: lng, elv: 0}));</span>
-          }
-        }
-<span class="cstat-no" title="statement not covered" >        return profilePoints;</span>
-      },
-&nbsp;
-      rasterizePolygon: <span class="fstat-no" title="function not covered" >function(){</span>
-<span class="cstat-no" title="statement not covered" >        if (!this.polygon)</span>
-<span class="cstat-no" title="statement not covered" >          return [];</span>
-<span class="cstat-no" title="statement not covered" >        return [];</span>
-      },
+      footprint: null,
 &nbsp;
       resetMap: <span class="fstat-no" title="function not covered" >function(){</span>
 <span class="cstat-no" title="statement not covered" >        var el = $('#map')[0];</span>
@@ -882,44 +409,10 @@ define([
           zoomControl: true
         });
         
-&nbsp;
 <span class="cstat-no" title="statement not covered" >        var tilesLoadedListener = google.maps.event.addListener(this.map, 'tilesloaded', angular.bind(this, <span class="fstat-no" title="function not covered" >function(){</span></span>
 <span class="cstat-no" title="statement not covered" >          $log.debug('map:tilesloaded');          </span>
-<span class="cstat-no" title="statement not covered" >          this.resetRect();</span>
+<span class="cstat-no" title="statement not covered" >          this.setFootprint(new RectFootprint());</span>
 <span class="cstat-no" title="statement not covered" >          google.maps.event.removeListener(tilesLoadedListener);</span>
-        }));
-<span class="cstat-no" title="statement not covered" >        google.maps.event.addListener(this.map, 'bounds_changed', angular.bind(this, <span class="fstat-no" title="function not covered" >function(){</span></span>
-<span class="cstat-no" title="statement not covered" >          $log.debug('map:bounds_changed : ' + this.map.getBounds().getSouthWest().lat() + ',' + this.map.getBounds().getSouthWest().lng() + '/' + this.map.getBounds().getNorthEast().lat() + ',' + this.map.getBounds().getNorthEast().lng());</span>
-<span class="cstat-no" title="statement not covered" >          if (this.rect)</span>
-<span class="cstat-no" title="statement not covered" >            this.rect.setBounds(this.getRectBounds());</span>
-        }));
-      },
-&nbsp;
-      resetRect: <span class="fstat-no" title="function not covered" >function(){</span>
-<span class="cstat-no" title="statement not covered" >        this.setPolygon(null);</span>
-<span class="cstat-no" title="statement not covered" >        this.setRect(null);</span>
-<span class="cstat-no" title="statement not covered" >        var rect = new google.maps.Rectangle({editable: true, draggable: true, map: this.map})</span>
-<span class="cstat-no" title="statement not covered" >        this.setRect(rect);        </span>
-        /*
-        // Matterhorn
-        new google.maps.LatLngBounds(   
-          new google.maps.LatLng(45.956433, 7.63),
-          new google.maps.LatLng(46, 7.7 )
-        )
-        */
-      },
-&nbsp;
-      resetPolygon: <span class="fstat-no" title="function not covered" >function(){</span>
-<span class="cstat-no" title="statement not covered" >        this.setPolygon(null);</span>
-<span class="cstat-no" title="statement not covered" >        this.setRect(null);</span>
-<span class="cstat-no" title="statement not covered" >        var dm = new google.maps.drawing.DrawingManager({</span>
-           map: this.map
-          ,drawingControl: false
-          ,drawingMode: google.maps.drawing.OverlayType.POLYGON
-        });
-<span class="cstat-no" title="statement not covered" >        google.maps.event.addListener(dm, 'polygoncomplete', angular.bind(this, <span class="fstat-no" title="function not covered" >function(polygon){</span></span>
-<span class="cstat-no" title="statement not covered" >          this.setPolygon(polygon);</span>
-<span class="cstat-no" title="statement not covered" >          dm.setDrawingMode(null);</span>
         }));
       },
 &nbsp;
@@ -945,9 +438,10 @@ define([
 <span class="cstat-no" title="statement not covered" >            $scope.$broadcast('gemeinde:loaded', docs);</span>
 <span class="cstat-no" title="statement not covered" >            if (this.doc)</span>
 <span class="cstat-no" title="statement not covered" >              this.parser.hideDocument(this.doc);</span>
-<span class="cstat-no" title="statement not covered" >            this.doc = docs[0];</span>
-<span class="cstat-no" title="statement not covered" >            var polygon = this.doc.placemarks[0].Polygon[0];</span>
-<span class="cstat-no" title="statement not covered" >            this.setPolygon(polygon);</span>
+<span class="cstat-no" title="statement not covered" >            this.doc = docs[0];            </span>
+<span class="cstat-no" title="statement not covered" >            var footprint = new GemeindeFootprint();</span>
+<span class="cstat-no" title="statement not covered" >            footprint.setShape(this.doc);</span>
+<span class="cstat-no" title="statement not covered" >            this.setFootprint(footprint);</span>
           })
         });
 <span class="cstat-no" title="statement not covered" >        this.parser.parse(localUrl);</span>
@@ -967,51 +461,25 @@ define([
 <span class="cstat-no" title="statement not covered" >        return bounds;</span>
       },
 &nbsp;
-      setPolygon: <span class="fstat-no" title="function not covered" >function(polygon){</span>
-<span class="cstat-no" title="statement not covered" >        if (polygon == null){</span>
-<span class="cstat-no" title="statement not covered" >          if (this.polygon){</span>
-<span class="cstat-no" title="statement not covered" >            this.polygon.setMap = this.polygon.setMap || <span class="fstat-no" title="function not covered" >function(){</span>};</span>
-<span class="cstat-no" title="statement not covered" >            this.polygon.setMap(null);</span>
-<span class="cstat-no" title="statement not covered" >            this.polygon = null;</span>
+      setFootprint: <span class="fstat-no" title="function not covered" >function(footprint){        </span>
+        // bisherige Auswahl löschen
+<span class="cstat-no" title="statement not covered" >        if (this.footprint){</span>
+          // Rect/Polygon
+<span class="cstat-no" title="statement not covered" >          if (this.footprint instanceof Footprint &amp;&amp; this.footprint.shape){</span>
+<span class="cstat-no" title="statement not covered" >            this.footprint.shape.setMap(null);</span>
+<span class="cstat-no" title="statement not covered" >            this.footprint.shape = null;            </span>
           }
-<span class="cstat-no" title="statement not covered" >          return;</span>
+          // Gemeinde
+          //if (this.footprint instanceof GemeindeFootprint &amp;&amp; this.footprint.)
+<span class="cstat-no" title="statement not covered" >          this.footprint = null;</span>
         };
+              
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (this.rect){</span>
-<span class="cstat-no" title="statement not covered" >          this.rect.setMap(null);</span>
-<span class="cstat-no" title="statement not covered" >          this.rect = null;          </span>
-        } 
-<span class="cstat-no" title="statement not covered" >        if (this.polygon)</span>
-<span class="cstat-no" title="statement not covered" >          this.setPolygon(null);      </span>
-<span class="cstat-no" title="statement not covered" >        this.polygon = polygon; </span>
-<span class="cstat-no" title="statement not covered" >        this.polygon.setOptions = this.polygon.setOptions || <span class="fstat-no" title="function not covered" >function(options){</span>};</span>
-<span class="cstat-no" title="statement not covered" >        this.polygon.setOptions({</span>
-          draggable: true, editable: true ,
-          strokeColor: '#ff0000',
-          strokeWeight: 5
-        });
-<span class="cstat-no" title="statement not covered" >        this._area = this.polygon;</span>
-      },
 &nbsp;
-      setRect: <span class="fstat-no" title="function not covered" >function(rect){</span>
-<span class="cstat-no" title="statement not covered" >        if (rect == null){</span>
-<span class="cstat-no" title="statement not covered" >          if (this.rect){</span>
-<span class="cstat-no" title="statement not covered" >            this.rect.setMap(null);</span>
-<span class="cstat-no" title="statement not covered" >            this.rect = null;</span>
-          }
-<span class="cstat-no" title="statement not covered" >          return;</span>
-        };
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        if (this.polygon){</span>
-<span class="cstat-no" title="statement not covered" >          this.polygon.setMap(null);</span>
-<span class="cstat-no" title="statement not covered" >          this.polygon = null;</span>
-        }                
-<span class="cstat-no" title="statement not covered" >        if (this.rect)</span>
-<span class="cstat-no" title="statement not covered" >          this.setRect(null);</span>
-<span class="cstat-no" title="statement not covered" >        this.rect = rect;</span>
-<span class="cstat-no" title="statement not covered" >        this.rect.setBounds(this.getRectBounds());</span>
-<span class="cstat-no" title="statement not covered" >        this._area = this.rect;</span>
+<span class="cstat-no" title="statement not covered" >        this.footprint = footprint;</span>
+<span class="cstat-no" title="statement not covered" >        this.footprint.setMap(this.map);</span>
       }
+&nbsp;
     };
 &nbsp;
     return ['$scope', '$log', 'ElevationDataService', 'ProfileOutlineService', MapController];
@@ -1022,102 +490,18 @@ define([
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Feb 18 2015 20:36:17 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Feb 26 2015 17:57:54 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>
-
-<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
 <script>
-
-    YUI().use('datatable', function (Y) {
-
-        var formatters = {
-          pct: function (o) {
-              o.className += o.record.get('classes')[o.column.key];
-              try {
-                  return o.value.toFixed(2) + '%';
-              } catch (ex) { return o.value + '%'; }
-          },
-          html: function (o) {
-              o.className += o.record.get('classes')[o.column.key];
-              return o.record.get(o.column.key + '_html');
-          }
-        },
-          defaultFormatter = function (o) {
-              o.className += o.record.get('classes')[o.column.key];
-              return o.value;
-          };
-
-        function getColumns(theadNode) {
-            var colNodes = theadNode.all('tr th'),
-                cols = [],
-                col;
-            colNodes.each(function (colNode) {
-                col = {
-                    key: colNode.getAttribute('data-col'),
-                    label: colNode.get('innerHTML') || ' ',
-                    sortable: !colNode.getAttribute('data-nosort'),
-                    className: colNode.getAttribute('class'),
-                    type: colNode.getAttribute('data-type'),
-                    allowHTML: colNode.getAttribute('data-html') === 'true' || colNode.getAttribute('data-fmt') === 'html'
-                };
-                col.formatter = formatters[colNode.getAttribute('data-fmt')] || defaultFormatter;
-                cols.push(col);
-            });
-            return cols;
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
         }
-
-        function getRowData(trNode, cols) {
-            var tdNodes = trNode.all('td'),
-                    i,
-                    row = { classes: {} },
-                    node,
-                    name;
-            for (i = 0; i < cols.length; i += 1) {
-                name = cols[i].key;
-                node = tdNodes.item(i);
-                row[name] = node.getAttribute('data-value') || node.get('innerHTML');
-                row[name + '_html'] = node.get('innerHTML');
-                row.classes[name] = node.getAttribute('class');
-                //Y.log('Name: ' + name + '; Value: ' + row[name]);
-                if (cols[i].type === 'number') { row[name] = row[name] * 1; }
-            }
-            //Y.log(row);
-            return row;
-        }
-
-        function getData(tbodyNode, cols) {
-            var data = [];
-            tbodyNode.all('tr').each(function (trNode) {
-                data.push(getRowData(trNode, cols));
-            });
-            return data;
-        }
-
-        function replaceTable(node) {
-            if (!node) { return; }
-            var cols = getColumns(node.one('thead')),
-                data = getData(node.one('tbody'), cols),
-                table,
-                parent = node.get('parentNode');
-
-            table = new Y.DataTable({
-                columns: cols,
-                data: data,
-                sortBy: 'file'
-            });
-            parent.set('innerHTML', '');
-            table.render(parent);
-        }
-
-        Y.on('domready', function () {
-            replaceTable(Y.one('div.coverage-summary table'));
-            if (typeof prettyPrint === 'function') {
-                prettyPrint();
-            }
-        });
-    });
+};
 </script>
+
+<script src="../../sorter.js"></script>
 </body>
 </html>

@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">73.45</p>
+      <p class="stat">74.14</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">100</p>
+      <p class="stat">91</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">16.65</p>
+      <p class="stat">15.58</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.61</p>
+      <p class="stat">0.58</p>
     </div>
   </div>
 </div>
@@ -98,7 +98,7 @@ define([
   ], 
   function (angular, $) {
 
-    var $rootScope, $log, $modalInstance, $scope;
+    var $log, $modalInstance, $scope, $rootScope;
     var fs, gemeindeDir;
 
     /**
@@ -109,12 +109,27 @@ define([
      * @namespace
      * @constructor
      */
-    var GemeindeController = function($rootScope, $scope, $log, $modalInstance){
+    var GemeindeController = function(rootScope, scope, log, modalInstance){
+      $log = log;
+      $scope = scope;
+      $modalInstance = modalInstance;
+      $rootScope = rootScope;
       $log.debug(&#039;GemeindeController created&#039;);      
-      this.init($rootScope, $scope, $log, $modalInstance);
+
+      $scope.query = &#039;&#039;;
+      $scope.gemeinden = {
+        all: [],          
+        list: function(){
+          return [];
+        }
+      };
 
       $scope.updateList = this.updateList;
 
+      $scope.load = function(gemeinde){          
+        $rootScope.$broadcast(&#039;gemeinde:load&#039;, gemeinde);
+        $modalInstance.close();
+      };
       $scope.isSet = function(checkTab){
         return this.tab === checkTab;
       };
@@ -124,7 +139,10 @@ define([
         this.updateList();
       };
 
-      $scope.query = &#039;&#039;;
+      $scope.ok = $scope.cancel = function(){
+        $modalInstance.close();
+      };
+      
       $scope.search = {
         query: function(newQuery){
           if (angular.isDefined(newQuery)){
@@ -133,59 +151,32 @@ define([
           return $scope.query;
         }
       };      
-
-      $scope.close = close;
+      this.init();
     };
 
     
-    GemeindeController.prototype = /** @lends m3d.controller.GemeindeController.prototype */{
-      tab: &#039;search&#039;,
+    GemeindeController.prototype.tab = &#039;search&#039;;
 
-      /**
-      * initialize controller
-      */
-      init: function(rootScope, scope, log, modalInstance){
-        $log = log;
-        $scope = scope;
-        $modalInstance = modalInstance;
-        $rootScope = rootScope;
-
-        $scope.gemeinden = {
-          all: [],          
-          list: function(){
-            return [];
-          }
-        };
-        $scope.list = [];
-
-        $scope.load = function(gemeinde){          
-          $rootScope.$broadcast(&#039;gemeinde:load&#039;, gemeinde);
-          $modalInstance.close();
-        };
-        $scope.ok = $scope.cancel = function(){
-          $modalInstance.close();
-        };
-        $.ajax({
-          url: &#039;assets/gemeinden/gemeinden.json&#039;,
-          success: function(data){
-            $scope.gemeinden.all = data;
-            $scope.setTab(&#039;search&#039;);
-            $scope.$apply();
-          }
-        });
-      },
-
-      updateList: function(){
-        if ($scope.isSet(&#039;search&#039;)) {
-          $scope.gemeinden.list = $scope.gemeinden.all;
+    GemeindeController.prototype.init = function(){
+      $.ajax({
+        url: &#039;assets/gemeinden/gemeinden.json&#039;,
+        success: function(data){
+          $scope.gemeinden.all = data;
+          $scope.setTab(&#039;search&#039;);
+          $scope.$apply();
         }
-        else {
-          $scope.gemeinden.list = _.filter($scope.gemeinden.all, function(name){
-            return name.toUpperCase().substr(0,1) === this.tab;
-          }, this);
-        }
+      });
+    };
+
+    GemeindeController.prototype.updateList = function(){
+      if ($scope.isSet(&#039;search&#039;)) {
+        $scope.gemeinden.list = $scope.gemeinden.all;
       }
-
+      else {
+        $scope.gemeinden.list = _.filter($scope.gemeinden.all, function(name){
+          return name.toUpperCase().substr(0,1) === this.tab;
+        }, this);
+      }
     };
 
     return [&#039;$rootScope&#039;, &#039;$scope&#039;, &#039;$log&#039;, &#039;$modalInstance&#039;, GemeindeController];
