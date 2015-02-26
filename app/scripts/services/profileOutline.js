@@ -5,8 +5,12 @@ define([
   ,'lodash'
   ,'models/m3dProfile'
   ,'models/m3dProfilePoint'
+  ,'models/footprint'
+  ,'models/rectFootprint'
+  ,'models/polyFootprint'
+  ,'models/gemeindeFootprint'
   ],
-  function(angular, THREE, _, Profile, ProfilePoint){
+  function(angular, THREE, _, Profile, ProfilePoint, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint){
 
     var extrudeSettings = { 
       amount: 40, 
@@ -32,15 +36,19 @@ define([
 
     ProfileOutlineService.prototype = /** @lends m3d.services.ProfileOutlineService.prototype */{
 
-      createProfile: function(profilePoints){
+      createProfile: function(footprint, profilePoints){
+        var mesh = null;
+        if (footprint instanceof PolyFootprint || footprint instanceof GemeindeFootprint)
+          mesh = this.createPolyMesh(profilePoints)
         var profile = new Profile({
+          mesh: mesh,
           profilePoints: profilePoints,
           thickness: localStorage.getItem('thickness') || undefined
         });
         return profile;
       },
 
-      createPolygon: function(coordinates){
+      createPolyMesh: function(coordinates){
         $log.debug('creating outline for ' + coordinates.length + ' coordinates');            
 
         var maxLat = _.max(coordinates, 'lat').lat;
@@ -64,16 +72,13 @@ define([
         var rasterVertices = rasterResult.vertices;
 
         // Schritt 4: Die ermittelten Rasterpunkte durch die Punkte auf dem Shaperands ergänzen
-        var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);
+        //var rasterPoints = this.calculateRasterPoints(rasterVertices, shape);
 
         // Schritt 5: Die Komplette Liste an Rasterpunkten zurückrechnen  in Koordinaten (ProfilePoints)
-        var profilePoints = this.calculateProfilePoints(rasterPoints);
+        //var profilePoints = this.calculateProfilePoints(rasterPoints);
 
-        // Mesh und Koordinaten zurückgeben
-        return {
-           mesh: rasterizedMesh
-          ,profilePoints: profilePoints
-        };
+        // Mesh zurückgeben
+        return rasterizedMesh;
       },
 
       /**
@@ -171,7 +176,7 @@ define([
         var boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth, 10, 1, 10);        
         var topVertices = this.getTopVertices(boxGeometry);
 
-        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: true });
+        var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, wireframe: false });
         //return new THREE.Mesh(boxGeometry, material);
 
         var csgBox = new THREE.ThreeBSP(boxGeometry);
@@ -217,7 +222,7 @@ define([
         var otherArray = refArray == array1?array2:array1;
 
         _.forEach(refArray, function(vertex, n){
-          filtered = _.filter(otherArray, {'x': vertex.x, 'z': vertex.z});
+          var filtered = _.filter(otherArray, {'x': vertex.x, 'z': vertex.z});
           result = result.concat(filtered);
         });
         return result;

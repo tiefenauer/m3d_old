@@ -9,7 +9,7 @@ define([
     'use strict';
 
     var google = window.google;
-    var service, coords;
+    var service;
     var $log, $rootScope;
     var stop, index, requestQueue, queueItem;
 
@@ -19,115 +19,113 @@ define([
      * @class
      * @name m3d.services.ElevationDataService 
      */
-    var ElevationDataService = function($log, $rootScope){
+    var ElevationDataService = function(log, rootScope){      
+      $log = log;
+      $rootScope = rootScope;
       $log.debug('HeightMapService created');
-      this.init($log, $rootScope);
     };
     
-
-    ElevationDataService.prototype = /** @lends m3d.services.ElevationDataService.prototype */ {
-      /** 
+    /** 
       * Default delay between service calls in ms 
       * @static 
       */
-      DELAY: 1010,
-      /** 
-      * Number of coordinates to process in one go
-      * @static 
-      */
-      CHUNK_SIZE: 150,
+    ElevationDataService.prototype.DELAY = 1010;
 
-      /**
-      * initialize Service
-      */
-      init: function(log, rootScope){
-        $log = log;
-        $rootScope = rootScope;
-      },
+    /** 
+    * Number of coordinates to process in one go
+    * @static 
+    */
+    ElevationDataService.prototype.CHUNK_SIZE = 150;
 
-      /**
-      * Calculate a height map from a list of coordinates
-      * @param {m3d.models.ProfilePoint[]} coordinates list of coordinates to process      
-      * @fires adapter:start
-      * @fires adapter:end
-      * @fires adapter:queue:progress
-      */
-      getElevationData: function(coordinates){
-        $log.debug('getting elevation data for ' + coordinates.length + ' points');
-        coords = coordinates;
+    ElevationDataService.prototype.footprint = null;
 
-        service = new google.maps.ElevationService();
+    ElevationDataService.prototype.coordinates = [];
 
-        // Koordinaten-Array aufsplitten (max 512 coordinates pro request)
-        var delay = 1010;
+    /**
+    * Calculate a height map from a list of coordinates
+    * @param {m3d.models.ProfilePoint[]} coordinates list of coordinates to process      
+    * @fires adapter:start
+    * @fires adapter:end
+    * @fires adapter:queue:progress
+    */
+    ElevationDataService.prototype.getElevationData = function(footprint){
+      this.footprint = footprint;
+      this.coordinates = footprint.rasterize();        
+      $log.debug('getting elevation data for ' + this.coordinates.length + ' points');
 
-        var chunkSize = 150;
-        requestQueue = [];
-        for(var i=0; i<coordinates.length; i+=chunkSize){
-          requestQueue.push(coordinates.slice(i, i+chunkSize));
-        }
-        
-        $rootScope.$broadcast('adapter:start', {
-           numItems: coordinates.length
-          ,numCalls: requestQueue.length
-          ,chunkSize: chunkSize
-          ,delay: delay
-        });
-        
-        stop = false;
-        index = 0;
-        processNextQueueItem();        
+      service = new google.maps.ElevationService();
+
+      // Koordinaten-Array aufsplitten (max 512 coordinates pro request)
+      var delay = 1010;
+
+      var chunkSize = 150;
+      requestQueue = [];
+      for(var i=0; i<this.coordinates.length; i+=chunkSize){
+        requestQueue.push(this.coordinates.slice(i, i+chunkSize));
       }
+      
+      $rootScope.$broadcast('adapter:start', {
+         numItems: this.coordinates.length
+        ,numCalls: requestQueue.length
+        ,chunkSize: chunkSize
+        ,delay: delay
+      });
+      
+      stop = false;
+      index = 0;
+      this.processNextQueueItem();        
     };
 
-    // Queue-Item abarbeiten
-    var processNextQueueItem = function(){
+    /**
+    * Get elevation data for next chunk in queue
+    */
+    ElevationDataService.prototype.processNextQueueItem = function(){
       if (stop || index >= requestQueue.length){
         stop = false;
-        $rootScope.$broadcast('adapter:end', coords);
+        $rootScope.$broadcast('adapter:end', this.footprint, this.coordinates);
       }
       else{
         queueItem = requestQueue[index];
         var request = {locations: queueItem};
-        service.getElevationForLocations(request, onServiceResponse);           
+        service.getElevationForLocations(request, angular.bind(this, this.onServiceResponse));
       }
     };    
 
-      // Response handler
-    var onServiceResponse = function(result, status){
-        $rootScope.$broadcast('adapter:queue:progress', {
-           status: status
-          ,progress: index+1
-          ,total: requestQueue.length
-        });
-        switch(status){
-          case google.maps.ElevationStatus.OK:              
+    /**
+    * Respone handler
+    */
+    ElevationDataService.prototype.onServiceResponse = function(result, status){
+      $rootScope.$broadcast('adapter:queue:progress', {
+         status: status
+        ,progress: index+1
+        ,total: requestQueue.length
+      });
+      switch(status){
+        case google.maps.ElevationStatus.OK:              
 
-            $.each(queueItem, function(i, coord){              
-              var searchResult = $.grep(result, function(entry, index){
-                var lat = Number(parseFloat(entry.location.lat())).toFixed(4);
-                var lng = Number(parseFloat(entry.location.lng())).toFixed(4);
-                return lat == coord.lat && lng == coord.lng;
-              });
-              if (searchResult && searchResult.length > 0){
-                $rootScope.$broadcast('adapter:item:progress');
-                coord.elv = searchResult[0].elevation;
-              }                
+          $.each(queueItem, function(i, coord){              
+            var searchResult = $.grep(result, function(entry, index){
+              var lat = Number(parseFloat(entry.location.lat())).toFixed(4);
+              var lng = Number(parseFloat(entry.location.lng())).toFixed(4);
+              return lat == coord.lat && lng == coord.lng;
             });
+            if (searchResult && searchResult.length > 0){
+              $rootScope.$broadcast('adapter:item:progress');
+              coord.elv = searchResult[0].elevation;
+            }                
+          });
 
-            stop = ++index >= requestQueue.length
-            processNextQueueItem();
-          break;
+          stop = ++index >= requestQueue.length
+          this.processNextQueueItem();
+        break;
 
-          default:
-            setTimeout(processNextQueueItem, 1000);
-          break;
-        }
-        
+        default:
+          setTimeout(this.processNextQueueItem, 1000);
+        break;
+      }
     };
 
-
-    return ElevationDataService;
+    return ['$log', '$rootScope', ElevationDataService];
 });
 
 /**

@@ -60,8 +60,11 @@ define([
       });
 
       it('should work with empty array', function(){
-        spyOn(rootScope, '$broadcast');        
-        ElevationDataService.getElevationData([]);
+        spyOn(rootScope, '$broadcast');       
+        var footprint = {
+          rasterize: function(){return []}
+        } 
+        ElevationDataService.getElevationData(footprint);
 
         expect(rootScope.$broadcast).toHaveBeenCalled();
         expect(rootScope.$broadcast.calls.first().args[0]).toBe('adapter:start');
@@ -71,7 +74,11 @@ define([
       });
 
       it('should trigger status events when processing', function(done){
-        var dummyCoordinates = createDummyCoordinates(2500);
+        var footprint = {
+          rasterize: function(){
+            return createDummyCoordinates(2500);
+          }
+        };
         var dummyGoogleMapsFunction = function(queueItem, callback){
           setTimeout(function(){
             var result = createDummyReponses(queueItem.locations);
@@ -82,17 +89,17 @@ define([
         var queueProgressCount = 0;
         rootScope.$on('adapter:item:progress', function(event, args){ itemProgressCount++ });
         rootScope.$on('adapter:queue:progress', function(event, args){ queueProgressCount++ });
-        rootScope.$on('adapter:end', function(event, result){
+        rootScope.$on('adapter:end', function(event, footprint, profilePoints){
           expect(itemProgressCount).toBe(2500);
           expect(queueProgressCount).toBe(Math.ceil(2500/ElevationDataService.CHUNK_SIZE));
-          result.forEach(function(entry, index){
+          profilePoints.forEach(function(entry, index){
             expect(entry.elv).toBe(43);
           });
           done();
         });
         spyOn(rootScope, '$broadcast').and.callThrough();
         spyOn(google.maps.ElevationService.prototype, 'getElevationForLocations').and.callFake(dummyGoogleMapsFunction);
-        ElevationDataService.getElevationData(dummyCoordinates);
+        ElevationDataService.getElevationData(footprint);
 
         // start event
         expect(rootScope.$broadcast).toHaveBeenCalled();

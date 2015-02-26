@@ -3,14 +3,16 @@ define([
    'angular'
   ,'jquery'
   ,'lodash'
-  ,'models/m3dProfile'
-  ,'models/m3dProfilePoint'    
+  ,'models/footprint' 
+  ,'models/rectFootprint'
+  ,'models/polyFootprint'
+  ,'models/gemeindeFootprint'
   ,'vendor/geoxml3'
     /*
   ,'vendor/ProjectedOverlay'
   */
   ], 
-  function (angular, $, _, Profile, ProfilePoint) {
+  function (angular, $, _, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint) {
 
     var $log, $scope, $ElevationDataService, $ProfileOutlineService;
     var gridSize;
@@ -41,7 +43,7 @@ define([
           this.resetZoom();
         }));
         $scope.$on('menu:model:generate', angular.bind(this, function(event){
-          $ElevationDataService.getElevationData(this.getCoordinates());
+          $ElevationDataService.getElevationData(this.footprint);
         }));
         $scope.$on('gemeinde:load', angular.bind(this, function(event, name){
           $log.debug('loading ' + name + ' from file...');
@@ -49,76 +51,16 @@ define([
         }));
         $scope.$on('menu:drawing:type', angular.bind(this, function(event, type){
           if (type == 'rect')
-            this.resetRect();
+            this.setFootprint(new RectFootprint());
           else if (type == 'poly')
-            this.resetPolygon();            
+            this.setFootprint(new PolyFootprint());
         }));
         //$scope.$broadcast('gemeinde:load', 'Aarau');        
     };
 
     MapController.prototype = /** @lends m3d.controller.MapController.prototype */{
       map: null,
-      rect: null,
-      polygon: null,
-      _area: null,
-
-      getCoordinates: function(){
-        if (!this._area)
-          return [];
-
-        if (this._area == this.rect)
-          return this.rasterizeRectangle();
-
-        if (this._area == this.polygon)
-          return this.rasterizePolygon();
-      },
-
-      /**
-      * Rasterize selection rectangle to determine points for which the elevation must be determined.
-      * @return {m3d.models.ProfilePoint[]} list of single profile Points for the rasterized selection rectangle. The elevation is zero for each point.
-      */
-      rasterizeRectangle: function(){
-        if (!this.rect)
-          return [];
-        var resolution = localStorage.getItem('resolution') || 25;
-        gridSize = horizontalSegments = verticalSegments = parseInt(resolution);
-
-        var rect = this.rect;
-        // Positionen der Ecken bestimmen
-        var ne = rect.getBounds().getNorthEast();
-        var sw = rect.getBounds().getSouthWest();
-        var nw = new google.maps.LatLng(ne.lat(), sw.lng());
-        var se = new google.maps.LatLng(sw.lat(), ne.lng());
-        
-        // get values on x-axis
-        var xFrom = nw.lng();
-        var xTo = ne.lng(); 
-        var xStep = (xTo-xFrom)/(horizontalSegments - 1);
-        
-        // get values on y-axis
-        var yFrom = se.lat();
-        var yTo = ne.lat();
-        var yStep = (yTo-yFrom)/(verticalSegments - 1);
-        
-        var profilePoints = [];
-        for(var y=0; y<verticalSegments; y++){
-          var yVal = yTo - y*yStep;
-          
-          for (var x=0; x<horizontalSegments; x++){
-            var xVal = xFrom + x*xStep;
-            var lat = Number(parseFloat(yVal).toFixed(4));
-            var lng = Number(parseFloat(xVal).toFixed(4));
-            profilePoints.push(new ProfilePoint({lat: lat, lng: lng, elv: 0}));
-          }
-        }
-        return profilePoints;
-      },
-
-      rasterizePolygon: function(){
-        if (!this.polygon)
-          return [];
-        return [];
-      },
+      footprint: null,
 
       resetMap: function(){
         var el = $('#map')[0];
@@ -130,44 +72,10 @@ define([
           zoomControl: true
         });
         
-
         var tilesLoadedListener = google.maps.event.addListener(this.map, 'tilesloaded', angular.bind(this, function(){
           $log.debug('map:tilesloaded');          
-          this.resetRect();
+          this.setFootprint(new RectFootprint());
           google.maps.event.removeListener(tilesLoadedListener);
-        }));
-        google.maps.event.addListener(this.map, 'bounds_changed', angular.bind(this, function(){
-          $log.debug('map:bounds_changed : ' + this.map.getBounds().getSouthWest().lat() + ',' + this.map.getBounds().getSouthWest().lng() + '/' + this.map.getBounds().getNorthEast().lat() + ',' + this.map.getBounds().getNorthEast().lng());
-          if (this.rect)
-            this.rect.setBounds(this.getRectBounds());
-        }));
-      },
-
-      resetRect: function(){
-        this.setPolygon(null);
-        this.setRect(null);
-        var rect = new google.maps.Rectangle({editable: true, draggable: true, map: this.map})
-        this.setRect(rect);        
-        /*
-        // Matterhorn
-        new google.maps.LatLngBounds(   
-          new google.maps.LatLng(45.956433, 7.63),
-          new google.maps.LatLng(46, 7.7 )
-        )
-        */
-      },
-
-      resetPolygon: function(){
-        this.setPolygon(null);
-        this.setRect(null);
-        var dm = this.dm = new google.maps.drawing.DrawingManager({
-           map: this.map
-          ,drawingControl: false
-          ,drawingMode: google.maps.drawing.OverlayType.POLYGON
-        });
-        google.maps.event.addListener(this.dm, 'polygoncomplete', angular.bind(this, function(polygon){
-          this.setPolygon(polygon);
-          dm.setDrawingMode(null);
         }));
       },
 
@@ -193,9 +101,10 @@ define([
             $scope.$broadcast('gemeinde:loaded', docs);
             if (this.doc)
               this.parser.hideDocument(this.doc);
-            this.doc = docs[0];
-            var polygon = this.doc.placemarks[0].Polygon[0];
-            this.setPolygon(polygon);
+            this.doc = docs[0];            
+            var footprint = new GemeindeFootprint();
+            footprint.setShape(this.doc);
+            this.setFootprint(footprint);
           })
         });
         this.parser.parse(localUrl);
@@ -215,51 +124,25 @@ define([
         return bounds;
       },
 
-      setPolygon: function(polygon){
-        if (polygon == null){
-          if (this.polygon){
-            this.polygon.setMap = this.polygon.setMap || function(){};
-            this.polygon.setMap(null);
-            this.polygon = null;
+      setFootprint: function(footprint){        
+        // bisherige Auswahl löschen
+        if (this.footprint){
+          // Rect/Polygon
+          if (this.footprint instanceof Footprint && this.footprint.shape){
+            this.footprint.shape.setMap(null);
+            this.footprint.shape = null;            
           }
-          return;
+          // Gemeinde
+          //if (this.footprint instanceof GemeindeFootprint && this.footprint.)
+          this.footprint = null;
         };
+              
 
-        if (this.rect){
-          this.rect.setMap(null);
-          this.rect = null;          
-        } 
-        if (this.polygon)
-          this.setPolygon(null);      
-        this.polygon = polygon; 
-        this.polygon.setOptions = this.polygon.setOptions || function(options){};
-        this.polygon.setOptions({
-          draggable: true, editable: true ,
-          strokeColor: '#ff0000',
-          strokeWeight: 5
-        });
-        this._area = this.polygon;
-      },
 
-      setRect: function(rect){
-        if (rect == null){
-          if (this.rect){
-            this.rect.setMap(null);
-            this.rect = null;
-          }
-          return;
-        };
-
-        if (this.polygon){
-          this.polygon.setMap(null);
-          this.polygon = null;
-        }                
-        if (this.rect)
-          this.setRect(null);
-        this.rect = rect;
-        this.rect.setBounds(this.getRectBounds());
-        this._area = this.rect;
+        this.footprint = footprint;
+        this.footprint.setMap(this.map);
       }
+
     };
 
     return ['$scope', '$log', 'ElevationDataService', 'ProfileOutlineService', MapController];

@@ -7,7 +7,7 @@ define([
   ], 
   function (angular, $) {
 
-    var $rootScope, $log, $modalInstance, $scope;
+    var $log, $modalInstance, $scope, $rootScope;
     var fs, gemeindeDir;
 
     /**
@@ -18,12 +18,27 @@ define([
      * @namespace
      * @constructor
      */
-    var GemeindeController = function($rootScope, $scope, $log, $modalInstance){
+    var GemeindeController = function(rootScope, scope, log, modalInstance){
+      $log = log;
+      $scope = scope;
+      $modalInstance = modalInstance;
+      $rootScope = rootScope;
       $log.debug('GemeindeController created');      
-      this.init($rootScope, $scope, $log, $modalInstance);
+
+      $scope.query = '';
+      $scope.gemeinden = {
+        all: [],          
+        list: function(){
+          return [];
+        }
+      };
 
       $scope.updateList = this.updateList;
 
+      $scope.load = function(gemeinde){          
+        $rootScope.$broadcast('gemeinde:load', gemeinde);
+        $modalInstance.close();
+      };
       $scope.isSet = function(checkTab){
         return this.tab === checkTab;
       };
@@ -33,7 +48,10 @@ define([
         this.updateList();
       };
 
-      $scope.query = '';
+      $scope.ok = $scope.cancel = function(){
+        $modalInstance.close();
+      };
+      
       $scope.search = {
         query: function(newQuery){
           if (angular.isDefined(newQuery)){
@@ -42,59 +60,32 @@ define([
           return $scope.query;
         }
       };      
-
-      $scope.close = close;
+      this.init();
     };
 
     
-    GemeindeController.prototype = /** @lends m3d.controller.GemeindeController.prototype */{
-      tab: 'search',
+    GemeindeController.prototype.tab = 'search';
 
-      /**
-      * initialize controller
-      */
-      init: function(rootScope, scope, log, modalInstance){
-        $log = log;
-        $scope = scope;
-        $modalInstance = modalInstance;
-        $rootScope = rootScope;
-
-        $scope.gemeinden = {
-          all: [],          
-          list: function(){
-            return [];
-          }
-        };
-        $scope.list = [];
-
-        $scope.load = function(gemeinde){          
-          $rootScope.$broadcast('gemeinde:load', gemeinde);
-          $modalInstance.close();
-        };
-        $scope.ok = $scope.cancel = function(){
-          $modalInstance.close();
-        };
-        $.ajax({
-          url: 'assets/gemeinden/gemeinden.json',
-          success: function(data){
-            $scope.gemeinden.all = data;
-            $scope.setTab('search');
-            $scope.$apply();
-          }
-        });
-      },
-
-      updateList: function(){
-        if ($scope.isSet('search')) {
-          $scope.gemeinden.list = $scope.gemeinden.all;
+    GemeindeController.prototype.init = function(){
+      $.ajax({
+        url: 'assets/gemeinden/gemeinden.json',
+        success: function(data){
+          $scope.gemeinden.all = data;
+          $scope.setTab('search');
+          $scope.$apply();
         }
-        else {
-          $scope.gemeinden.list = _.filter($scope.gemeinden.all, function(name){
-            return name.toUpperCase().substr(0,1) === this.tab;
-          }, this);
-        }
+      });
+    };
+
+    GemeindeController.prototype.updateList = function(){
+      if ($scope.isSet('search')) {
+        $scope.gemeinden.list = $scope.gemeinden.all;
       }
-
+      else {
+        $scope.gemeinden.list = _.filter($scope.gemeinden.all, function(name){
+          return name.toUpperCase().substr(0,1) === this.tab;
+        }, this);
+      }
     };
 
     return ['$rootScope', '$scope', '$log', '$modalInstance', GemeindeController];

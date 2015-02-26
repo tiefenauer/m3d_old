@@ -1,8 +1,9 @@
 define([
    'angular'
   ,'lodash'
+  ,'models/m3dProfilePoint'   
   ], 
-  function(angular, _){
+  function(angular, _, ProfilePoint){
 
     /**
      * Footprint
@@ -12,14 +13,21 @@ define([
      * @namespace
      * @constructor
      */
-    var Footprint = function(){
-
+    var Footprint = function(map){
+      this.map = map;
+      this.shape = null;
     };
 
-    Footprint.prototype = /** @lends m3d.model.Profile.prototype */ { 
-      rasterize: function(){
+    Footprint.prototype.rasterize = function(){
+      return [];
+    };
 
-      }
+    Footprint.prototype.setMap = function(map){
+      this.map = map;
+    };
+
+    Footprint.prototype.setShape = function(shape){
+      this.shape = shape;
     };
 
     return Footprint;

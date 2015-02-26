@@ -39,9 +39,9 @@ define([
       renderer = new THREE.WebGLRenderer({ antialias: true });
       scene = new THREE.Scene();
       
-      $scope.$on('adapter:end', function(event, profilePoints){
+      $scope.$on('adapter:end', function(event, footprint, profilePoints){
         clearScene();
-        var m3dProfile = ProfileOutlineService.createProfile(profilePoints);
+        var m3dProfile = ProfileOutlineService.createProfile(footprint, profilePoints);
         drawProfile(m3dProfile);
       });
       $scope.$on('io:model:loaded', function(event, profile){
@@ -123,9 +123,11 @@ define([
     };
 
     var remove = function(m3dProfile){
-      var mesh = scene.getObjectByName(m3dProfile.mesh.name);
+      if (!m3dProfile)
+        return;
+      var mesh = scene.getObjectByName(m3dProfile.name);
       if (m3dProfile.mold)
-        var mold = scene.getObjectByName(m3dProfile.mold.name);
+        var mold = scene.getObjectByName(m3dProfile.name);
       scene.remove(mesh);
       scene.remove(mold);
     };

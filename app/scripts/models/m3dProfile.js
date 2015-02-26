@@ -46,19 +46,16 @@ define([
 		  init: function(options){		  			  	
 				this.thickness = options.thickness;		  	
 				this.name = options.name?options.name:'profile_' + Math.floor(Math.random()*100);
-
-				if (options.profilePoints.length > 0){				
-					this.profilePoints = _.sortByAll(options.profilePoints, ['lat', 'lng']);
+				this.mesh = options.mesh;
+				this.profilePoints = _.sortByAll(options.profilePoints, ['lat', 'lng']);
+				if (this.profilePoints.length > 0){
 					this.segmentsX =  Math.sqrt(this.profilePoints.length) - 1;
 					this.segmentsY =  Math.sqrt(this.profilePoints.length) - 1;
-					this.updateMesh(this.profilePoints);
+					if (!this.mesh)
+						this.updateMesh(this.profilePoints);
 				}
-				else if (options.mesh){
-					this.mesh = options.mesh;
+				if(this.mesh)
 					this.mesh.name = this.name;
-					//this.updateProfilePoints(this.mesh);
-					//this.updateMesh(this.profilePoints);
-				}			
 		  },
 
 		  /**
