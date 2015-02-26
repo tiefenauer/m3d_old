@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">63.02</p>
+      <p class="stat">63.08</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">129</p>
+      <p class="stat">130</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">34.42</p>
+      <p class="stat">32.28</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.94</p>
+      <p class="stat">0.86</p>
     </div>
   </div>
 </div>
@@ -103,6 +103,7 @@
     var service;
     var $log, $rootScope;
     var stop, index, requestQueue, queueItem;
+    var footprint, coordinates;
 
     /**
      * ElevationDataService
@@ -139,10 +140,10 @@
     * @fires adapter:end
     * @fires adapter:queue:progress
     */
-    ElevationDataService.prototype.getElevationData = function(footprint){
-      this.footprint = footprint;
-      this.coordinates = footprint.rasterize();        
-      $log.debug(&#039;getting elevation data for &#039; + this.coordinates.length + &#039; points&#039;);
+    ElevationDataService.prototype.getElevationData = function(_footprint){
+      footprint = _footprint;
+      coordinates = footprint.rasterize();        
+      $log.debug(&#039;getting elevation data for &#039; + coordinates.length + &#039; points&#039;);
 
       service = new google.maps.ElevationService();
 
@@ -151,12 +152,12 @@
 
       var chunkSize = 150;
       requestQueue = [];
-      for(var i=0; i&lt;this.coordinates.length; i+=chunkSize){
-        requestQueue.push(this.coordinates.slice(i, i+chunkSize));
+      for(var i=0; i&lt;coordinates.length; i+=chunkSize){
+        requestQueue.push(coordinates.slice(i, i+chunkSize));
       }
       
       $rootScope.$broadcast(&#039;adapter:start&#039;, {
-         numItems: this.coordinates.length
+         numItems: coordinates.length
         ,numCalls: requestQueue.length
         ,chunkSize: chunkSize
         ,delay: delay
@@ -164,28 +165,28 @@
       
       stop = false;
       index = 0;
-      this.processNextQueueItem();        
+      processNextQueueItem();        
     };
 
     /**
     * Get elevation data for next chunk in queue
     */
-    ElevationDataService.prototype.processNextQueueItem = function(){
+    var processNextQueueItem = function(){
       if (stop || index &gt;= requestQueue.length){
         stop = false;
-        $rootScope.$broadcast(&#039;adapter:end&#039;, this.footprint, this.coordinates);
+        $rootScope.$broadcast(&#039;adapter:end&#039;, footprint, coordinates);
       }
       else{
         queueItem = requestQueue[index];
         var request = {locations: queueItem};
-        service.getElevationForLocations(request, angular.bind(this, this.onServiceResponse));
+        service.getElevationForLocations(request, onServiceResponse);
       }
     };    
 
     /**
     * Respone handler
     */
-    ElevationDataService.prototype.onServiceResponse = function(result, status){
+    var onServiceResponse = function(result, status){
       $rootScope.$broadcast(&#039;adapter:queue:progress&#039;, {
          status: status
         ,progress: index+1
@@ -207,11 +208,11 @@
           });
 
           stop = ++index &gt;= requestQueue.length
-          this.processNextQueueItem();
+          processNextQueueItem();
         break;
 
         default:
-          setTimeout(this.processNextQueueItem, 1000);
+          setTimeout(processNextQueueItem, 1000);
         break;
       }
     };
