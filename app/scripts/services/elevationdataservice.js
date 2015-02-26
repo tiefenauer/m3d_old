@@ -12,6 +12,7 @@ define([
     var service;
     var $log, $rootScope;
     var stop, index, requestQueue, queueItem;
+    var footprint, coordinates;
 
     /**
      * ElevationDataService
@@ -48,10 +49,10 @@ define([
     * @fires adapter:end
     * @fires adapter:queue:progress
     */
-    ElevationDataService.prototype.getElevationData = function(footprint){
-      this.footprint = footprint;
-      this.coordinates = footprint.rasterize();        
-      $log.debug('getting elevation data for ' + this.coordinates.length + ' points');
+    ElevationDataService.prototype.getElevationData = function(_footprint){
+      footprint = _footprint;
+      coordinates = footprint.rasterize();        
+      $log.debug('getting elevation data for ' + coordinates.length + ' points');
 
       service = new google.maps.ElevationService();
 
@@ -60,12 +61,12 @@ define([
 
       var chunkSize = 150;
       requestQueue = [];
-      for(var i=0; i<this.coordinates.length; i+=chunkSize){
-        requestQueue.push(this.coordinates.slice(i, i+chunkSize));
+      for(var i=0; i<coordinates.length; i+=chunkSize){
+        requestQueue.push(coordinates.slice(i, i+chunkSize));
       }
       
       $rootScope.$broadcast('adapter:start', {
-         numItems: this.coordinates.length
+         numItems: coordinates.length
         ,numCalls: requestQueue.length
         ,chunkSize: chunkSize
         ,delay: delay
@@ -73,28 +74,28 @@ define([
       
       stop = false;
       index = 0;
-      this.processNextQueueItem();        
+      processNextQueueItem();        
     };
 
     /**
     * Get elevation data for next chunk in queue
     */
-    ElevationDataService.prototype.processNextQueueItem = function(){
+    var processNextQueueItem = function(){
       if (stop || index >= requestQueue.length){
         stop = false;
-        $rootScope.$broadcast('adapter:end', this.footprint, this.coordinates);
+        $rootScope.$broadcast('adapter:end', footprint, coordinates);
       }
       else{
         queueItem = requestQueue[index];
         var request = {locations: queueItem};
-        service.getElevationForLocations(request, angular.bind(this, this.onServiceResponse));
+        service.getElevationForLocations(request, onServiceResponse);
       }
     };    
 
     /**
     * Respone handler
     */
-    ElevationDataService.prototype.onServiceResponse = function(result, status){
+    var onServiceResponse = function(result, status){
       $rootScope.$broadcast('adapter:queue:progress', {
          status: status
         ,progress: index+1
@@ -116,11 +117,11 @@ define([
           });
 
           stop = ++index >= requestQueue.length
-          this.processNextQueueItem();
+          processNextQueueItem();
         break;
 
         default:
-          setTimeout(this.processNextQueueItem, 1000);
+          setTimeout(processNextQueueItem, 1000);
         break;
       }
     };
