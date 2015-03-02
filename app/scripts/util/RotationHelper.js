@@ -21,20 +21,46 @@ define(
 			canvas = canvasElement;
 			renderer = threeRenderer;
 			$canvas = $(canvas);
-			return {
-				 initEvents: initEvents.bind(this)
-				,get targetRotation(){
-					return targetRotation;
-				}
-			};
 		};
 
-		var initEvents = function(){
-			canvas.addEventListener( 'mousedown', onDocumentMouseDown.bind(this), false );
-			canvas.addEventListener( 'touchstart', onDocumentTouchStart.bind(this), false );
-			canvas.addEventListener( 'touchmove', onDocumentTouchMove.bind(this), false );			
-			window.addEventListener( 'resize', onWindowResize.bind(this), false );
+		RotationHelper.prototype = {
+			active: false,
+			get targetRotation(){
+					return targetRotation;
+			},
+
+			start: function(){
+				this.active = true;
+				addEventListeners();
+			},
+
+			stop: function(rotation){				
+				this.active = false;
+				targetRotation = rotation;
+				removeEventListeners();
+				//targetRotation = 0;
+			}
+
 		};
+
+		var addEventListeners = function(){
+			canvas.addEventListener( 'mousedown', onDocumentMouseDown, false );
+			//canvas.addEventListener( 'mousemove', onDocumentMouseMove, false );
+			canvas.addEventListener( 'mouseup', onDocumentMouseUp, false );
+			canvas.addEventListener( 'mouseout', onDocumentMouseOut, false );			
+			canvas.addEventListener( 'touchstart', onDocumentTouchStart, false );
+			//canvas.addEventListener( 'touchmove', onDocumentTouchMove, false );			
+			window.addEventListener( 'resize', onWindowResize, false );			
+		};
+
+		var removeEventListeners = function( ) {
+			canvas.removeEventListener( 'mousedown', onDocumentMouseDown, false );
+			//canvas.removeEventListener( 'mousemove', onDocumentMouseMove, false );
+			canvas.removeEventListener( 'mouseup', onDocumentMouseUp, false );
+			canvas.removeEventListener( 'mouseout', onDocumentMouseOut, false );
+			canvas.removeEventListener( 'touchstart', onDocumentTouchStart, false );
+			//canvas.removeEventListener( 'touchmove', onDocumentTouchMove, false );
+		};		
 
 		var onWindowResize = function() {
 			windowHalfX = $canvas.width() / 2;

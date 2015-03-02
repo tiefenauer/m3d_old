@@ -19,6 +19,7 @@ define([
 			if (arguments[0]) options = arguments[0];
 			var defaultArgs = {
 				'profilePoints': [],
+				'footprint': null,
 				'thickness': 200,
 				'mesh': null,
 				'name': null
@@ -32,6 +33,7 @@ define([
 		Profile.prototype = /** @lends m3d.model.Profile.prototype */{
 		  name: '',
 		  profilePoints: [],
+		  footprint: null,
 		  thickness: 0,
 		  segmentsX: 0,
 		  segmentsY: 1,
@@ -44,6 +46,7 @@ define([
 		  * @param {Object} options configuration options
 		  */ 
 		  init: function(options){		  			  	
+		  	this.footprint = options.footprint;
 				this.thickness = options.thickness;		  	
 				this.name = options.name?options.name:'profile_' + Math.floor(Math.random()*100);
 				this.mesh = options.mesh;
@@ -209,18 +212,6 @@ define([
 		  	var maxZ = _.max(zs);
 		  	var minZ = _.min(zs);
 		  	return Math.floor(Math.abs(maxZ - minZ));
-		  },
-
-		 /**
-		  * Rotate the model for a given angle on the Y-Axis
-		  * @param {Number} angle the angle the model should be rotated with
-		  * @param {Number} damping the damping factor that should be used to calculate the rotation
-		  */
-		  rotate: function(angle, damping){
-		  	var rotation = (angle - this.mesh.rotation.y) * damping;
-          	this.mesh.rotation.y += rotation;
-          	if (this.mold)
-          		this.mold.rotation.y += rotation;
 		  },
 
 		  /**

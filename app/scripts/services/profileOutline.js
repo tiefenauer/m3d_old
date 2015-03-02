@@ -233,9 +233,10 @@ define([
       * @param {m3d.models.Profile} profile the profile to be inverted
       */
       invert: function(profile){
+        profile.mesh.rotation.y = 0;
         profile.mesh.geometry.computeVertexNormals();
         // Quader für Gussform vorbereiten
-        var boxBorderThickness = profile.getDimensionY() * 1.1 - profile.getDimensionY();
+        var boxBorderThickness = (profile.getDimensionY() * 1.1 - profile.getDimensionY()) * 2;
         var boxWidth = profile.getDimensionZ() + boxBorderThickness;
         var boxHeight = profile.getDimensionY() * 2 + boxBorderThickness;
         var boxDepth =  profile.getDimensionX() + boxBorderThickness;
@@ -246,14 +247,11 @@ define([
           if (vertex.y < 0)
             vertex.y = -1 * boxBorderThickness;
         });
-        boxGeometry.verticesNeedUpdate = true;
+        boxGeometry.verticesNeedUpdate = true;        
 
         // Modell kopieren und Sockel erstellen
-        profile.mesh.geometry.computeVertexNormals();
-        var profileCopy = new Profile({
-          profilePoints: profile.profilePoints,
-          mesh: profile.mesh
-        });   
+        profile.mesh.geometry.computeVertexNormals();        
+        var profileCopy = this.createProfile(profile.footprint, profile.profilePoints);           
         profile.mesh.geometry.computeVertexNormals();
         profileCopy.mesh.geometry.computeVertexNormals();
 
@@ -279,8 +277,7 @@ define([
             var boti = getBoti(i);
             profileCopy.mesh.geometry.vertices[boti].y = -1 * boxHeight;
           }
-        };    
-        //profileCopy.mesh = profile.mesh;
+        };                  
         profileCopy.mesh.geometry.verticesNeedUpdate = true;
         profileCopy.mesh.geometry.mergeVertices();
         profileCopy.mesh.geometry.computeVertexNormals();
