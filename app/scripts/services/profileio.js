@@ -1,15 +1,15 @@
 'use strict';
 define([
    'angular'
+  ,'lodash'
   ,'threejs'
   ,'models/m3dProfile'
-  ,'lodash'
   ,'services/STLLoader'
   ,'services/VRMLLoader'
   ,'util/FileSaver.min'
   ,'vendor/three/ThreeCSG'
   ], 
-  function (angular, THREE, Profile, _) {
+  function (angular, _, THREE, Profile) {
 
     var $log, $rootScope;
     var loader;
@@ -63,11 +63,10 @@ define([
       * save model to file
       * @param {m3d.models.Profile[]} profiles the profiles to be saved. Each object will be saved to a separate file.
       */
-      save: function(m3dProfile){
-        var fileName = m3dProfile.name || 'stlModel';
-        fileName += '_generated';
+      save: function(mesh){
+        var fileName = mesh.name || 'stlModel_generated';
         $log.debug('Saving model to ' + fileName + '.stl ...');
-        var stlString = generateStl(m3dProfile.mesh.geometry);
+        var stlString = generateStl(mesh.geometry);
         // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
         var blob;
         if (typeof WebKitBlobBuilder !== 'undefined'){
@@ -88,12 +87,8 @@ define([
       var fileName = file.name.substr(0, file.name.lastIndexOf('.'));
       var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
       mesh.geometry.mergeVertices();
-      mesh.geometry.computeVertexNormals();
-      var profile = new Profile({
-        mesh: mesh,
-        name: fileName
-      });
-      $rootScope.$broadcast('io:model:loaded', profile);
+      mesh.geometry.computeVertexNormals();      
+      $rootScope.$broadcast('io:model:loaded', mesh);
     };
 
     var onVrmlLoaded = function(content, file){

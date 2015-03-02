@@ -37,12 +37,13 @@ define([
         var m3dProfile = ProfileOutlineService.createProfile(footprint, profilePoints);
         this.drawProfile(m3dProfile);
       }));
-      $scope.$on('io:model:loaded', angular.bind(this, function(event, profile){
+      $scope.$on('io:model:loaded', angular.bind(this, function(event, mesh){
         this.clearScene();
+        var profile = ProfileOutlineService.createFromMesh(mesh);
         this.drawProfile(profile);
       }));
       $scope.$on('menu:model:save', angular.bind(this, function(){
-        ProfileIOService.save(this.currentProfile);
+        ProfileIOService.save(this.currentMesh);
       }));
       $scope.$on('menu:model:invert', angular.bind(this, function(){
         this.stopRotation();

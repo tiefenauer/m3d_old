@@ -20,7 +20,7 @@ define([
 			var defaultArgs = {
 				'profilePoints': [],
 				'footprint': null,
-				'thickness': 200,
+				'thickness': localStorage.getItem('thickness') || 200,
 				'mesh': null,
 				'name': null
 			};
@@ -83,7 +83,7 @@ define([
 
 				var diff = 0;
 
-				//model.geometry.vertices.length
+				// Profilpunkte verschieben
 				_.forEach(this.profilePoints, function(point, i){
 					diff = point.elv - this.getMinElv();         
 					var bottomIndex = this.getBottomIndex(i);
