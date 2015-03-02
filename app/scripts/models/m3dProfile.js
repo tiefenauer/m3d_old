@@ -3,8 +3,9 @@ define([
 	,'lodash'
 	,'models/m3dProfilePoint'
 	,'util/GoogleMapsUtil'
+	,'util/ProfileUtil'
 	],
-	function(angular, _, ProfilePoint, gmUtil){
+	function(angular, _, ProfilePoint, gmUtil, ProfileUtil){
 
     /**
      * Profile
@@ -35,9 +36,6 @@ define([
 		  profilePoints: [],
 		  footprint: null,
 		  thickness: 0,
-		  segmentsX: 0,
-		  segmentsY: 1,
-		  segmentsZ: 0,
 		  mesh: null,
 		  mold: null,
 
@@ -51,65 +49,8 @@ define([
 				this.name = options.name?options.name:'profile_' + Math.floor(Math.random()*100);
 				this.mesh = options.mesh;
 				this.profilePoints = _.sortByAll(options.profilePoints, ['lat', 'lng']);
-				if (this.profilePoints.length > 0){
-					this.segmentsX =  Math.sqrt(this.profilePoints.length) - 1;
-					this.segmentsY =  Math.sqrt(this.profilePoints.length) - 1;
-					if (!this.mesh)
-						this.updateMesh(this.profilePoints);
-				}
 				if(this.mesh)
 					this.mesh.name = this.name;
-		  },
-
-		  /**
-		  * update mesh according to given ProfilePoints
-		  * @param {m3d.model.ProfilePoint[]} profilePoints array of ProfilePoints to create the mesh
-		  */
-		  updateMesh: function(profilePoints){
-		  	var geometry = new THREE.BoxGeometry(this.thickness, this.getDistanceZ(), this.getDistanceX(), 1, this.segmentsX, this.segmentsY);
-		  	var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
-		  	var mesh = new THREE.Mesh(geometry, material);
-		  	this.mesh = mesh;
-		  	mesh.name = this.name;
-		  	mesh.geometry.dynamic = true;
-
-	  	  var rotationZ = new THREE.Matrix4().makeRotationZ( - Math.PI/2 );
-		    var rotationX = new THREE.Matrix4().makeRotationX( Math.PI );
-				mesh.updateMatrix();
-		    mesh.geometry.applyMatrix(mesh.matrix);
-		    mesh.geometry.applyMatrix(rotationZ);
-		    mesh.geometry.applyMatrix(rotationX);
-		    mesh.matrix.identity();
-
-				var diff = 0;
-
-				// Profilpunkte verschieben
-				_.forEach(this.profilePoints, function(point, i){
-					diff = point.elv - this.getMinElv();         
-					var bottomIndex = this.getBottomIndex(i);
-					mesh.geometry.vertices[i].y += diff; 
-					mesh.geometry.vertices[bottomIndex].y += diff;				
-				}, this);
-
-				mesh.geometry.computeFaceNormals();
-				mesh.geometry.computeVertexNormals();
-		  },
-
-		  /**
-		  * update profile points according to given mesh
-		  * @param {THREE.Mesh} mesh mesh to be used to create ProfilePoints
-		  */
-		  updateProfilePoints: function(mesh){
-		  	var profilePoints = [];
-		  	var topPoints = mesh.geometry.vertices.splice(0, Math.ceil(mesh.geometry.vertices.length / 2));
-		  	_.forEach(topPoints, function(vertex, i){
-		  		var lat = vertex.x;
-		  		var lng = vertex.y;
-		  		var elv = vertex.z;
-		  		var profilePoint = new ProfilePoint({lat: lat, lng: lng, elv: elv});
-		  		profilePoints.push(profilePoint);
-		  	});
-		  	this.profilePoints = profilePoints;
 		  },
 
 		  /**
@@ -117,42 +58,42 @@ define([
 		  * @return {Number} minimum value of all longitudes
 		  */
 		  getMinLng: function(){
-		  	return _.min(_.pluck(this.profilePoints, 'lng'));
+		  	return ProfileUtil.getMinLng(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum longitude
 		  * @return {Number} maximum value of all longitudes
 		  */
 		  getMaxLng: function(){
-		  	return _.max(_.pluck(this.profilePoints, 'lng'));
+		  	return ProfileUtil.getMaxLng(this.profilePoints);
 		  },
 		  /**
 		  * Get minimum latitude
 		  * @return {Number} minimum value of all latitudes
 		  */
 		  getMinLat: function(){
-			return _.min(_.pluck(this.profilePoints, 'lat'))
+				return ProfileUtil.getMinLat(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum latitude
 		  * @return {Number} maximum value of all latitudes
 		  */
 		  getMaxLat: function(){
-		  	return _.max(_.pluck(this.profilePoints, 'lat'))
+		  	return ProfileUtil.getMaxLat(this.profilePoints);
 		  },
 		  /*
 		  * Get minimum elevation
 		  * @return {Number} maximum value of all elevations
 		  */
 		  getMinElv: function(){
-			return _.min(_.pluck(this.profilePoints, 'elv'))
+				return ProfileUtil.getMinElv(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum elevation
 		  * @return {Number} maximum value of all elevations
 		  */
 		  getMaxElv: function(){
-		  	return _.max(_.pluck(this.profilePoints, 'elv'))
+		  	return ProfileUtil.getMaxElv(this.profilePoints);
 		  },
 		  /**
 		  * Get the model width as the distance between the easternmost and the westermost point
@@ -214,46 +155,6 @@ define([
 		  	return Math.floor(Math.abs(maxZ - minZ));
 		  },
 
-		  /**
-		  * Get the index on the bottom for a vertex on top
-		  * @return {Number} the index of the vertex on the bottom
-		  */
-		  getBottomIndex: function(i){
-		  	if (!this.mesh)
-		  		return -1;
-		  	if (i<0)
-		  		return -1;
-		  	if (i > this.mesh.geometry.vertices.length)
-		  		return -1;
-
-		  	var half = Math.ceil(this.mesh.geometry.vertices.length / 2);
-		  	if (i > half)
-		  		return -1;
-		  	var side = Math.sqrt(half);		  	
-		  	return half + i + side - 2*(i%side) - 1;
-		  },
-
-		  /**
-		  * Get the vertex on the bottom for a vertex on top
-		  * @returns {THREE.Vector3} the vertex on the bottom or null if 
-		  * - the index is not on top or 
-		  * - the vertex is not in the mesh
-		  * - there is no mesh for the profile
-		  */
-		  getBottomVertex: function(vertex){
-		  	if (!this.mesh || !vertex)
-		  		return null;
-		  	var index = _.indexOf(this.mesh.geometry.vertices, vertex);
-		  	// not found
-		  	if (index < 0)
-		  		return null;
-
-		  	var bottomIndex = this.getBottomIndex(index);
-		  	var bottomVertex = this.mesh.geometry.vertices[bottomIndex];
-		  	if (typeof bottomVertex == 'undefined')
-		  		return null;
-		  	return bottomVertex;
-		  }
 	};
 
 	return Profile;

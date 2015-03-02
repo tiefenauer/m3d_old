@@ -1,10 +1,12 @@
 define([
    'angular'
   ,'lodash'
+  ,'threejs'
   ,'models/footprint'
   ,'models/m3dProfilePoint'   
+  ,'util/ProfileUtil'
   ], 
-  function(angular, _, Footprint, ProfilePoint){
+  function(angular, _, THREE, Footprint, ProfilePoint, ProfileUtil){
 
     var rect;
 
@@ -23,11 +25,25 @@ define([
 
     RectFootprint.prototype = Object.create(Footprint.prototype);
 
+    RectFootprint.prototype.horizontalSegments = 0;
+    RectFootprint.prototype.verticalSegments = 0;
+
+    RectFootprint.prototype.getProfilePoints = function(){
+      if (!this.profilePoints)
+        this.profilePoints = this.rasterize();
+      return this.profilePoints;
+    };
+
+    /**
+    * Rasterize current footprint returning an array of profile points (elevation is zero)
+    * @returns {ProfilePoint} array of ProfilePoints
+    */
     RectFootprint.prototype.rasterize = function(){
       if (!this.shape)
         return [];
       var resolution = localStorage.getItem('resolution') || 25;
-      gridSize = horizontalSegments = verticalSegments = parseInt(resolution);
+      this.horizontalSegments = parseInt(resolution);
+      this.verticalSegments = parseInt(resolution);
 
       var rect = this.shape;
       // Positionen der Ecken bestimmen
@@ -39,18 +55,18 @@ define([
       // get values on x-axis
       var xFrom = nw.lng();
       var xTo = ne.lng(); 
-      var xStep = (xTo-xFrom)/(horizontalSegments - 1);
+      var xStep = (xTo-xFrom)/(this.horizontalSegments - 1);
       
       // get values on y-axis
       var yFrom = se.lat();
       var yTo = ne.lat();
-      var yStep = (yTo-yFrom)/(verticalSegments - 1);
+      var yStep = (yTo-yFrom)/(this.verticalSegments - 1);
       
       var profilePoints = [];
-      for(var y=0; y<verticalSegments; y++){
+      for(var y=0; y<this.verticalSegments; y++){
         var yVal = yTo - y*yStep;
         
-        for (var x=0; x<horizontalSegments; x++){
+        for (var x=0; x<this.horizontalSegments; x++){
           var xVal = xFrom + x*xStep;
           var lat = Number(parseFloat(yVal).toFixed(4));
           var lng = Number(parseFloat(xVal).toFixed(4));

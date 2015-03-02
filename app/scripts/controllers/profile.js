@@ -32,9 +32,9 @@ define([
       el = $('#profile')[0];
       $el = $(el);
       
-      $scope.$on('adapter:end', angular.bind(this, function(event, footprint, profilePoints){
+      $scope.$on('adapter:end', angular.bind(this, function(event, footprint){
         this.clearScene();
-        var m3dProfile = ProfileOutlineService.createProfile(footprint, profilePoints);
+        var m3dProfile = ProfileOutlineService.createProfile(footprint);
         this.drawProfile(m3dProfile);
       }));
       $scope.$on('io:model:loaded', angular.bind(this, function(event, mesh){

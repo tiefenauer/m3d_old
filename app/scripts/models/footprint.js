@@ -18,6 +18,16 @@ define([
       this.shape = null;
     };
 
+    Footprint.prototype.profilePoints = null;
+
+    Footprint.prototype.geProfilePoints = function(){
+      return [];
+    };
+
+    Footprint.prototype.setProfilePoints = function(value){
+      this.profilePoints = value;
+    };
+
     Footprint.prototype.rasterize = function(){
       return [];
     };

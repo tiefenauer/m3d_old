@@ -101,10 +101,13 @@ define([
       var stl = 'solid pixel\n';
 
       var stringifyVector = function(vec){
-          return ''+vec.x+' '+vec.y+' '+vec.z;
+        return ''+vec.x+' '+vec.y+' '+vec.z;
       };
       var stringifyVertex = function(vec){
-          return 'vertex ' + vec.x + ' ' + vec.y + ' ' + vec.z + ' \n';
+        var x = Number(vec.x).toFixed(4);
+        var y = Number(vec.y).toFixed(4);
+        var z = Number(vec.z).toFixed(4);
+        return 'vertex ' + x + ' ' + y + ' ' + z + ' \n';
       };
 
       var vertices, tris, i;
@@ -119,9 +122,9 @@ define([
             stl += ('outer loop \n');
 
           for (var j=i; j<i+9; j+=3){
-            var x = positions[j];
-            var y = positions[j+1];
-            var z = positions[j+2];
+            var x = Number(positions[j]).toFixed(4);
+            var y = Number(positions[j+1]).toFixed(4);
+            var z = Number(positions[j+2]).toFixed(4);
             stl += 'vertex '+x+' '+y+' '+z+' \n';
           }
           stl += ('endloop \n');

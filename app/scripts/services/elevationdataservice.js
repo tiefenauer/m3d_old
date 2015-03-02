@@ -12,7 +12,7 @@ define([
     var service;
     var $log, $rootScope;
     var stop, index, requestQueue, queueItem;
-    var footprint, coordinates;
+    var footprint, profilePoints;
 
     /**
      * ElevationDataService
@@ -51,8 +51,8 @@ define([
     */
     ElevationDataService.prototype.getElevationData = function(_footprint){
       footprint = _footprint;
-      coordinates = footprint.rasterize();        
-      $log.debug('getting elevation data for ' + coordinates.length + ' points');
+      profilePoints = footprint.getProfilePoints();        
+      $log.debug('getting elevation data for ' + profilePoints.length + ' points');
 
       service = new google.maps.ElevationService();
 
@@ -61,12 +61,12 @@ define([
 
       var chunkSize = 150;
       requestQueue = [];
-      for(var i=0; i<coordinates.length; i+=chunkSize){
-        requestQueue.push(coordinates.slice(i, i+chunkSize));
+      for(var i=0; i<profilePoints.length; i+=chunkSize){
+        requestQueue.push(profilePoints.slice(i, i+chunkSize));
       }
       
       $rootScope.$broadcast('adapter:start', {
-         numItems: coordinates.length
+         numItems: profilePoints.length
         ,numCalls: requestQueue.length
         ,chunkSize: chunkSize
         ,delay: delay
@@ -83,7 +83,8 @@ define([
     var processNextQueueItem = function(){
       if (stop || index >= requestQueue.length){
         stop = false;
-        $rootScope.$broadcast('adapter:end', footprint, coordinates);
+        footprint.setProfilePoints(profilePoints);
+        $rootScope.$broadcast('adapter:end', footprint);
       }
       else{
         queueItem = requestQueue[index];
@@ -104,15 +105,15 @@ define([
       switch(status){
         case google.maps.ElevationStatus.OK:              
 
-          $.each(queueItem, function(i, coord){              
+          $.each(queueItem, function(i, profilePoint){              
             var searchResult = $.grep(result, function(entry, index){
               var lat = Number(parseFloat(entry.location.lat())).toFixed(4);
               var lng = Number(parseFloat(entry.location.lng())).toFixed(4);
-              return lat == coord.lat && lng == coord.lng;
+              return lat == profilePoint.lat && lng == profilePoint.lng;
             });
             if (searchResult && searchResult.length > 0){
               $rootScope.$broadcast('adapter:item:progress');
-              coord.elv = searchResult[0].elevation;
+              profilePoint.elv = searchResult[0].elevation;
             }                
           });
 

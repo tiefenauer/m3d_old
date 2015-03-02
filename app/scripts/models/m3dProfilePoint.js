@@ -17,7 +17,9 @@ define([
 			var defaultArgs = {
 				'lat': 0,
 				'lng': 0,
-				'elv': 0
+				'elv': 0,
+        'topVertex': null,
+        'bottomVertex': null
 			};
 			for(var index in defaultArgs){
 				if (typeof options[index] == 'undefined') options[index] = defaultArgs[index];
@@ -29,6 +31,8 @@ define([
 			lat: 0,
 			lng: 0,
 			elv: 0,
+      topVertex: null,
+      bottomVertex: null,
 
 			/*
 			* initialize the ProfilePoint with an options object
@@ -38,6 +42,8 @@ define([
 				this.lat = options.lat;
 				this.lng = options.lng;
 				this.elv = options.elv;
+        this.topVertex = options.topVertex;
+        this.bottomVertex = options.bottomVertex;
 			}
 		};
 

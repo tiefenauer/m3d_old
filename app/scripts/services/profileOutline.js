@@ -9,8 +9,9 @@ define([
   ,'models/rectFootprint'
   ,'models/polyFootprint'
   ,'models/gemeindeFootprint'
+  ,'util/ProfileUtil'
   ],
-  function(angular, THREE, _, Profile, ProfilePoint, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint){
+  function(angular, THREE, _, Profile, ProfilePoint, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint, ProfileUtil){
 
     var extrudeSettings = { 
       amount: 40, 
@@ -44,29 +45,78 @@ define([
       var topVertices = this.getTopVertices(mesh.geometry.vertices);
       var profilePoints = [];
       _.forEach(topVertices, angular.bind(this, function(vertex){
-        profilePoints.push(new ProfilePoint({lat: vertex.x, lng: vertex.z, elv: vertex.y}))
+        profilePoints.push(new ProfilePoint({topVertex: vertex}));
       }));
-      var profile = new Profile({
-        mesh: mesh,
-        profilePoints: profilePoints
-      });
-      return profile;
-    };
+      // sort by lat and lng
+      profilePoints = _.sortByAll(profilePoints, ['lat', 'lng']);
 
-    ProfileOutlineService.prototype.createProfile = function(footprint, profilePoints){
-      var mesh = null;
-      if (footprint instanceof PolyFootprint || footprint instanceof GemeindeFootprint)
-        mesh = this.createPolyMesh(profilePoints)
+      // assume rectangular footprint
+      var footprint = new RectFootprint();
+      footprint.setProfilePoints(profilePoints);
+
       var profile = new Profile({
         mesh: mesh,
         profilePoints: profilePoints,
-        thickness: localStorage.getItem('thickness') || undefined
+        footprint: footprint
       });
       return profile;
     };
 
-    ProfileOutlineService.prototype.createRectMesh = function(coordinates){
+    ProfileOutlineService.prototype.createProfile = function(footprint){
+      var mesh = null;
+      var profilePoints = footprint.getProfilePoints();
+      if (footprint instanceof PolyFootprint || footprint instanceof GemeindeFootprint)
+        mesh = this.createPolyMesh(profilePoints);
+      // assume footprint is rectangular
+      else if (footprint instanceof RectFootprint)
+        mesh = this.createRectMesh(profilePoints);
+      var profile = new Profile({
+        mesh: mesh,
+        profilePoints: profilePoints,        
+      });
+      return profile;
+    };
 
+    ProfileOutlineService.prototype.createRectMesh = function(profilePoints){      
+      var height = localStorage.getItem('thickness') || 200;      
+      var depth = ProfileUtil.getDistanceZ(profilePoints);
+      var width = ProfileUtil.getDistanceX(profilePoints);
+
+      var segmentsX =  Math.sqrt(profilePoints.length) - 1;
+      var segmentsY =  Math.sqrt(profilePoints.length) - 1;
+
+      var geometry = new THREE.BoxGeometry(height, depth, width, 1, segmentsX, segmentsY);
+      var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
+      var mesh = new THREE.Mesh(geometry, material);
+      this.mesh = mesh;
+      mesh.name = this.name;
+      mesh.geometry.dynamic = true;
+
+      var rotationZ = new THREE.Matrix4().makeRotationZ( - Math.PI/2 );
+      var rotationX = new THREE.Matrix4().makeRotationX( Math.PI );
+      mesh.updateMatrix();
+      mesh.geometry.applyMatrix(mesh.matrix);
+      mesh.geometry.applyMatrix(rotationZ);
+      mesh.geometry.applyMatrix(rotationX);
+      mesh.matrix.identity();
+
+      // Vertices verschieben und mit Profilpunkten verbinden
+      var diff = 0;
+      var minElv = ProfileUtil.getMinElv(profilePoints);
+      _.forEach(profilePoints, function(point, i){
+        diff = point.elv - minElv;
+        var bottomIndex = ProfileUtil.getBottomIndex(i, mesh.geometry.vertices);
+        var topVertex = mesh.geometry.vertices[i];
+        var bottomVertex = mesh.geometry.vertices[bottomIndex];
+        topVertex.y += diff; 
+        bottomVertex.y += diff;        
+        point.topVertex = topVertex;
+        point.bottomVertex = bottomVertex;
+      }, this);
+
+      mesh.geometry.computeFaceNormals();
+      mesh.geometry.computeVertexNormals();
+      return mesh;
     };
 
     ProfileOutlineService.prototype.createPolyMesh = function(coordinates){
@@ -224,10 +274,11 @@ define([
     */
     ProfileOutlineService.prototype.getTopVertices = function(vertices){
       var topVertices = [];
-      _.forEach(vertices, function(vertex, n){
+      _.forEach(vertices, function(vertex, n){     
         var pair = _.filter(vertices, {'x': vertex.x, 'z': vertex.z});
         var top = _.max(pair, 'y');
         var alreadyInList = _.filter(topVertices, {'x': top.x, 'z': top.z}).length > 0;
+        alreadyInList = topVertices.indexOf(top) > -1;
         // zweite Bedinggung wegen Genauigkeitsverlust
         if (!alreadyInList && top.y > 0)
           topVertices.push(top);
@@ -284,10 +335,10 @@ define([
 
       // Sockel erstellen
       if (profileCopy.profilePoints.length > 0){
-      _.forEach(profileCopy.profilePoints, function(point, i){
-            var bottomIndex = profileCopy.getBottomIndex(i);                        
+        _.forEach(profileCopy.profilePoints, function(point, i){
+          var bottomIndex = ProfileUtil.getBottomIndex(i, profileCopy.mesh.geometry.vertices);
           profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;
-          });   
+        });   
       } 
       else{
         var half = Math.ceil(profileCopy.mesh.geometry.vertices.length / 2);
