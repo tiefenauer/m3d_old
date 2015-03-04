@@ -62,7 +62,8 @@ define([
       it('should work with empty array', function(){
         spyOn(rootScope, '$broadcast');       
         var footprint = {
-          rasterize: function(){return []}
+          getProfilePoints: function(){return []},
+          setProfilePoints: function(value){}
         } 
         ElevationDataService.getElevationData(footprint);
 
@@ -75,8 +76,12 @@ define([
 
       it('should trigger status events when processing', function(done){
         var footprint = {
-          rasterize: function(){
-            return createDummyCoordinates(2500);
+          profilePoints: createDummyCoordinates(2500),
+          getProfilePoints: function(){
+            return this.profilePoints;
+          },
+          setProfilePoints: function(value){
+            this.profilePoints = value;
           }
         };
         var dummyGoogleMapsFunction = function(queueItem, callback){
@@ -89,9 +94,10 @@ define([
         var queueProgressCount = 0;
         rootScope.$on('adapter:item:progress', function(event, args){ itemProgressCount++ });
         rootScope.$on('adapter:queue:progress', function(event, args){ queueProgressCount++ });
-        rootScope.$on('adapter:end', function(event, footprint, profilePoints){
+        rootScope.$on('adapter:end', function(event, footprint){
           expect(itemProgressCount).toBe(2500);
           expect(queueProgressCount).toBe(Math.ceil(2500/ElevationDataService.CHUNK_SIZE));
+          var profilePoints = footprint.getProfilePoints();
           profilePoints.forEach(function(entry, index){
             expect(entry.elv).toBe(43);
           });

@@ -46,7 +46,7 @@ define([
         expect(typeof(outlineService)).toBe('object');
       });
 
-      it('should calculate a correct inverted model', function(){
+      xit('should calculate a correct inverted model', function(){
         var profile = new Profile({profilePoints: orderedPoints});
         var mold = outlineService.invert(profile);
         expect(mold).not.toBe(null);

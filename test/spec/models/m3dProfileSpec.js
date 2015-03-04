@@ -48,14 +48,8 @@ define([
           profilePoints: shuffledPoints
         });
         expect(profile.profilePoints).toEqual(orderedPoints);
-        expect(profile.mesh).not.toBe(null);
         expect(profile.name).not.toBe(null);
         expect(profile.name.length).toBeGreaterThan(0);
-        expect(profile.mesh.name).not.toBe(null);
-        expect(profile.name).toEqual(profile.mesh.name);
-        expect(profile.segmentsX).toBe(2);
-        expect(profile.segmentsY).toBe(2);
-        expect(profile.segmentsZ).toBe(0);
 
         profile = new Profile({
           mesh: boxMesh 
@@ -72,64 +66,6 @@ define([
         expect(profile.getMinLng()).toBe(0);
         expect(profile.getMaxElv()).toBe(9);
         expect(profile.getMinElv()).toBe(1);
-      });
-
-
-      it('should calculate the dimensions correctly', function(){
-        var profile = new Profile({profilePoints: orderedPoints});
-        expect(profile.getDimensionX()).toBeGreaterThan(0);
-        expect(profile.getDimensionY()).toBeGreaterThan(0);
-        expect(profile.getDimensionZ()).toBeGreaterThan(0);
-      });
-
-      it('should create a valid mesh from profilePoints', function(){
-        var profile = new Profile({profilePoints: orderedPoints});
-        expect(profile.mesh).not.toBe(null);
-        expect(profile.mesh.geometry.vertices.length).toEqual(orderedPoints.length * 2);      
-
-        var minElv = profile.getMinElv();
-        _.forEach(orderedPoints, function(point, i){
-          // die Y-Koordinate wird normalisiert berechnet, d.h. der tiefste Punkt auf der Karte wird nicht angehoben
-          var expectedElevation = profile.thickness / 2 + point.elv - minElv;
-          expect(profile.mesh.geometry.vertices[i].y).toBeCloseTo(expectedElevation);
-        });        
-      });
-
-      it('should calculate the correct value of the bottom index', function(){
-        var profile = new Profile({profilePoints: orderedPoints});
-        _.forEach(orderedPoints, function(point, i){
-          expect(profile.getBottomIndex(i)).toBeGreaterThan(8);
-          expect(profile.getBottomIndex(i)).toBeLessThan(18);
-        });
-      });
-
-      it('should return the correct vertex for a vertex on top', function(){
-        // negative tests
-        // --------------
-        // no mesh
-        var profile = new Profile();
-        expect(profile.getBottomVertex(orderedPoints[0])).toBe(null);
-
-        profile = new Profile({profilePoints: orderedPoints});        
-        // no vertex
-        expect(profile.getBottomVertex(null)).toBe(null);
-        // no vertex within mesh
-        expect(profile.getBottomVertex(new THREE.Vector3(9,9,9))).toBe(null);
-        // no top vertex
-        for (var i=Math.ceil(profile.mesh.geometry.vertices.length / 2); i<profile.mesh.geometry.vertices.length; i++){
-          var bottomVertex = profile.mesh.geometry.vertices[i];
-          expect(profile.getBottomVertex(bottomVertex)).toBe(null);
-        }   
-
-        // positive tests
-        // --------------
-        for(var i=0; i<Math.ceil(profile.mesh.geometry.vertices.length / 2); i++){
-          var topVertex = profile.mesh.geometry.vertices[i];
-          var bottomVertex = profile.getBottomVertex(topVertex);
-          expect(bottomVertex).not.toBe(null);
-          expect(bottomVertex instanceof THREE.Vector3).toBe(true);
-          expect(_.find(profile.mesh.geometry.vertices, bottomVertex)).toBeDefined();
-        }
       });
 
     });
