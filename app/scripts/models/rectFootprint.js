@@ -29,7 +29,11 @@ define([
     RectFootprint.prototype.verticalSegments = 0;
 
     RectFootprint.prototype.getProfilePoints = function(){
-      if (!this.profilePoints)
+      var resolution = localStorage.getItem('resolution') || 25;
+      this.horizontalSegments = parseInt(resolution);
+      this.verticalSegments = parseInt(resolution);
+
+      if (!this.profilePoints || this.profilePoints.length != Math.pow(this.horizontalSegments, 2))
         this.profilePoints = this.rasterize();
       return this.profilePoints;
     };

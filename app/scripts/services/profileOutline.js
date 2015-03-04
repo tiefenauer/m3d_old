@@ -71,6 +71,7 @@ define([
       else if (footprint instanceof RectFootprint)
         mesh = this.createRectMesh(profilePoints);
       var profile = new Profile({
+        footprint: footprint,
         mesh: mesh,
         profilePoints: profilePoints,        
       });
@@ -78,9 +79,21 @@ define([
     };
 
     ProfileOutlineService.prototype.createRectMesh = function(profilePoints){      
-      var height = localStorage.getItem('thickness') || 200;      
-      var depth = ProfileUtil.getDistanceZ(profilePoints);
-      var width = ProfileUtil.getDistanceX(profilePoints);
+      var maxLng = _.max(_.pluck(profilePoints, 'lng'));
+      var minLng = _.min(_.pluck(profilePoints, 'lng'));
+      var maxLat = _.max(_.pluck(profilePoints, 'lat'));
+      var minLat = _.min(_.pluck(profilePoints, 'lat'));
+      var maxElv = _.max(_.pluck(profilePoints, 'elv'));
+      var minElv = _.min(_.pluck(profilePoints, 'elv'));
+
+      var height = localStorage.getItem('thickness') || 1;
+      var depth = maxLat - minLat;
+      var width = maxLng - minLng;
+
+      // Faktor zur Normalisierung auf 50 (längste Seite)
+      var factor = 50/Math.max(depth, width);      
+      depth = depth * factor;
+      width = width * factor;
 
       var segmentsX =  Math.sqrt(profilePoints.length) - 1;
       var segmentsY =  Math.sqrt(profilePoints.length) - 1;
@@ -100,11 +113,14 @@ define([
       mesh.geometry.applyMatrix(rotationX);
       mesh.matrix.identity();
 
+      // Faktor zur Normalisierung der Höhe im Verhältnis zur Seite
+      var widthInMeters = ProfileUtil.getDistanceZ(profilePoints);
+      var scaleFactor = widthInMeters/width;
+
       // Vertices verschieben und mit Profilpunkten verbinden
       var diff = 0;
-      var minElv = ProfileUtil.getMinElv(profilePoints);
       _.forEach(profilePoints, function(point, i){
-        diff = point.elv - minElv;
+        diff = (point.elv - minElv)/scaleFactor;
         var bottomIndex = ProfileUtil.getBottomIndex(i, mesh.geometry.vertices);
         var topVertex = mesh.geometry.vertices[i];
         var bottomVertex = mesh.geometry.vertices[bottomIndex];

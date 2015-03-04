@@ -152,7 +152,7 @@ define([
       var height = $el.height();
       this.camera = new THREE.PerspectiveCamera(45,  width/height, 0.1, 200000);
       this.scene.add(this.camera);
-      this.camera.position.set(5000,5000,5000);
+      this.camera.position.set(50,50,50);
       this.camera.lookAt(this.scene.position);
     };
 
