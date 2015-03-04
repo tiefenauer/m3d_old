@@ -340,7 +340,10 @@ define([
 
       // Modell kopieren und Sockel erstellen
       profile.mesh.geometry.computeVertexNormals();        
-      var profileCopy = this.createProfile(profile.footprint, profile.profilePoints);           
+      var profileCopy = new Profile({
+         profilePoints: profile.profilePoints
+        ,mesh: profile.mesh.clone()
+      });
       profile.mesh.geometry.computeVertexNormals();
       profileCopy.mesh.geometry.computeVertexNormals();
 
