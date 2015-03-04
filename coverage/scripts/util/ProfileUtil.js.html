@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for scripts/util/ProfileUtil.js</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../../prettify.css">
+
+    <link rel="stylesheet" href="../../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">scripts/util/ProfileUtil.js</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">40% <small>(20 / 50)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">0% <small>(0 / 19)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">58.33% <small>(7 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">40% <small>(20 / 50)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../index.html">All files</a> &#187; <a href="index.html">scripts/util/</a> &#187; ProfileUtil.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">define([
+   'angular'
+  ,'lodash'
+  ,'util/GoogleMapsUtil'
+  ], 
+  function(angular, _, gmUtil){
+&nbsp;
+    var ProfileUtil = {};
+&nbsp;
+    /**
+    * Get minimum longitude
+    * @return {Number} minimum value of all longitudes
+    */
+    ProfileUtil.getMinLng = function(profilePoints){
+      return _.min(_.pluck(profilePoints, 'lng'));
+    };
+    /**
+    * Get maximum longitude
+    * @return {Number} maximum value of all longitudes
+    */
+    ProfileUtil.getMaxLng = function(profilePoints){
+      return _.max(_.pluck(profilePoints, 'lng'));
+    };
+    /**
+    * Get minimum latitude
+    * @return {Number} minimum value of all latitudes
+    */
+    ProfileUtil.getMinLat = function(profilePoints){
+      return _.min(_.pluck(profilePoints, 'lat'))
+    };
+    /**
+    * Get maximum latitude
+    * @return {Number} maximum value of all latitudes
+    */
+    ProfileUtil.getMaxLat = function(profilePoints){
+      return _.max(_.pluck(profilePoints, 'lat'))
+    };
+    /*
+    * Get minimum elevation
+    * @return {Number} maximum value of all elevations
+    */
+    ProfileUtil.getMinElv = function(profilePoints){
+      return _.min(_.pluck(profilePoints, 'elv'))
+    };
+    /**
+    * Get maximum elevation
+    * @return {Number} maximum value of all elevations
+    */
+    ProfileUtil.getMaxElv = function(profilePoints){
+      return _.max(_.pluck(profilePoints, 'elv'))
+    };
+&nbsp;
+    /**
+    * Get the model width as the distance between the easternmost and the westermost point
+    * @return {Number} the distance between the easternmost and the westermost point in meters
+    */
+    ProfileUtil.getDistanceX = <span class="fstat-no" title="function not covered" >function(coordinates){</span>
+<span class="cstat-no" title="statement not covered" >      var nw = {'lat': this.getMaxLat(coordinates), 'lng': this.getMinLng(coordinates)};</span>
+<span class="cstat-no" title="statement not covered" >      var ne = {'lat': this.getMaxLat(coordinates), 'lng': this.getMaxLng(coordinates)};</span>
+<span class="cstat-no" title="statement not covered" >      return Math.floor(gmUtil.degreeToMeter(nw, ne));</span>
+    };
+&nbsp;
+    /**
+    * Get the model depth (length) as the distance between te southernmost and the northernmost point
+    * @return {Number} the distance between the southernmost and the northernmost point in meters
+    */
+    ProfileUtil.getDistanceZ = <span class="fstat-no" title="function not covered" >function(coordinates){</span>
+<span class="cstat-no" title="statement not covered" >      var sw = {'lat': this.getMinLat(coordinates), 'lng': this.getMinLng(coordinates)};  </span>
+<span class="cstat-no" title="statement not covered" >      var nw = {'lat': this.getMaxLat(coordinates), 'lng': this.getMinLng(coordinates)};</span>
+<span class="cstat-no" title="statement not covered" >      return Math.floor(gmUtil.degreeToMeter(sw, nw));</span>
+    };
+&nbsp;
+    /**
+    * Get the model height as the distance between the lowest and the highest point
+    * @return {Number} the distance between the lowest and the highest point in meters
+    */
+    ProfileUtil.getDistanceY = <span class="fstat-no" title="function not covered" >function(coordinates){</span>
+<span class="cstat-no" title="statement not covered" >      return this.getMaxElv() - this.getMinElv();</span>
+    };
+&nbsp;
+    /**
+    * Get the index on the bottom for a vertex on top
+    * @return {Number} the index of the vertex on the bottom
+    */
+    ProfileUtil.getBottomIndex = <span class="fstat-no" title="function not covered" >function(i, vertices){</span>
+<span class="cstat-no" title="statement not covered" >      if (!vertices)</span>
+<span class="cstat-no" title="statement not covered" >        return -1;</span>
+<span class="cstat-no" title="statement not covered" >      if (vertices.length == 0)</span>
+<span class="cstat-no" title="statement not covered" >        return -1;</span>
+<span class="cstat-no" title="statement not covered" >      if (i&lt;0)</span>
+<span class="cstat-no" title="statement not covered" >        return -1;</span>
+<span class="cstat-no" title="statement not covered" >      if (i &gt; vertices.length)</span>
+<span class="cstat-no" title="statement not covered" >        return -1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      var half = Math.ceil(vertices.length / 2);</span>
+<span class="cstat-no" title="statement not covered" >      if (i &gt; half)</span>
+<span class="cstat-no" title="statement not covered" >        return -1;</span>
+<span class="cstat-no" title="statement not covered" >      var side = Math.sqrt(half);       </span>
+<span class="cstat-no" title="statement not covered" >      return half + i + side - 2*(i%side) - 1;</span>
+    };
+&nbsp;
+    /**
+    * Get the vertex on the bottom for a vertex on top
+    * @returns {THREE.Vector3} the vertex on the bottom or null if 
+    * - the index is not on top or 
+    * - the vertex is not in the mesh
+    * - there is no mesh for the profile
+    */
+    ProfileUtil.getBottomVertex = <span class="fstat-no" title="function not covered" >function(vertex, vertices){</span>
+<span class="cstat-no" title="statement not covered" >      if (!vertices || vertices.length == 0 || !vertex)</span>
+<span class="cstat-no" title="statement not covered" >        return null;</span>
+<span class="cstat-no" title="statement not covered" >      var index = _.indexOf(vertices, vertex);</span>
+      // not found
+<span class="cstat-no" title="statement not covered" >      if (index &lt; 0)</span>
+<span class="cstat-no" title="statement not covered" >        return null;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      var bottomIndex = this.getBottomIndex(index);</span>
+<span class="cstat-no" title="statement not covered" >      var bottomVertex = vertices[bottomIndex];</span>
+<span class="cstat-no" title="statement not covered" >      if (typeof bottomVertex == 'undefined')</span>
+<span class="cstat-no" title="statement not covered" >        return null;</span>
+<span class="cstat-no" title="statement not covered" >      return bottomVertex;</span>
+    };
+&nbsp;
+    return ProfileUtil;
+});</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Mar 04 2015 20:29:45 GMT+0000 (UTC)</div>
+</div>
+
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+
+<script src="../../sorter.js"></script>
+</body>
+</html>

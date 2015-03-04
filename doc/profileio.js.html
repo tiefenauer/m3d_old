@@ -129,18 +129,6 @@
             </ul>
             <ul class="methods itemMembers">
             
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.services.ProfileOutlineService#calculateRasterPoints"><a href="m3d.services.ProfileOutlineService.html#calculateRasterPoints">calculateRasterPoints</a></li>
-            
-                <li data-name="m3d.services.ProfileOutlineService#createShape"><a href="m3d.services.ProfileOutlineService.html#createShape">createShape</a></li>
-            
-                <li data-name="m3d.services.ProfileOutlineService#getCommonVertices"><a href="m3d.services.ProfileOutlineService.html#getCommonVertices">getCommonVertices</a></li>
-            
-                <li data-name="m3d.services.ProfileOutlineService#getTopVertices"><a href="m3d.services.ProfileOutlineService.html#getTopVertices">getTopVertices</a></li>
-            
-                <li data-name="m3d.services.ProfileOutlineService#invert"><a href="m3d.services.ProfileOutlineService.html#invert">invert</a></li>
-            
             </ul>
             <ul class="events itemMembers">
             
@@ -185,11 +173,7 @@
             
                 <li data-name="m3d.controller.MenuController#loadModel"><a href="m3d.controller.MenuController.html#loadModel">loadModel</a></li>
             
-                <li data-name="m3d.controller.MenuController#render"><a href="m3d.controller.MenuController.html#render">render</a></li>
-            
                 <li data-name="m3d.controller.MenuController#saveModel"><a href="m3d.controller.MenuController.html#saveModel">saveModel</a></li>
-            
-                <li data-name="m3d.controller.MenuController#toggleInvert"><a href="m3d.controller.MenuController.html#toggleInvert">toggleInvert</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -288,10 +272,6 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="m3d.model.Profile#getBottomIndex"><a href="m3d.model.Profile.html#getBottomIndex">getBottomIndex</a></li>
-            
-                <li data-name="m3d.model.Profile#getBottomVertex"><a href="m3d.model.Profile.html#getBottomVertex">getBottomVertex</a></li>
-            
                 <li data-name="m3d.model.Profile#getDimensionX"><a href="m3d.model.Profile.html#getDimensionX">getDimensionX</a></li>
             
                 <li data-name="m3d.model.Profile#getDimensionY"><a href="m3d.model.Profile.html#getDimensionY">getDimensionY</a></li>
@@ -315,12 +295,6 @@
                 <li data-name="m3d.model.Profile#getMinLng"><a href="m3d.model.Profile.html#getMinLng">getMinLng</a></li>
             
                 <li data-name="m3d.model.Profile#init"><a href="m3d.model.Profile.html#init">init</a></li>
-            
-                <li data-name="m3d.model.Profile#rotate"><a href="m3d.model.Profile.html#rotate">rotate</a></li>
-            
-                <li data-name="m3d.model.Profile#updateMesh"><a href="m3d.model.Profile.html#updateMesh">updateMesh</a></li>
-            
-                <li data-name="m3d.model.Profile#updateProfilePoints"><a href="m3d.model.Profile.html#updateProfilePoints">updateProfilePoints</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -398,15 +372,15 @@
             <pre class="prettyprint source "><code>'use strict';
 define([
    'angular'
+  ,'lodash'
   ,'threejs'
   ,'models/m3dProfile'
-  ,'lodash'
   ,'services/STLLoader'
   ,'services/VRMLLoader'
   ,'util/FileSaver.min'
   ,'vendor/three/ThreeCSG'
   ], 
-  function (angular, THREE, Profile, _) {
+  function (angular, _, THREE, Profile) {
 
     var $log, $rootScope;
     var loader;
@@ -460,11 +434,10 @@ define([
       * save model to file
       * @param {m3d.models.Profile[]} profiles the profiles to be saved. Each object will be saved to a separate file.
       */
-      save: function(m3dProfile){
-        var fileName = m3dProfile.name || 'stlModel';
-        fileName += '_generated';
+      save: function(mesh){
+        var fileName = mesh.name || 'stlModel_generated';
         $log.debug('Saving model to ' + fileName + '.stl ...');
-        var stlString = generateStl(m3dProfile.mesh.geometry);
+        var stlString = generateStl(mesh.geometry);
         // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
         var blob;
         if (typeof WebKitBlobBuilder !== 'undefined'){
@@ -485,12 +458,8 @@ define([
       var fileName = file.name.substr(0, file.name.lastIndexOf('.'));
       var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
       mesh.geometry.mergeVertices();
-      mesh.geometry.computeVertexNormals();
-      var profile = new Profile({
-        mesh: mesh,
-        name: fileName
-      });
-      $rootScope.$broadcast('io:model:loaded', profile);
+      mesh.geometry.computeVertexNormals();      
+      $rootScope.$broadcast('io:model:loaded', mesh);
     };
 
     var onVrmlLoaded = function(content, file){
@@ -503,10 +472,13 @@ define([
       var stl = 'solid pixel\n';
 
       var stringifyVector = function(vec){
-          return ''+vec.x+' '+vec.y+' '+vec.z;
+        return ''+vec.x+' '+vec.y+' '+vec.z;
       };
       var stringifyVertex = function(vec){
-          return 'vertex ' + vec.x + ' ' + vec.y + ' ' + vec.z + ' \n';
+        var x = Number(vec.x).toFixed(4);
+        var y = Number(vec.y).toFixed(4);
+        var z = Number(vec.z).toFixed(4);
+        return 'vertex ' + x + ' ' + y + ' ' + z + ' \n';
       };
 
       var vertices, tris, i;
@@ -521,9 +493,9 @@ define([
             stl += ('outer loop \n');
 
           for (var j=i; j&lt;i+9; j+=3){
-            var x = positions[j];
-            var y = positions[j+1];
-            var z = positions[j+2];
+            var x = Number(positions[j]).toFixed(4);
+            var y = Number(positions[j+1]).toFixed(4);
+            var z = Number(positions[j+2]).toFixed(4);
             stl += 'vertex '+x+' '+y+' '+z+' \n';
           }
           stl += ('endloop \n');
@@ -569,7 +541,7 @@ define([
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Feb 26 2015 20:30:51 GMT-0000 (UTC)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Mar 04 2015 20:30:03 GMT-0000 (UTC)
         </footer>
     </div>
 </div>

@@ -129,18 +129,6 @@
             </ul>
             <ul class="methods itemMembers">
             
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="m3d.services.ProfileOutlineService#calculateRasterPoints"><a href="m3d.services.ProfileOutlineService.html#calculateRasterPoints">calculateRasterPoints</a></li>
-            
-                <li data-name="m3d.services.ProfileOutlineService#createShape"><a href="m3d.services.ProfileOutlineService.html#createShape">createShape</a></li>
-            
-                <li data-name="m3d.services.ProfileOutlineService#getCommonVertices"><a href="m3d.services.ProfileOutlineService.html#getCommonVertices">getCommonVertices</a></li>
-            
-                <li data-name="m3d.services.ProfileOutlineService#getTopVertices"><a href="m3d.services.ProfileOutlineService.html#getTopVertices">getTopVertices</a></li>
-            
-                <li data-name="m3d.services.ProfileOutlineService#invert"><a href="m3d.services.ProfileOutlineService.html#invert">invert</a></li>
-            
             </ul>
             <ul class="events itemMembers">
             
@@ -185,11 +173,7 @@
             
                 <li data-name="m3d.controller.MenuController#loadModel"><a href="m3d.controller.MenuController.html#loadModel">loadModel</a></li>
             
-                <li data-name="m3d.controller.MenuController#render"><a href="m3d.controller.MenuController.html#render">render</a></li>
-            
                 <li data-name="m3d.controller.MenuController#saveModel"><a href="m3d.controller.MenuController.html#saveModel">saveModel</a></li>
-            
-                <li data-name="m3d.controller.MenuController#toggleInvert"><a href="m3d.controller.MenuController.html#toggleInvert">toggleInvert</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -288,10 +272,6 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="m3d.model.Profile#getBottomIndex"><a href="m3d.model.Profile.html#getBottomIndex">getBottomIndex</a></li>
-            
-                <li data-name="m3d.model.Profile#getBottomVertex"><a href="m3d.model.Profile.html#getBottomVertex">getBottomVertex</a></li>
-            
                 <li data-name="m3d.model.Profile#getDimensionX"><a href="m3d.model.Profile.html#getDimensionX">getDimensionX</a></li>
             
                 <li data-name="m3d.model.Profile#getDimensionY"><a href="m3d.model.Profile.html#getDimensionY">getDimensionY</a></li>
@@ -315,12 +295,6 @@
                 <li data-name="m3d.model.Profile#getMinLng"><a href="m3d.model.Profile.html#getMinLng">getMinLng</a></li>
             
                 <li data-name="m3d.model.Profile#init"><a href="m3d.model.Profile.html#init">init</a></li>
-            
-                <li data-name="m3d.model.Profile#rotate"><a href="m3d.model.Profile.html#rotate">rotate</a></li>
-            
-                <li data-name="m3d.model.Profile#updateMesh"><a href="m3d.model.Profile.html#updateMesh">updateMesh</a></li>
-            
-                <li data-name="m3d.model.Profile#updateProfilePoints"><a href="m3d.model.Profile.html#updateProfilePoints">updateProfilePoints</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -400,8 +374,9 @@
 	,'lodash'
 	,'models/m3dProfilePoint'
 	,'util/GoogleMapsUtil'
+	,'util/ProfileUtil'
 	],
-	function(angular, _, ProfilePoint, gmUtil){
+	function(angular, _, ProfilePoint, gmUtil, ProfileUtil){
 
     /**
      * Profile
@@ -416,7 +391,8 @@
 			if (arguments[0]) options = arguments[0];
 			var defaultArgs = {
 				'profilePoints': [],
-				'thickness': 200,
+				'footprint': null,
+				'thickness': localStorage.getItem('thickness') || 200,
 				'mesh': null,
 				'name': null
 			};
@@ -429,10 +405,8 @@
 		Profile.prototype = /** @lends m3d.model.Profile.prototype */{
 		  name: '',
 		  profilePoints: [],
+		  footprint: null,
 		  thickness: 0,
-		  segmentsX: 0,
-		  segmentsY: 1,
-		  segmentsZ: 0,
 		  mesh: null,
 		  mold: null,
 
@@ -441,69 +415,13 @@
 		  * @param {Object} options configuration options
 		  */ 
 		  init: function(options){		  			  	
+		  	this.footprint = options.footprint;
 				this.thickness = options.thickness;		  	
 				this.name = options.name?options.name:'profile_' + Math.floor(Math.random()*100);
 				this.mesh = options.mesh;
 				this.profilePoints = _.sortByAll(options.profilePoints, ['lat', 'lng']);
-				if (this.profilePoints.length > 0){
-					this.segmentsX =  Math.sqrt(this.profilePoints.length) - 1;
-					this.segmentsY =  Math.sqrt(this.profilePoints.length) - 1;
-					if (!this.mesh)
-						this.updateMesh(this.profilePoints);
-				}
 				if(this.mesh)
 					this.mesh.name = this.name;
-		  },
-
-		  /**
-		  * update mesh according to given ProfilePoints
-		  * @param {m3d.model.ProfilePoint[]} profilePoints array of ProfilePoints to create the mesh
-		  */
-		  updateMesh: function(profilePoints){
-		  	var geometry = new THREE.BoxGeometry(this.thickness, this.getDistanceZ(), this.getDistanceX(), 1, this.segmentsX, this.segmentsY);
-		  	var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
-		  	var mesh = new THREE.Mesh(geometry, material);
-		  	this.mesh = mesh;
-		  	mesh.name = this.name;
-		  	mesh.geometry.dynamic = true;
-
-	  	  var rotationZ = new THREE.Matrix4().makeRotationZ( - Math.PI/2 );
-		    var rotationX = new THREE.Matrix4().makeRotationX( Math.PI );
-				mesh.updateMatrix();
-		    mesh.geometry.applyMatrix(mesh.matrix);
-		    mesh.geometry.applyMatrix(rotationZ);
-		    mesh.geometry.applyMatrix(rotationX);
-		    mesh.matrix.identity();
-
-				var diff = 0;
-
-				//model.geometry.vertices.length
-				_.forEach(this.profilePoints, function(point, i){
-					diff = point.elv - this.getMinElv();         
-					var bottomIndex = this.getBottomIndex(i);
-					mesh.geometry.vertices[i].y += diff; 
-					mesh.geometry.vertices[bottomIndex].y += diff;				
-				}, this);
-
-				mesh.geometry.computeFaceNormals();
-				mesh.geometry.computeVertexNormals();
-		  },
-
-		  /**
-		  * update profile points according to given mesh
-		  * @param {THREE.Mesh} mesh mesh to be used to create ProfilePoints
-		  */
-		  updateProfilePoints: function(mesh){
-		  	var profilePoints = [];
-		  	var topPoints = mesh.geometry.vertices.splice(0, Math.ceil(mesh.geometry.vertices.length / 2));
-		  	_.forEach(topPoints, function(vertex, i){
-		  		var lat = vertex.x;
-		  		var lng = vertex.y;
-		  		var elv = vertex.z;
-		  		var profilePoint = new ProfilePoint({lat: lat, lng: lng, elv: elv});
-		  		profilePoints.push(profilePoint);
-		  	});
-		  	this.profilePoints = profilePoints;
 		  },
 
 		  /**
@@ -511,42 +429,42 @@
 		  * @return {Number} minimum value of all longitudes
 		  */
 		  getMinLng: function(){
-		  	return _.min(_.pluck(this.profilePoints, 'lng'));
+		  	return ProfileUtil.getMinLng(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum longitude
 		  * @return {Number} maximum value of all longitudes
 		  */
 		  getMaxLng: function(){
-		  	return _.max(_.pluck(this.profilePoints, 'lng'));
+		  	return ProfileUtil.getMaxLng(this.profilePoints);
 		  },
 		  /**
 		  * Get minimum latitude
 		  * @return {Number} minimum value of all latitudes
 		  */
 		  getMinLat: function(){
-			return _.min(_.pluck(this.profilePoints, 'lat'))
+				return ProfileUtil.getMinLat(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum latitude
 		  * @return {Number} maximum value of all latitudes
 		  */
 		  getMaxLat: function(){
-		  	return _.max(_.pluck(this.profilePoints, 'lat'))
+		  	return ProfileUtil.getMaxLat(this.profilePoints);
 		  },
 		  /*
 		  * Get minimum elevation
 		  * @return {Number} maximum value of all elevations
 		  */
 		  getMinElv: function(){
-			return _.min(_.pluck(this.profilePoints, 'elv'))
+				return ProfileUtil.getMinElv(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum elevation
 		  * @return {Number} maximum value of all elevations
 		  */
 		  getMaxElv: function(){
-		  	return _.max(_.pluck(this.profilePoints, 'elv'))
+		  	return ProfileUtil.getMaxElv(this.profilePoints);
 		  },
 		  /**
 		  * Get the model width as the distance between the easternmost and the westermost point
@@ -608,58 +526,6 @@
 		  	return Math.floor(Math.abs(maxZ - minZ));
 		  },
 
-		 /**
-		  * Rotate the model for a given angle on the Y-Axis
-		  * @param {Number} angle the angle the model should be rotated with
-		  * @param {Number} damping the damping factor that should be used to calculate the rotation
-		  */
-		  rotate: function(angle, damping){
-		  	var rotation = (angle - this.mesh.rotation.y) * damping;
-          	this.mesh.rotation.y += rotation;
-          	if (this.mold)
-          		this.mold.rotation.y += rotation;
-		  },
-
-		  /**
-		  * Get the index on the bottom for a vertex on top
-		  * @return {Number} the index of the vertex on the bottom
-		  */
-		  getBottomIndex: function(i){
-		  	if (!this.mesh)
-		  		return -1;
-		  	if (i&lt;0)
-		  		return -1;
-		  	if (i > this.mesh.geometry.vertices.length)
-		  		return -1;
-
-		  	var half = Math.ceil(this.mesh.geometry.vertices.length / 2);
-		  	if (i > half)
-		  		return -1;
-		  	var side = Math.sqrt(half);		  	
-		  	return half + i + side - 2*(i%side) - 1;
-		  },
-
-		  /**
-		  * Get the vertex on the bottom for a vertex on top
-		  * @returns {THREE.Vector3} the vertex on the bottom or null if 
-		  * - the index is not on top or 
-		  * - the vertex is not in the mesh
-		  * - there is no mesh for the profile
-		  */
-		  getBottomVertex: function(vertex){
-		  	if (!this.mesh || !vertex)
-		  		return null;
-		  	var index = _.indexOf(this.mesh.geometry.vertices, vertex);
-		  	// not found
-		  	if (index &lt; 0)
-		  		return null;
-
-		  	var bottomIndex = this.getBottomIndex(index);
-		  	var bottomVertex = this.mesh.geometry.vertices[bottomIndex];
-		  	if (typeof bottomVertex == 'undefined')
-		  		return null;
-		  	return bottomVertex;
-		  }
 	};
 
 	return Profile;
@@ -675,7 +541,7 @@
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Feb 26 2015 20:30:51 GMT-0000 (UTC)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Mar 04 2015 20:30:03 GMT-0000 (UTC)
         </footer>
     </div>
 </div>

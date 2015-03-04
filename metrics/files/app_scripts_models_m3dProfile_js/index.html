@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">66.70</p>
+      <p class="stat">70.78</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">269</p>
+      <p class="stat">161</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">54.95</p>
+      <p class="stat">30.38</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">2.59</p>
+      <p class="stat">1.13</p>
     </div>
   </div>
 </div>
@@ -94,8 +94,9 @@
 	,&#039;lodash&#039;
 	,&#039;models/m3dProfilePoint&#039;
 	,&#039;util/GoogleMapsUtil&#039;
+	,&#039;util/ProfileUtil&#039;
 	],
-	function(angular, _, ProfilePoint, gmUtil){
+	function(angular, _, ProfilePoint, gmUtil, ProfileUtil){
 
     /**
      * Profile
@@ -110,7 +111,8 @@
 			if (arguments[0]) options = arguments[0];
 			var defaultArgs = {
 				&#039;profilePoints&#039;: [],
-				&#039;thickness&#039;: 200,
+				&#039;footprint&#039;: null,
+				&#039;thickness&#039;: localStorage.getItem(&#039;thickness&#039;) || 200,
 				&#039;mesh&#039;: null,
 				&#039;name&#039;: null
 			};
@@ -123,10 +125,8 @@
 		Profile.prototype = /** @lends m3d.model.Profile.prototype */{
 		  name: &#039;&#039;,
 		  profilePoints: [],
+		  footprint: null,
 		  thickness: 0,
-		  segmentsX: 0,
-		  segmentsY: 1,
-		  segmentsZ: 0,
 		  mesh: null,
 		  mold: null,
 
@@ -135,69 +135,13 @@
 		  * @param {Object} options configuration options
 		  */ 
 		  init: function(options){		  			  	
+		  	this.footprint = options.footprint;
 				this.thickness = options.thickness;		  	
 				this.name = options.name?options.name:&#039;profile_&#039; + Math.floor(Math.random()*100);
 				this.mesh = options.mesh;
 				this.profilePoints = _.sortByAll(options.profilePoints, [&#039;lat&#039;, &#039;lng&#039;]);
-				if (this.profilePoints.length &gt; 0){
-					this.segmentsX =  Math.sqrt(this.profilePoints.length) - 1;
-					this.segmentsY =  Math.sqrt(this.profilePoints.length) - 1;
-					if (!this.mesh)
-						this.updateMesh(this.profilePoints);
-				}
 				if(this.mesh)
 					this.mesh.name = this.name;
-		  },
-
-		  /**
-		  * update mesh according to given ProfilePoints
-		  * @param {m3d.model.ProfilePoint[]} profilePoints array of ProfilePoints to create the mesh
-		  */
-		  updateMesh: function(profilePoints){
-		  	var geometry = new THREE.BoxGeometry(this.thickness, this.getDistanceZ(), this.getDistanceX(), 1, this.segmentsX, this.segmentsY);
-		  	var material = new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true });
-		  	var mesh = new THREE.Mesh(geometry, material);
-		  	this.mesh = mesh;
-		  	mesh.name = this.name;
-		  	mesh.geometry.dynamic = true;
-
-	  	  var rotationZ = new THREE.Matrix4().makeRotationZ( - Math.PI/2 );
-		    var rotationX = new THREE.Matrix4().makeRotationX( Math.PI );
-				mesh.updateMatrix();
-		    mesh.geometry.applyMatrix(mesh.matrix);
-		    mesh.geometry.applyMatrix(rotationZ);
-		    mesh.geometry.applyMatrix(rotationX);
-		    mesh.matrix.identity();
-
-				var diff = 0;
-
-				//model.geometry.vertices.length
-				_.forEach(this.profilePoints, function(point, i){
-					diff = point.elv - this.getMinElv();         
-					var bottomIndex = this.getBottomIndex(i);
-					mesh.geometry.vertices[i].y += diff; 
-					mesh.geometry.vertices[bottomIndex].y += diff;				
-				}, this);
-
-				mesh.geometry.computeFaceNormals();
-				mesh.geometry.computeVertexNormals();
-		  },
-
-		  /**
-		  * update profile points according to given mesh
-		  * @param {THREE.Mesh} mesh mesh to be used to create ProfilePoints
-		  */
-		  updateProfilePoints: function(mesh){
-		  	var profilePoints = [];
-		  	var topPoints = mesh.geometry.vertices.splice(0, Math.ceil(mesh.geometry.vertices.length / 2));
-		  	_.forEach(topPoints, function(vertex, i){
-		  		var lat = vertex.x;
-		  		var lng = vertex.y;
-		  		var elv = vertex.z;
-		  		var profilePoint = new ProfilePoint({lat: lat, lng: lng, elv: elv});
-		  		profilePoints.push(profilePoint);
-		  	});
-		  	this.profilePoints = profilePoints;
 		  },
 
 		  /**
@@ -205,42 +149,42 @@
 		  * @return {Number} minimum value of all longitudes
 		  */
 		  getMinLng: function(){
-		  	return _.min(_.pluck(this.profilePoints, &#039;lng&#039;));
+		  	return ProfileUtil.getMinLng(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum longitude
 		  * @return {Number} maximum value of all longitudes
 		  */
 		  getMaxLng: function(){
-		  	return _.max(_.pluck(this.profilePoints, &#039;lng&#039;));
+		  	return ProfileUtil.getMaxLng(this.profilePoints);
 		  },
 		  /**
 		  * Get minimum latitude
 		  * @return {Number} minimum value of all latitudes
 		  */
 		  getMinLat: function(){
-			return _.min(_.pluck(this.profilePoints, &#039;lat&#039;))
+				return ProfileUtil.getMinLat(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum latitude
 		  * @return {Number} maximum value of all latitudes
 		  */
 		  getMaxLat: function(){
-		  	return _.max(_.pluck(this.profilePoints, &#039;lat&#039;))
+		  	return ProfileUtil.getMaxLat(this.profilePoints);
 		  },
 		  /*
 		  * Get minimum elevation
 		  * @return {Number} maximum value of all elevations
 		  */
 		  getMinElv: function(){
-			return _.min(_.pluck(this.profilePoints, &#039;elv&#039;))
+				return ProfileUtil.getMinElv(this.profilePoints);
 		  },
 		  /**
 		  * Get maximum elevation
 		  * @return {Number} maximum value of all elevations
 		  */
 		  getMaxElv: function(){
-		  	return _.max(_.pluck(this.profilePoints, &#039;elv&#039;))
+		  	return ProfileUtil.getMaxElv(this.profilePoints);
 		  },
 		  /**
 		  * Get the model width as the distance between the easternmost and the westermost point
@@ -302,58 +246,6 @@
 		  	return Math.floor(Math.abs(maxZ - minZ));
 		  },
 
-		 /**
-		  * Rotate the model for a given angle on the Y-Axis
-		  * @param {Number} angle the angle the model should be rotated with
-		  * @param {Number} damping the damping factor that should be used to calculate the rotation
-		  */
-		  rotate: function(angle, damping){
-		  	var rotation = (angle - this.mesh.rotation.y) * damping;
-          	this.mesh.rotation.y += rotation;
-          	if (this.mold)
-          		this.mold.rotation.y += rotation;
-		  },
-
-		  /**
-		  * Get the index on the bottom for a vertex on top
-		  * @return {Number} the index of the vertex on the bottom
-		  */
-		  getBottomIndex: function(i){
-		  	if (!this.mesh)
-		  		return -1;
-		  	if (i&lt;0)
-		  		return -1;
-		  	if (i &gt; this.mesh.geometry.vertices.length)
-		  		return -1;
-
-		  	var half = Math.ceil(this.mesh.geometry.vertices.length / 2);
-		  	if (i &gt; half)
-		  		return -1;
-		  	var side = Math.sqrt(half);		  	
-		  	return half + i + side - 2*(i%side) - 1;
-		  },
-
-		  /**
-		  * Get the vertex on the bottom for a vertex on top
-		  * @returns {THREE.Vector3} the vertex on the bottom or null if 
-		  * - the index is not on top or 
-		  * - the vertex is not in the mesh
-		  * - there is no mesh for the profile
-		  */
-		  getBottomVertex: function(vertex){
-		  	if (!this.mesh || !vertex)
-		  		return null;
-		  	var index = _.indexOf(this.mesh.geometry.vertices, vertex);
-		  	// not found
-		  	if (index &lt; 0)
-		  		return null;
-
-		  	var bottomIndex = this.getBottomIndex(index);
-		  	var bottomVertex = this.mesh.geometry.vertices[bottomIndex];
-		  	if (typeof bottomVertex == &#039;undefined&#039;)
-		  		return null;
-		  	return bottomVertex;
-		  }
 	};
 
 	return Profile;

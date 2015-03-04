@@ -18,16 +18,16 @@
     <h1>Code coverage report for <span class="entity">scripts/models/rectFootprint.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">19.05% <small>(8 / 42)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">21.15% <small>(11 / 52)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Branches: <span class="metric">0% <small>(0 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 10)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">20% <small>(1 / 5)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">16.67% <small>(1 / 6)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">19.05% <small>(8 / 42)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">21.15% <small>(11 / 52)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -118,7 +118,29 @@
 81
 82
 83
-84</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,6 +166,24 @@
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -204,10 +244,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">define([
    'angular'
   ,'lodash'
+  ,'threejs'
   ,'models/footprint'
   ,'models/m3dProfilePoint'   
+  ,'util/ProfileUtil'
   ], 
-  function(angular, _, Footprint, ProfilePoint){
+  function(angular, _, THREE, Footprint, ProfilePoint, ProfileUtil){
 &nbsp;
     var rect;
 &nbsp;
@@ -226,11 +268,29 @@
 &nbsp;
     RectFootprint.prototype = Object.create(Footprint.prototype);
 &nbsp;
+    RectFootprint.prototype.horizontalSegments = 0;
+    RectFootprint.prototype.verticalSegments = 0;
+&nbsp;
+    RectFootprint.prototype.getProfilePoints = <span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >      var resolution = localStorage.getItem('resolution') || 25;</span>
+<span class="cstat-no" title="statement not covered" >      this.horizontalSegments = parseInt(resolution);</span>
+<span class="cstat-no" title="statement not covered" >      this.verticalSegments = parseInt(resolution);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (!this.profilePoints || this.profilePoints.length != Math.pow(this.horizontalSegments, 2))</span>
+<span class="cstat-no" title="statement not covered" >        this.profilePoints = this.rasterize();</span>
+<span class="cstat-no" title="statement not covered" >      return this.profilePoints;</span>
+    };
+&nbsp;
+    /**
+    * Rasterize current footprint returning an array of profile points (elevation is zero)
+    * @returns {ProfilePoint} array of ProfilePoints
+    */
     RectFootprint.prototype.rasterize = <span class="fstat-no" title="function not covered" >function(){</span>
 <span class="cstat-no" title="statement not covered" >      if (!this.shape)</span>
 <span class="cstat-no" title="statement not covered" >        return [];</span>
 <span class="cstat-no" title="statement not covered" >      var resolution = localStorage.getItem('resolution') || 25;</span>
-<span class="cstat-no" title="statement not covered" >      gridSize = horizontalSegments = verticalSegments = parseInt(resolution);</span>
+<span class="cstat-no" title="statement not covered" >      this.horizontalSegments = parseInt(resolution);</span>
+<span class="cstat-no" title="statement not covered" >      this.verticalSegments = parseInt(resolution);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      var rect = this.shape;</span>
       // Positionen der Ecken bestimmen
@@ -242,18 +302,18 @@
       // get values on x-axis
 <span class="cstat-no" title="statement not covered" >      var xFrom = nw.lng();</span>
 <span class="cstat-no" title="statement not covered" >      var xTo = ne.lng(); </span>
-<span class="cstat-no" title="statement not covered" >      var xStep = (xTo-xFrom)/(horizontalSegments - 1);</span>
+<span class="cstat-no" title="statement not covered" >      var xStep = (xTo-xFrom)/(this.horizontalSegments - 1);</span>
       
       // get values on y-axis
 <span class="cstat-no" title="statement not covered" >      var yFrom = se.lat();</span>
 <span class="cstat-no" title="statement not covered" >      var yTo = ne.lat();</span>
-<span class="cstat-no" title="statement not covered" >      var yStep = (yTo-yFrom)/(verticalSegments - 1);</span>
+<span class="cstat-no" title="statement not covered" >      var yStep = (yTo-yFrom)/(this.verticalSegments - 1);</span>
       
 <span class="cstat-no" title="statement not covered" >      var profilePoints = [];</span>
-<span class="cstat-no" title="statement not covered" >      for(var y=0; y&lt;verticalSegments; y++){</span>
+<span class="cstat-no" title="statement not covered" >      for(var y=0; y&lt;this.verticalSegments; y++){</span>
 <span class="cstat-no" title="statement not covered" >        var yVal = yTo - y*yStep;</span>
         
-<span class="cstat-no" title="statement not covered" >        for (var x=0; x&lt;horizontalSegments; x++){</span>
+<span class="cstat-no" title="statement not covered" >        for (var x=0; x&lt;this.horizontalSegments; x++){</span>
 <span class="cstat-no" title="statement not covered" >          var xVal = xFrom + x*xStep;</span>
 <span class="cstat-no" title="statement not covered" >          var lat = Number(parseFloat(yVal).toFixed(4));</span>
 <span class="cstat-no" title="statement not covered" >          var lng = Number(parseFloat(xVal).toFixed(4));</span>
@@ -289,7 +349,7 @@
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Feb 26 2015 20:30:34 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Mar 04 2015 20:29:45 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

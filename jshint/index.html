@@ -52,18 +52,6 @@
     <td class="text-center">5</td>
     <td><code>    var orderedPoints &#61; &#91;</code></td>
     <td>Missing &quot;use strict&quot; statement.</td>
-</tr><tr class="warning">
-    <td class="text-center">W004</td>
-    <td class="text-center">126</td>
-    <td class="text-center">18</td>
-    <td><code>        for&#40;var i&#61;0; i&lt;Math.ceil&#40;profile.mesh.geometry.vertices.length / 2&#41;; i&#43;&#43;&#41;&#123;</code></td>
-    <td>&#39;i&#39; is already defined.</td>
-</tr><tr class="warning">
-    <td class="text-center">W004</td>
-    <td class="text-center">128</td>
-    <td class="text-center">28</td>
-    <td><code>          var bottomVertex &#61; profile.getBottomVertex&#40;topVertex&#41;;</code></td>
-    <td>&#39;bottomVertex&#39; is already defined.</td>
 </tr><tr><td colspan="5"><b>../../test/spec/services/elevationdataserviceSpec.js</b></td></tr><tr class="warning">
     <td class="text-center">W033</td>
     <td class="text-center">33</td>
@@ -79,24 +67,24 @@
 </tr><tr class="warning">
     <td class="text-center">W033</td>
     <td class="text-center">65</td>
-    <td class="text-center">42</td>
-    <td><code>          rasterize: function&#40;&#41;&#123;return &#91;&#93;&#125;</code></td>
+    <td class="text-center">49</td>
+    <td><code>          getProfilePoints: function&#40;&#41;&#123;return &#91;&#93;&#125;&#44;</code></td>
     <td>Missing semicolon.</td>
 </tr><tr class="warning">
     <td class="text-center">W033</td>
-    <td class="text-center">66</td>
+    <td class="text-center">67</td>
     <td class="text-center">10</td>
     <td><code>        &#125; </code></td>
     <td>Missing semicolon.</td>
 </tr><tr class="warning">
     <td class="text-center">W033</td>
-    <td class="text-center">90</td>
+    <td class="text-center">95</td>
     <td class="text-center">90</td>
     <td><code>        rootScope.&#36;on&#40;&#39;adapter:item:progress&#39;&#44; function&#40;event&#44; args&#41;&#123; itemProgressCount&#43;&#43; &#125;&#41;;</code></td>
     <td>Missing semicolon.</td>
 </tr><tr class="warning">
     <td class="text-center">W033</td>
-    <td class="text-center">91</td>
+    <td class="text-center">96</td>
     <td class="text-center">92</td>
     <td><code>        rootScope.&#36;on&#40;&#39;adapter:queue:progress&#39;&#44; function&#40;event&#44; args&#41;&#123; queueProgressCount&#43;&#43; &#125;&#41;;</code></td>
     <td>Missing semicolon.</td>
@@ -108,13 +96,13 @@
     <td>&#39;&#36;&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">85</td>
+    <td class="text-center">90</td>
     <td class="text-center">30</td>
     <td><code>            callback&#40;result&#44; google.maps.ElevationStatus.OK&#41;;</code></td>
     <td>&#39;google&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
-    <td class="text-center">101</td>
+    <td class="text-center">107</td>
     <td class="text-center">15</td>
     <td><code>        spyOn&#40;google.maps.ElevationService.prototype&#44; &#39;getElevationForLocations&#39;&#41;.and.callFake&#40;dummyGoogleMapsFunction&#41;;</code></td>
     <td>&#39;google&#39; is not defined.</td>
@@ -124,6 +112,12 @@
     <td class="text-center">1</td>
     <td><code>&#39;use strict&#39;</code></td>
     <td>Missing semicolon.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">49</td>
+    <td class="text-center">7</td>
+    <td><code>      xit&#40;&#39;should calculate a correct inverted model&#39;&#44; function&#40;&#41;&#123;</code></td>
+    <td>&#39;xit&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W098</td>
     <td class="text-center">13</td>
@@ -168,6 +162,12 @@
     <td>&#39;THREE&#39; is not defined.</td>
 </tr><tr class="warning">
     <td class="text-center">W117</td>
+    <td class="text-center">59</td>
+    <td class="text-center">5</td>
+    <td><code>    xit&#40;&#39;should broadcast an event when file is loaded&#39;&#44; function&#40;&#41;&#123;</code></td>
+    <td>&#39;xit&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
     <td class="text-center">62</td>
     <td class="text-center">13</td>
     <td><code>      spyOn&#40;THREE.STLLoader.prototype&#44; &#39;loadLocal&#39;&#41;.and.callFake&#40;function&#40;fileArg&#44; callbackArg&#41;&#123;</code></td>
@@ -196,10 +196,22 @@
     <td class="text-center">14</td>
     <td><code>      expect&#40;THREE.VRMLLoader.prototype.loadLocal&#41;.toHaveBeenCalled&#40;&#41;;</code></td>
     <td>&#39;THREE&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">94</td>
+    <td class="text-center">5</td>
+    <td><code>    xit&#40;&#39;should save each model into a separate file&#39;&#44; function&#40;&#41;&#123;</code></td>
+    <td>&#39;xit&#39; is not defined.</td>
+</tr><tr class="warning">
+    <td class="text-center">W117</td>
+    <td class="text-center">102</td>
+    <td class="text-center">5</td>
+    <td><code>    xit&#40;&#39;should produce a correct STL-String&#39;&#44; function&#40;done&#41;&#123;</code></td>
+    <td>&#39;xit&#39; is not defined.</td>
 </tr>
     </table>
     <div class="well">
-    Found <span class="label label-default">30</span> failures - <span class="label label-danger">2 errors</span> &amp; <span class="label label-warning">28 warnings</span>
+    Found <span class="label label-default">32</span> failures - <span class="label label-danger">2 errors</span> &amp; <span class="label label-warning">30 warnings</span>
 </div>
 </div>
 

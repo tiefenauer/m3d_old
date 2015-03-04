@@ -19,6 +19,7 @@ angular-bootstrap.js
 filters.js
 models/m3dProfilePoint.js
 util/GoogleMapsUtil.js
+util/ProfileUtil.js
 models/m3dProfile.js
 services/elevationdataservice.js
 services/STLLoader.js

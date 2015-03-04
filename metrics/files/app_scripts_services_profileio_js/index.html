@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">62.06</p>
+      <p class="stat">62.03</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">155</p>
+      <p class="stat">153</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">33.17</p>
+      <p class="stat">34.55</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.47</p>
+      <p class="stat">1.54</p>
     </div>
   </div>
 </div>
@@ -92,15 +92,15 @@
     <textarea id="file-source" class="col-md-12">&#039;use strict&#039;;
 define([
    &#039;angular&#039;
+  ,&#039;lodash&#039;
   ,&#039;threejs&#039;
   ,&#039;models/m3dProfile&#039;
-  ,&#039;lodash&#039;
   ,&#039;services/STLLoader&#039;
   ,&#039;services/VRMLLoader&#039;
   ,&#039;util/FileSaver.min&#039;
   ,&#039;vendor/three/ThreeCSG&#039;
   ], 
-  function (angular, THREE, Profile, _) {
+  function (angular, _, THREE, Profile) {
 
     var $log, $rootScope;
     var loader;
@@ -154,11 +154,10 @@ define([
       * save model to file
       * @param {m3d.models.Profile[]} profiles the profiles to be saved. Each object will be saved to a separate file.
       */
-      save: function(m3dProfile){
-        var fileName = m3dProfile.name || &#039;stlModel&#039;;
-        fileName += &#039;_generated&#039;;
+      save: function(mesh){
+        var fileName = mesh.name || &#039;stlModel_generated&#039;;
         $log.debug(&#039;Saving model to &#039; + fileName + &#039;.stl ...&#039;);
-        var stlString = generateStl(m3dProfile.mesh.geometry);
+        var stlString = generateStl(mesh.geometry);
         // Bug in PhantomJS: https://github.com/ariya/phantomjs/issues/11013
         var blob;
         if (typeof WebKitBlobBuilder !== &#039;undefined&#039;){
@@ -179,12 +178,8 @@ define([
       var fileName = file.name.substr(0, file.name.lastIndexOf(&#039;.&#039;));
       var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x00ff00, dynamic: true, shading: THREE.FlatShading}));
       mesh.geometry.mergeVertices();
-      mesh.geometry.computeVertexNormals();
-      var profile = new Profile({
-        mesh: mesh,
-        name: fileName
-      });
-      $rootScope.$broadcast(&#039;io:model:loaded&#039;, profile);
+      mesh.geometry.computeVertexNormals();      
+      $rootScope.$broadcast(&#039;io:model:loaded&#039;, mesh);
     };
 
     var onVrmlLoaded = function(content, file){
@@ -197,10 +192,13 @@ define([
       var stl = &#039;solid pixel\n&#039;;
 
       var stringifyVector = function(vec){
-          return &#039;&#039;+vec.x+&#039; &#039;+vec.y+&#039; &#039;+vec.z;
+        return &#039;&#039;+vec.x+&#039; &#039;+vec.y+&#039; &#039;+vec.z;
       };
       var stringifyVertex = function(vec){
-          return &#039;vertex &#039; + vec.x + &#039; &#039; + vec.y + &#039; &#039; + vec.z + &#039; \n&#039;;
+        var x = Number(vec.x).toFixed(4);
+        var y = Number(vec.y).toFixed(4);
+        var z = Number(vec.z).toFixed(4);
+        return &#039;vertex &#039; + x + &#039; &#039; + y + &#039; &#039; + z + &#039; \n&#039;;
       };
 
       var vertices, tris, i;
@@ -215,9 +213,9 @@ define([
             stl += (&#039;outer loop \n&#039;);
 
           for (var j=i; j&lt;i+9; j+=3){
-            var x = positions[j];
-            var y = positions[j+1];
-            var z = positions[j+2];
+            var x = Number(positions[j]).toFixed(4);
+            var y = Number(positions[j+1]).toFixed(4);
+            var z = Number(positions[j+2]).toFixed(4);
             stl += &#039;vertex &#039;+x+&#039; &#039;+y+&#039; &#039;+z+&#039; \n&#039;;
           }
           stl += (&#039;endloop \n&#039;);

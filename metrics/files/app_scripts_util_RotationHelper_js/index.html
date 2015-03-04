@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">71.30</p>
+      <p class="stat">71.76</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">97</p>
+      <p class="stat">123</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">28.09</p>
+      <p class="stat">29.42</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.80</p>
+      <p class="stat">0.92</p>
     </div>
   </div>
 </div>
@@ -112,20 +112,46 @@
 			canvas = canvasElement;
 			renderer = threeRenderer;
 			$canvas = $(canvas);
-			return {
-				 initEvents: initEvents.bind(this)
-				,get targetRotation(){
-					return targetRotation;
-				}
-			};
 		};
 
-		var initEvents = function(){
-			canvas.addEventListener( &#039;mousedown&#039;, onDocumentMouseDown.bind(this), false );
-			canvas.addEventListener( &#039;touchstart&#039;, onDocumentTouchStart.bind(this), false );
-			canvas.addEventListener( &#039;touchmove&#039;, onDocumentTouchMove.bind(this), false );			
-			window.addEventListener( &#039;resize&#039;, onWindowResize.bind(this), false );
+		RotationHelper.prototype = {
+			active: false,
+			get targetRotation(){
+					return targetRotation;
+			},
+
+			start: function(){
+				this.active = true;
+				addEventListeners();
+			},
+
+			stop: function(rotation){				
+				this.active = false;
+				targetRotation = rotation;
+				removeEventListeners();
+				//targetRotation = 0;
+			}
+
 		};
+
+		var addEventListeners = function(){
+			canvas.addEventListener( &#039;mousedown&#039;, onDocumentMouseDown, false );
+			//canvas.addEventListener( &#039;mousemove&#039;, onDocumentMouseMove, false );
+			canvas.addEventListener( &#039;mouseup&#039;, onDocumentMouseUp, false );
+			canvas.addEventListener( &#039;mouseout&#039;, onDocumentMouseOut, false );			
+			canvas.addEventListener( &#039;touchstart&#039;, onDocumentTouchStart, false );
+			//canvas.addEventListener( &#039;touchmove&#039;, onDocumentTouchMove, false );			
+			window.addEventListener( &#039;resize&#039;, onWindowResize, false );			
+		};
+
+		var removeEventListeners = function( ) {
+			canvas.removeEventListener( &#039;mousedown&#039;, onDocumentMouseDown, false );
+			//canvas.removeEventListener( &#039;mousemove&#039;, onDocumentMouseMove, false );
+			canvas.removeEventListener( &#039;mouseup&#039;, onDocumentMouseUp, false );
+			canvas.removeEventListener( &#039;mouseout&#039;, onDocumentMouseOut, false );
+			canvas.removeEventListener( &#039;touchstart&#039;, onDocumentTouchStart, false );
+			//canvas.removeEventListener( &#039;touchmove&#039;, onDocumentTouchMove, false );
+		};		
 
 		var onWindowResize = function() {
 			windowHalfX = $canvas.width() / 2;

@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">68.88</p>
+      <p class="stat">68.40</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">197</p>
+      <p class="stat">199</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">21.80</p>
+      <p class="stat">34.79</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.61</p>
+      <p class="stat">2.37</p>
     </div>
   </div>
 </div>
@@ -105,11 +105,6 @@
 
     var el, $el;
     var $log, $scope, $ProfileIOService, $ProfileOutlineService;
-    var profiles = {};
-    var scene;
-    var renderer;
-    var camera, controls, currentMesh, currentProfile;
-    var rotationHelper;
 
   /**
    * ProfileController
@@ -126,105 +121,94 @@
       $log.debug(&#039;ProfileController created&#039;);        
 
       el = $(&#039;#profile&#039;)[0];
-      $el = $(el);      
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      scene = new THREE.Scene();
+      $el = $(el);
       
-      $scope.$on(&#039;adapter:end&#039;, function(event, footprint, profilePoints){
-        clearScene();
-        var m3dProfile = ProfileOutlineService.createProfile(footprint, profilePoints);
-        drawProfile(m3dProfile);
-      });
-      $scope.$on(&#039;io:model:loaded&#039;, function(event, profile){
-        drawProfile(profile);
-      });
-      $scope.$on(&#039;menu:model:save&#039;, function(){
-        ProfileIOService.save(currentProfile);
-      });
-      $scope.$on(&#039;menu:model:invert&#039;, this.toggleInvert);
+      $scope.$on(&#039;adapter:end&#039;, angular.bind(this, function(event, footprint){
+        this.clearScene();
+        var m3dProfile = ProfileOutlineService.createProfile(footprint);
+        this.drawProfile(m3dProfile);
+      }));
+      $scope.$on(&#039;io:model:loaded&#039;, angular.bind(this, function(event, mesh){
+        this.clearScene();
+        var profile = ProfileOutlineService.createFromMesh(mesh);
+        this.drawProfile(profile);
+      }));
+      $scope.$on(&#039;menu:model:save&#039;, angular.bind(this, function(){
+        ProfileIOService.save(this.currentMesh);
+      }));
+      $scope.$on(&#039;menu:model:invert&#039;, angular.bind(this, function(){
+        this.stopRotation();
+        this.toggleInvert();
+      }));
 
-      initScene();
-      initRenderer();
+      this.initRenderer();
+      this.initScene();
       this.render();
 
-      $scope.$on(&#039;outline:created&#039;, function(event, outline){
-        drawProfile(outline);
-      });            
+      $scope.$on(&#039;outline:created&#039;, angular.bind(this, function(event, outline){
+        this.drawProfile(outline);
+      }));
     };
 
-    ProfileController.prototype = /** @lends m3d.controller.MenuController.prototype */{
+    ProfileController.prototype.profiles = {};
+    ProfileController.prototype.currentMesh = {};
+    ProfileController.prototype.currentProfile = {};
 
-      /**
-      * Toggle between model and inverted model (mold)
-      */
-      toggleInvert: function(){
-        if (!currentProfile)
-          return;
+    ProfileController.prototype.stopRotation = function(){
+      if (this.currentMesh){
+        this.rotationHelper.stop(this.currentMesh.rotation.y);
+        this.rotationHelper.start();
+      }
+    };
 
-        if (currentMesh == currentProfile.mesh){
-          if (!currentProfile.mold)
-            currentProfile.mold = $ProfileOutlineService.invert(currentProfile);
-          draw(currentProfile.mold);
-        }
-        else {
-          draw(currentProfile.mesh);
-        }
-      },
+    ProfileController.prototype.toggleInvert = function(){
+      if (!this.currentProfile)
+        return;
 
-      /**
-      * Render profiles on canvas
-      * @param {Object[]} profiles the profiles to render
-      */
-      render: function(){
-        var animate = function(){         
-          requestAnimationFrame(animate);
-              controls.update();
-                _.each(profiles, function(m3dProfile){
-                  m3dProfile.rotate(rotationHelper.targetRotation, 0.05);
-                  /*
-                  var rotation = (rotationHelper.targetRotation - m3dProfile.mesh.rotation.y) * 0.05;
-                  m3dProfile.mesh.rotation.y += rotation;
-                  */
-                });              
-          renderer.render(scene, camera);         
-        };
-        animate();
+      if (this.currentMesh == this.currentProfile.mesh){
+        if (!this.currentProfile.mold)
+          this.currentProfile.mold = $ProfileOutlineService.invert(this.currentProfile);
+        this.draw(this.currentProfile.mold);
+      }
+      else {
+        this.draw(this.currentProfile.mesh);
       }
     };
 
     /**
-    * Remove all profiles from canvas
+    * Render profiles on canvas
+    * @param {Object[]} profiles the profiles to render
     */
-    var clearScene = function(){
-      _.each(profiles, function(profile){
-        remove(profile);
+    ProfileController.prototype.render = function(){
+      var animate = angular.bind(this, function(){         
+        requestAnimationFrame(animate);
+        this.controls.update();
+        _.each(this.profiles, angular.bind(this, function(m3dProfile){
+          if (!this.rotationHelper.active)
+            return;
+          var rotation = (this.rotationHelper.targetRotation - m3dProfile.mesh.rotation.y) * 0.05;
+          m3dProfile.mesh.rotation.y += rotation;
+          if (m3dProfile.mold)
+              m3dProfile.mold.rotation.y += rotation;          
+        }));
+        this.renderer.render(this.scene, this.camera);
       });
+      animate();
     };
 
-    var drawProfile = function(m3dProfile){      
-      currentProfile = m3dProfile;
-      profiles[m3dProfile.name] = m3dProfile;
-      draw(m3dProfile.mesh);
+    ProfileController.prototype.initRenderer = function(){
+      this.renderer = new THREE.WebGLRenderer({ antialias: true });
+      var width = $el.width();
+      var height = $el.height();
+      this.renderer.setSize( width, height );
+      $el.append(this.renderer.domElement);        
+      this.renderer.precision = &#039;highp&#039;;
+      this.renderer.setClearColor(0x000000, 1);
+      this.renderer.shadowMapEnabled = true;
     };
 
-    var draw = function(mesh){
-      clearScene();
-      currentMesh = mesh;
-      scene.add(mesh);      
-    };
-
-    var remove = function(m3dProfile){
-      if (!m3dProfile)
-        return;
-      var mesh = scene.getObjectByName(m3dProfile.name);
-      if (m3dProfile.mold)
-        var mold = scene.getObjectByName(m3dProfile.name);
-      scene.remove(mesh);
-      scene.remove(mold);
-    };
-
-
-    var initScene = function(){        
+    ProfileController.prototype.initScene = function(){    
+      this.scene = new THREE.Scene();    
       var topLight = new THREE.PointLight( 0x404040, 1.8 );
       topLight.position.set( 10000, 10000, 10000 );       
 
@@ -244,44 +228,62 @@
       var axis = new THREE.AxisHelper(100);
       var grid = new THREE.GridHelper(10,1);      
 
-      scene.add( topLight );
-      scene.add(hemiLight);
-      scene.add( bottomLight );
-      scene.add(ambientLight);
-      scene.add(axis);
-      scene.add(grid);
-      initCamera();     
-      initControls();               
+      this.scene.add( topLight );
+      this.scene.add(hemiLight);
+      this.scene.add( bottomLight );
+      this.scene.add(ambientLight);
+      this.scene.add(axis);
+      this.scene.add(grid);
+      this.initCamera();     
+      this.initControls();               
     };
 
-    var initCamera = function(){
+    ProfileController.prototype.initCamera = function(){
       var width = $el.width();
       var height = $el.height();
-      camera = new THREE.PerspectiveCamera(45,  width/height, 0.1, 200000);
-      scene.add(camera);
-      camera.position.set(5000,5000,5000);
-      camera.lookAt(scene.position);
+      this.camera = new THREE.PerspectiveCamera(45,  width/height, 0.1, 200000);
+      this.scene.add(this.camera);
+      this.camera.position.set(50,50,50);
+      this.camera.lookAt(this.scene.position);
     };
 
-    var initRenderer = function(){
-      var width = $el.width();
-      var height = $el.height();
-      renderer.setSize( width, height );
-      $el.append(renderer.domElement);        
-      renderer.precision = &#039;highp&#039;;
-      renderer.setClearColor(0x000000, 1);
-      renderer.shadowMapEnabled = true;
+    ProfileController.prototype.initControls = function(){
+      this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+      this.controls.target = new THREE.Vector3(0,0,0);
+      this.controls.minAzimuthAngle = 0;
+      this.controls.maxAzimuthAngle = 0;
+      this.controls.noRotate = true;     
 
-      rotationHelper = new RotationHelper(renderer.domElement, camera, renderer);     
-      rotationHelper.initEvents();         
+      this.rotationHelper = new RotationHelper(this.renderer.domElement, this.camera, this.renderer);     
+      this.rotationHelper.start();
     };
 
-    var initControls = function(){
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.target = new THREE.Vector3(0,0,0);
-      controls.minAzimuthAngle = 0;
-      controls.maxAzimuthAngle = 0;
-      controls.noRotate = true;     
+    ProfileController.prototype.clearScene = function(){
+      _.each(this.profiles, angular.bind(this, function(profile){
+        this.remove(profile);
+      }));
+    };
+
+    ProfileController.prototype.drawProfile = function(m3dProfile){      
+      this.currentProfile = m3dProfile;
+      this.profiles[m3dProfile.name] = m3dProfile;
+      this.draw(m3dProfile.mesh);
+    };
+
+    ProfileController.prototype.draw = function(mesh){
+      this.clearScene();
+      this.currentMesh = mesh;
+      this.scene.add(mesh);      
+    };
+
+    ProfileController.prototype.remove = function(m3dProfile){
+      if (!m3dProfile)
+        return;
+      var mesh = this.scene.getObjectByName(m3dProfile.mesh.name);
+      if (m3dProfile.mold)
+        var mold = this.scene.getObjectByName(m3dProfile.mold.name);
+      this.scene.remove(mesh);
+      this.scene.remove(mold);
     };
 
     return [&#039;$scope&#039;, &#039;$log&#039;, &#039;ProfileIOService&#039;, &#039;ProfileOutlineService&#039;, ProfileController];
