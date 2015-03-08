@@ -20,7 +20,7 @@ define([
 
     Footprint.prototype.profilePoints = null;
 
-    Footprint.prototype.geProfilePoints = function(){
+    Footprint.prototype.getProfilePoints = function(){
       return [];
     };
 

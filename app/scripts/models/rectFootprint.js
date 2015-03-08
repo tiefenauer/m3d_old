@@ -20,7 +20,10 @@ define([
      */
     var RectFootprint = function(map){
       Footprint.call(this, map);
-      this.shape = rect = new google.maps.Rectangle({editable: true, draggable: true});      
+      this.shape = rect = new google.maps.Rectangle({editable: true, draggable: true});
+      var tilesLoadedListener = google.maps.event.addListener(this.shape, 'bounds_changed', angular.bind(this, function(){
+        this.profilePoints = null;
+      }));      
     };
 
     RectFootprint.prototype = Object.create(Footprint.prototype);

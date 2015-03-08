@@ -14,8 +14,8 @@ define([
   function(angular, THREE, _, Profile, ProfilePoint, Footprint, RectFootprint, PolyFootprint, GemeindeFootprint, ProfileUtil){
 
     var extrudeSettings = { 
-      amount: 40, 
-      bevelEnabled: true, 
+      amount: localStorage.getItem('thickness') || 2, 
+      bevelEnabled: false, 
       bevelSegments: 2, 
       steps: 2, 
       bevelSize: 1, 
@@ -142,15 +142,17 @@ define([
       var maxLng = _.max(coordinates, 'lng').lng;
       var minLat = _.min(coordinates, 'lat').lat;
       var minLng = _.min(coordinates, 'lng').lng;
-      var scale = 50000;
+      var depth = maxLat - minLat;
+      var width = maxLng - minLng;
+      var factor = 50/Math.max(depth, width);      
 
       // Schritt 1: Shape aus Einzelpunkten konstruieren
-      var shape = this.createShape(coordinates, scale);
+      var shape = this.createShape(coordinates, factor);
 
       // Schritt 2: Aus 2D-Shape eine 3D-Geometrie erstellen
       var posX, posY=0;
-      posX = (maxLng - minLng)*scale/2;
-      posY = (maxLat - minLat)*-scale/2;        
+      posX = (maxLng - minLng)*factor/2;
+      posY = (maxLat - minLat)*-factor/2;        
       var extrudedMesh = this.extrude(shape, extrudeSettings, posX, 0, posY);
 
       // Schritt 3: Die 3D-Geometrie regelmässig rastern und die Rasterpunkte ermitteln (ohne Randpunkte)

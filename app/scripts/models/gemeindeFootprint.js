@@ -12,6 +12,12 @@ define([
 
     GemeindeFootprint.prototype = Object.create(Footprint.prototype);
 
+    GemeindeFootprint.prototype.getProfilePoints = function(){
+      if (!this.profilePoints || this.profilePoints.length == 0)
+        this.profilePoints = this.rasterize();
+      return this.profilePoints;
+    };
+
     GemeindeFootprint.prototype.setShape = function(doc){
       var polygon = doc.placemarks[0].Polygon[0];
       Footprint.prototype.setShape.call(this, polygon);
