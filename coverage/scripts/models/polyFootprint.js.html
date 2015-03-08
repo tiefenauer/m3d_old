@@ -18,16 +18,16 @@
     <h1>Code coverage report for <span class="entity">scripts/models/polyFootprint.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">46.67% <small>(7 / 15)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">36.36% <small>(8 / 22)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Branches: <span class="metric">100% <small>(0 / 0)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">20% <small>(1 / 5)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">14.29% <small>(1 / 7)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">46.67% <small>(7 / 15)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">36.36% <small>(8 / 22)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -82,7 +82,22 @@
 45
 46
 47
-48</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -106,6 +121,19 @@
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -133,8 +161,9 @@
   'angular'
   ,'lodash'
   ,'models/footprint'
+  ,'models/m3dProfilePoint'     
   ], 
-  function(angular, _, Footprint){
+  function(angular, _, Footprint, ProfilePoint){
 &nbsp;
     var poly;
 &nbsp;
@@ -152,8 +181,21 @@
 &nbsp;
     PolyFootprint.prototype = Object.create(Footprint.prototype);
 &nbsp;
+    PolyFootprint.prototype.getProfilePoints = <span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >      if (!this.profilePoints || this.profilePoints.length == 0)</span>
+<span class="cstat-no" title="statement not covered" >        this.profilePoints = this.rasterize();</span>
+<span class="cstat-no" title="statement not covered" >      return this.profilePoints;</span>
+    };
+&nbsp;
     PolyFootprint.prototype.rasterize = <span class="fstat-no" title="function not covered" >function(){</span>
-<span class="cstat-no" title="statement not covered" >        return [];</span>
+<span class="cstat-no" title="statement not covered" >      var profilePoints = [];</span>
+<span class="cstat-no" title="statement not covered" >      this.poly.getPath().forEach(<span class="fstat-no" title="function not covered" >function(latLng){</span></span>
+<span class="cstat-no" title="statement not covered" >        profilePoints.push(new ProfilePoint({</span>
+          lat: latLng.lat(), 
+          lng: latLng.lng()
+        }));
+      });
+<span class="cstat-no" title="statement not covered" >      return profilePoints;</span>
     };
 &nbsp;
     PolyFootprint.prototype.setMap = <span class="fstat-no" title="function not covered" >function(map){</span>
@@ -164,7 +206,7 @@
         ,drawingMode: google.maps.drawing.OverlayType.POLYGON
       });
 <span class="cstat-no" title="statement not covered" >      google.maps.event.addListener(this.dm, 'polygoncomplete', angular.bind(this, <span class="fstat-no" title="function not covered" >function(polygon){</span></span>
-<span class="cstat-no" title="statement not covered" >        this.shape = poly = polygon;</span>
+<span class="cstat-no" title="statement not covered" >        this.shape = this.poly = polygon;</span>
 <span class="cstat-no" title="statement not covered" >        dm.setDrawingMode(null);</span>
 <span class="cstat-no" title="statement not covered" >        this.shape.setOptions({</span>
           draggable: true, editable: true ,
@@ -181,7 +223,7 @@
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Mar 04 2015 20:29:45 GMT+0000 (UTC)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Mar 08 2015 13:07:14 GMT+0000 (UTC)</div>
 </div>
 
 <script src="../../prettify.js"></script>

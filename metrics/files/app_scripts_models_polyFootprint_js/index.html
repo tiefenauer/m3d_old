@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">73.26</p>
+      <p class="stat">72.87</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">48</p>
+      <p class="stat">62</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">10.23</p>
+      <p class="stat">15.88</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.30</p>
+      <p class="stat">0.47</p>
     </div>
   </div>
 </div>
@@ -93,8 +93,9 @@
   &#039;angular&#039;
   ,&#039;lodash&#039;
   ,&#039;models/footprint&#039;
+  ,&#039;models/m3dProfilePoint&#039;     
   ], 
-  function(angular, _, Footprint){
+  function(angular, _, Footprint, ProfilePoint){
 
     var poly;
 
@@ -112,8 +113,21 @@
 
     PolyFootprint.prototype = Object.create(Footprint.prototype);
 
+    PolyFootprint.prototype.getProfilePoints = function(){
+      if (!this.profilePoints || this.profilePoints.length == 0)
+        this.profilePoints = this.rasterize();
+      return this.profilePoints;
+    };
+
     PolyFootprint.prototype.rasterize = function(){
-        return [];
+      var profilePoints = [];
+      this.poly.getPath().forEach(function(latLng){
+        profilePoints.push(new ProfilePoint({
+          lat: latLng.lat(), 
+          lng: latLng.lng()
+        }));
+      });
+      return profilePoints;
     };
 
     PolyFootprint.prototype.setMap = function(map){
@@ -124,7 +138,7 @@
         ,drawingMode: google.maps.drawing.OverlayType.POLYGON
       });
       google.maps.event.addListener(this.dm, &#039;polygoncomplete&#039;, angular.bind(this, function(polygon){
-        this.shape = poly = polygon;
+        this.shape = this.poly = polygon;
         dm.setDrawingMode(null);
         this.shape.setOptions({
           draggable: true, editable: true ,
