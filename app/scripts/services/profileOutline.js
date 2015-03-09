@@ -22,7 +22,7 @@ define([
       bevelThickness: 1 
     };
 
-    var $log;
+    var $log, $rootScope;
 
     /**
      * ProfileOutlineService
@@ -32,8 +32,9 @@ define([
      * @constructor
      * @namespace
      */
-    var ProfileOutlineService = function(log){
+    var ProfileOutlineService = function(log, rootScope){
       $log = log;
+      $rootScope = rootScope;
     };
 
     /**
@@ -324,8 +325,8 @@ define([
     * @param {m3d.models.Profile} profile the profile to be inverted
     */
     ProfileOutlineService.prototype.invert = function(profile){
+      $rootScope.$broadcast('outline:invert:start');
       profile.mesh.rotation.y = 0;
-      profile.mesh.geometry.computeVertexNormals();
       // Quader für Gussform vorbereiten
       var boxBorderThickness = (profile.getDimensionY() * 1.1 - profile.getDimensionY()) * 2;
       var boxWidth = profile.getDimensionZ() + boxBorderThickness;
@@ -341,37 +342,18 @@ define([
       boxGeometry.verticesNeedUpdate = true;        
 
       // Modell kopieren und Sockel erstellen
-      profile.mesh.geometry.computeVertexNormals();        
       var profileCopy = new Profile({
          profilePoints: profile.profilePoints
         ,mesh: profile.mesh.clone()
       });
-      profile.mesh.geometry.computeVertexNormals();
-      profileCopy.mesh.geometry.computeVertexNormals();
-
       profileCopy.mesh.dynamic = true;
 
-      profile.mesh.geometry.computeVertexNormals();
-      profileCopy.mesh.geometry.computeVertexNormals();
-
       // Sockel erstellen
-      if (profileCopy.profilePoints.length > 0){
-        _.forEach(profileCopy.profilePoints, function(point, i){
-          var bottomIndex = ProfileUtil.getBottomIndex(i, profileCopy.mesh.geometry.vertices);
-          profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;
-        });   
-      } 
-      else{
-        var half = Math.ceil(profileCopy.mesh.geometry.vertices.length / 2);
-        var getBoti = function(n){        
-          var side = Math.sqrt(half);       
-          return half + n + side - 2*(n%side) - 1;
-        }
-        for(var i=0; i<half; i++){
-          var boti = getBoti(i);
-          profileCopy.mesh.geometry.vertices[boti].y = -1 * boxHeight;
-        }
-      };                  
+      _.forEach(profileCopy.profilePoints, function(point, i){
+        $rootScope.$broadcast('outline:invert:progress', {progress: i, total: profileCopy.profilePoints.length});
+        var bottomIndex = ProfileUtil.getBottomIndex(i, profileCopy.mesh.geometry.vertices);
+        profileCopy.mesh.geometry.vertices[bottomIndex].y = -1 * boxHeight;
+      });   
       profileCopy.mesh.geometry.verticesNeedUpdate = true;
       profileCopy.mesh.geometry.mergeVertices();
       profileCopy.mesh.geometry.computeVertexNormals();
@@ -392,8 +374,9 @@ define([
       mold.geometry.applyMatrix(moldRotation);
       mold.matrix.identity();
       mold.name = profile.mesh.name + 'mold';
+      $rootScope.$broadcast('outline:invert:end');
       return mold;
     };
 
-    return ['$log', ProfileOutlineService];
+    return ['$log', '$rootScope', ProfileOutlineService];
 });

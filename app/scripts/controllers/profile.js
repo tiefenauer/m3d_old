@@ -46,10 +46,11 @@ define([
         ProfileIOService.save(this.currentMesh);
       }));
       $scope.$on('menu:model:invert', angular.bind(this, function(){
+        if (!this.currentProfile)
+          return;
         this.stopRotation();
         this.toggleInvert();
       }));
-
       this.initRenderer();
       this.initScene();
       this.render();
@@ -60,8 +61,8 @@ define([
     };
 
     ProfileController.prototype.profiles = {};
-    ProfileController.prototype.currentMesh = {};
-    ProfileController.prototype.currentProfile = {};
+    ProfileController.prototype.currentMesh = null;
+    ProfileController.prototype.currentProfile = null;
 
     ProfileController.prototype.stopRotation = function(){
       if (this.currentMesh){

@@ -87,6 +87,7 @@ define([
       Footprint.prototype.setMap.call(this, map);
       this.shape.setMap(this.map);
       this.shape.setBounds(this.getRectBounds());
+      this.shape.setBounds(this.initialRectBounds);
     };
 
     RectFootprint.prototype.getRectBounds = function(){
@@ -102,6 +103,13 @@ define([
       var bounds = new google.maps.LatLngBounds(rectSouthWest,rectNorthEast);
       return bounds;
     };
+
+    RectFootprint.prototype.initialRectBounds = new google.maps.LatLngBounds(
+      // southwest
+      new google.maps.LatLng(45.9, 7.6),
+      // northEast
+      new google.maps.LatLng(46.0, 7.7)
+      );
 
     return RectFootprint;
 });

@@ -110,20 +110,6 @@ define([
         this.parser.parse(localUrl);
       },
 
-      getRectBounds: function(){
-        var mapBounds = this.map.getBounds();
-        var rectNorthEast = new google.maps.LatLng(
-           mapBounds.getNorthEast().lat() - (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
-          ,mapBounds.getNorthEast().lng() - (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
-        );
-        var rectSouthWest = new google.maps.LatLng(
-           mapBounds.getSouthWest().lat() + (mapBounds.getNorthEast().lat() - mapBounds.getSouthWest().lat())*0.3
-          ,mapBounds.getSouthWest().lng() + (mapBounds.getNorthEast().lng() - mapBounds.getSouthWest().lng())*0.3
-        );
-        var bounds = new google.maps.LatLngBounds(rectSouthWest,rectNorthEast);
-        return bounds;
-      },
-
       setFootprint: function(footprint){        
         // bisherige Auswahl löschen
         if (this.footprint){
