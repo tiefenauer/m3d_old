@@ -41,6 +41,7 @@ define([
         $scope.$on('menu:places:changed', angular.bind(this, function(event, places){                    
           this.fitBounds(places);          
           this.resetZoom();
+          this.setFootprint(new RectFootprint());
         }));
         $scope.$on('menu:model:generate', angular.bind(this, function(event){
           $ElevationDataService.getElevationData(this.footprint);
@@ -120,10 +121,9 @@ define([
           }
           // Gemeinde
           //if (this.footprint instanceof GemeindeFootprint && this.footprint.)
+          this.footprint.map = null;
           this.footprint = null;
         };
-              
-
 
         this.footprint = footprint;
         this.footprint.setMap(this.map);

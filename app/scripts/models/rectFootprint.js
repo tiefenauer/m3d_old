@@ -87,7 +87,7 @@ define([
       Footprint.prototype.setMap.call(this, map);
       this.shape.setMap(this.map);
       this.shape.setBounds(this.getRectBounds());
-      this.shape.setBounds(this.initialRectBounds);
+      //this.shape.setBounds(this.initialRectBounds);
     };
 
     RectFootprint.prototype.getRectBounds = function(){
